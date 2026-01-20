@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "prisma generate --schema=../prisma/schema.prisma"
+    "postinstall": "prisma generate --schema=./prisma/schema.prisma"
   },
   "dependencies": {
     "@better-auth/cli": "^1.4.10",
