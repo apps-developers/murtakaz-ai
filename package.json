@@ -5,6 +5,13 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   },
+  "scripts": {
+    "db:wipe": "ts-node prisma/wipe-database.ts",
+    "db:snapshot": "ts-node prisma/export-org-snapshot.ts",
+    "db:restore-snapshot": "ts-node prisma/restore-org-snapshot.ts",
+    "create-super-admin": "ts-node prisma/create-super-admin.ts",
+    "db:create-super-admin": "ts-node prisma/create-super-admin.ts"
+  },
   "dependencies": {
     "@prisma/client": "^6.19.1",
     "bcryptjs": "^3.0.3",
@@ -12,6 +19,6 @@
     "mermaid": "^11.12.2"
   },
   "prisma": {
-    "seed": "ts-node prisma/seed-mousa.ts"
+    "seed": "ts-node prisma/seed-entity.ts"
   }
 }

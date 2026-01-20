@@ -10,12 +10,17 @@ import {
   PrismaClient,
   Role,
   Status,
- } from "../web/src/generated/prisma-client/index.js";
- import { auth } from "../web/src/lib/auth";
+} from "../web/src/generated/prisma-client/index.js";
+import { webcrypto } from "node:crypto";
+import { hashPassword } from "better-auth/crypto";
 
- const prisma = new PrismaClient();
+const prisma = new PrismaClient();
 
- type Delegate = {
+// Ensure WebCrypto exists for better-auth password hashing
+const g = globalThis as unknown as { crypto?: unknown };
+if (!g.crypto) g.crypto = webcrypto as unknown;
+
+type Delegate = {
   deleteMany: (args?: unknown) => Promise<unknown>;
   findFirst: (args: unknown) => Promise<unknown>;
   findMany: (args: unknown) => Promise<unknown>;
@@ -30,8 +35,476 @@ import {
  const prismaEntityVariable = (prisma as unknown as { entityVariable?: Delegate }).entityVariable;
  const prismaEntityValue = (prisma as unknown as { entityValue?: Delegate }).entityValue;
  const prismaEntityVariableValue = (prisma as unknown as { entityVariableValue?: Delegate }).entityVariableValue;
+ const prismaUserEntityAssignment = (prisma as unknown as { userEntityAssignment?: Delegate }).userEntityAssignment;
 
  type OrgEntityTypeCode = "pillar" | "objective" | "department" | "initiative" | "kpi";
+
+type StrategicObjectiveMap = {
+ strategic_objectives_map: Array<{
+  goal_id: number;
+  goal_title: string;
+  strategic_kpis: Array<{
+   id: string;
+   title: string;
+   formula_avg_KPIs: Array<{
+    department_kpi_name: string;
+    weight: string;
+    unit?: string;
+    frequency?: string;
+    page_source?: number;
+   }>;
+  }>;
+ }>;
+};
+
+const strategicObjectivesSeed: StrategicObjectiveMap = {
+ strategic_objectives_map: [
+  {
+   goal_id: 1,
+   goal_title: "توسيع المحفظة الاستثمارية عبر الدخول في 5 قطاعات جديدة بنهاية عام 2028",
+   strategic_kpis: [
+    {
+     id: "1.1",
+     title: "عدد القطاعات الجديدة",
+     formula_avg_KPIs: [
+      {
+       department_kpi_name: "عدد القطاعات الجديدة",
+       weight: "10%",
+       unit: "عدد",
+       frequency: "ربع سنوي/سنوي",
+       page_source: 9,
+      },
+     ],
+    },
+    {
+     id: "1.2",
+     title: "نسبة مساهمة القطاعات الجديدة في إجمالي المحفظة",
+     formula_avg_KPIs: [
+      {
+       department_kpi_name: "عدد القطاعات الجديدة",
+       weight: "10%",
+       unit: "عدد",
+       frequency: "ربع سنوي/سنوي",
+       page_source: 9,
+      },
+      {
+       department_kpi_name: "نسبة تحقيق العائد الاستثماري المستهدف",
+       weight: "10%",
+       unit: "%",
+       frequency: "ربع سنوي/سنوي",
+       page_source: 9,
+      },
+      {
+       department_kpi_name: "نسبة فجوة تحقيق العائد الاستثماري",
+       weight: "10%",
+       unit: "%",
+       frequency: "ربع سنوي",
+       page_source: 9,
+      },
+      {
+       department_kpi_name: "نسبة نجاح المشاريع الاستثمارية",
+       weight: "10%",
+       unit: "%",
+       frequency: "سنوي",
+       page_source: 10,
+      },
+      {
+       department_kpi_name: "نسبة المشاريع غير الناجحة",
+       weight: "10%",
+       unit: "%",
+       frequency: "ربع سنوي",
+       page_source: 10,
+      },
+     ],
+    },
+    {
+     id: "1.3",
+     title: "عدد الشراكات أو المشاريع الاستثمارية الجديدة",
+     formula_avg_KPIs: [
+      {
+       department_kpi_name: "عدد القطاعات الجديدة",
+       weight: "10%",
+       unit: "عدد",
+       frequency: "ربع سنوي/سنوي",
+       page_source: 9,
+      },
+      {
+       department_kpi_name: "نسبة نجاح المشاريع الاستثمارية",
+       weight: "10%",
+       unit: "%",
+       frequency: "سنوي",
+       page_source: 10,
+      },
+      {
+       department_kpi_name: "نسبة المشاريع غير الناجحة",
+       weight: "10%",
+       unit: "%",
+       frequency: "ربع سنوي",
+       page_source: 10,
+      },
+     ],
+    },
+    {
+     id: "1.4",
+     title: "العائد على الاستثمارات الجديدة (ROI)",
+     formula_avg_KPIs: [
+      {
+       department_kpi_name: "عدد القطاعات الجديدة",
+       weight: "10%",
+       unit: "عدد",
+       frequency: "ربع سنوي/سنوي",
+       page_source: 9,
+      },
+      {
+       department_kpi_name: "نسبة تحقيق العائد الاستثماري المستهدف",
+       weight: "10%",
+       unit: "%",
+       frequency: "ربع سنوي/سنوي",
+       page_source: 9,
+      },
+      {
+       department_kpi_name: "نسبة فجوة تحقيق العائد الاستثماري",
+       weight: "10%",
+       unit: "%",
+       frequency: "ربع سنوي",
+       page_source: 9,
+      },
+     ],
+    },
+   ],
+  },
+  {
+   goal_id: 2,
+   goal_title: "تعزيز الريادة الاستثمارية عبر إدارة محفظة استثمارية تحقق عائداً استثمارياً بنسبة 20% بنهاية عام 2028",
+   strategic_kpis: [
+    {
+     id: "2.1",
+     title: "العائد على الاستثمار",
+     formula_avg_KPIs: [
+      {
+       department_kpi_name: "اجمالي الاستثمارات الجديدة",
+       weight: "10%",
+       unit: "%",
+       frequency: "ربع سنوي/سنوي",
+       page_source: 9,
+      },
+      {
+       department_kpi_name: "نسبة الفرص الاستثمارية غير المستغلة",
+       weight: "10%",
+       unit: "%",
+       frequency: "شهري/ربع سنوي",
+       page_source: 9,
+      },
+      {
+       department_kpi_name: "نسبة تحقيق العائد الاستثماري المستهدف",
+       weight: "10%",
+       unit: "%",
+       frequency: "ربع سنوي/سنوي",
+       page_source: 9,
+      },
+      {
+       department_kpi_name: "نسبة فجوة تحقيق العائد الاستثماري",
+       weight: "10%",
+       unit: "%",
+       frequency: "ربع سنوي",
+       page_source: 9,
+      },
+      {
+       department_kpi_name: "نسبة النمو في المحفظة الاستثمارية",
+       weight: "10%",
+       unit: "ريال",
+       frequency: "نصف سنوي/سنوي",
+       page_source: 9,
+      },
+     ],
+    },
+    {
+     id: "2.2",
+     title: "العائد المركب السنوي",
+     formula_avg_KPIs: [
+      {
+       department_kpi_name: "اجمالي الاستثمارات الجديدة",
+       weight: "10%",
+       unit: "%",
+       frequency: "ربع سنوي/سنوي",
+       page_source: 9,
+      },
+      {
+       department_kpi_name: "نسبة الفرص الاستثمارية غير المستغلة",
+       weight: "10%",
+       unit: "%",
+       frequency: "شهري/ربع سنوي",
+       page_source: 9,
+      },
+      {
+       department_kpi_name: "نسبة تحقيق العائد الاستثماري المستهدف",
+       weight: "10%",
+       unit: "%",
+       frequency: "ربع سنوي/سنوي",
+       page_source: 9,
+      },
+      {
+       department_kpi_name: "نسبة فجوة تحقيق العائد الاستثماري",
+       weight: "10%",
+       unit: "%",
+       frequency: "ربع سنوي",
+       page_source: 9,
+      },
+      {
+       department_kpi_name: "نسبة النمو في المحفظة الاستثمارية",
+       weight: "10%",
+       unit: "ريال",
+       frequency: "نصف سنوي/سنوي",
+       page_source: 9,
+      },
+     ],
+    },
+    {
+     id: "2.3",
+     title: "نسبة التنوع",
+     formula_avg_KPIs: [
+      {
+       department_kpi_name: "اجمالي الاستثمارات الجديدة",
+       weight: "10%",
+       unit: "%",
+       frequency: "ربع سنوي/سنوي",
+       page_source: 9,
+      },
+      {
+       department_kpi_name: "نسبة الفرص الاستثمارية غير المستغلة",
+       weight: "10%",
+       unit: "%",
+       frequency: "شهري/ربع سنوي",
+       page_source: 9,
+      },
+      {
+       department_kpi_name: "نسبة نجاح المشاريع الاستثمارية",
+       weight: "10%",
+       unit: "%",
+       frequency: "سنوي",
+       page_source: 10,
+      },
+      {
+       department_kpi_name: "نسبة المشاريع غير الناجحة",
+       weight: "10%",
+       unit: "%",
+       frequency: "ربع سنوي",
+       page_source: 10,
+      },
+     ],
+    },
+    {
+     id: "2.4",
+     title: "نسبة مساهمة الاستثمارات الجديدة",
+     formula_avg_KPIs: [
+      {
+       department_kpi_name: "اجمالي الاستثمارات الجديدة",
+       weight: "10%",
+       unit: "%",
+       frequency: "ربع سنوي/سنوي",
+       page_source: 9,
+      },
+      {
+       department_kpi_name: "نسبة الفرص الاستثمارية غير المستغلة",
+       weight: "10%",
+       unit: "%",
+       frequency: "شهري/ربع سنوي",
+       page_source: 9,
+      },
+      {
+       department_kpi_name: "نسبة تحقيق العائد الاستثماري المستهدف",
+       weight: "10%",
+       unit: "%",
+       frequency: "ربع سنوي/سنوي",
+       page_source: 9,
+      },
+      {
+       department_kpi_name: "نسبة فجوة تحقيق العائد الاستثماري",
+       weight: "10%",
+       unit: "%",
+       frequency: "ربع سنوي",
+       page_source: 9,
+      },
+      {
+       department_kpi_name: "نسبة النمو في المحفظة الاستثمارية",
+       weight: "10%",
+       unit: "ريال",
+       frequency: "نصف سنوي/سنوي",
+       page_source: 9,
+      },
+      {
+       department_kpi_name: "نسبة نجاح المشاريع الاستثمارية",
+       weight: "10%",
+       unit: "%",
+       frequency: "سنوي",
+       page_source: 10,
+      },
+      {
+       department_kpi_name: "نسبة المشاريع غير الناجحة",
+       weight: "10%",
+       unit: "%",
+       frequency: "ربع سنوي",
+       page_source: 10,
+      },
+     ],
+    },
+    {
+     id: "2.5",
+     title: "عدد الاستثمارات التي تحقق العائد",
+     formula_avg_KPIs: [
+      {
+       department_kpi_name: "اجمالي الاستثمارات الجديدة",
+       weight: "10%",
+       unit: "%",
+       frequency: "ربع سنوي/سنوي",
+       page_source: 9,
+      },
+      {
+       department_kpi_name: "نسبة الفرص الاستثمارية غير المستغلة",
+       weight: "10%",
+       unit: "%",
+       frequency: "شهري/ربع سنوي",
+       page_source: 9,
+      },
+      {
+       department_kpi_name: "نسبة تحقيق العائد الاستثماري المستهدف",
+       weight: "10%",
+       unit: "%",
+       frequency: "ربع سنوي/سنوي",
+       page_source: 9,
+      },
+      {
+       department_kpi_name: "نسبة فجوة تحقيق العائد الاستثماري",
+       weight: "10%",
+       unit: "%",
+       frequency: "ربع سنوي",
+       page_source: 9,
+      },
+      {
+       department_kpi_name: "نسبة النمو في المحفظة الاستثمارية",
+       weight: "10%",
+       unit: "ريال",
+       frequency: "نصف سنوي/سنوي",
+       page_source: 9,
+      },
+      {
+       department_kpi_name: "نسبة نجاح المشاريع الاستثمارية",
+       weight: "10%",
+       unit: "%",
+       frequency: "سنوي",
+       page_source: 10,
+      },
+      {
+       department_kpi_name: "نسبة المشاريع غير الناجحة",
+       weight: "10%",
+       unit: "%",
+       frequency: "ربع سنوي",
+       page_source: 10,
+      },
+     ],
+    },
+   ],
+  },
+  {
+   goal_id: 3,
+   goal_title: "رفع الإيرادات المستدامة للمجموعة لتصل إلى 200 مليون ريال بنهاية عام 2028",
+   strategic_kpis: [
+    {
+     id: "3.1",
+     title: "إجمالي الإيرادات السنوية",
+     formula_avg_KPIs: [
+      {
+       department_kpi_name: "نمو الإيرادات المستدامة",
+       weight: "10%",
+       unit: "%",
+       frequency: "ربع سنوي/سنوي",
+       page_source: 9,
+      },
+     ],
+    },
+    {
+     id: "3.2",
+     title: "نسبة الإيرادات المستدامة",
+     formula_avg_KPIs: [
+      {
+       department_kpi_name: "نمو الإيرادات المستدامة",
+       weight: "10%",
+       unit: "%",
+       frequency: "ربع سنوي/سنوي",
+       page_source: 9,
+      },
+     ],
+    },
+    {
+     id: "3.3",
+     title: "نسبة الانحراف عن المستهدف",
+     formula_avg_KPIs: [
+      {
+       department_kpi_name: "نمو الإيرادات المستدامة",
+       weight: "10%",
+       unit: "%",
+       frequency: "ربع سنوي/سنوي",
+       page_source: 9,
+      },
+     ],
+    },
+    {
+     id: "3.4",
+     title: "نسبة مساهمة القطاعات الجديدة في الإيرادات المستدامة",
+     formula_avg_KPIs: [
+      {
+       department_kpi_name: "نمو الإيرادات المستدامة",
+       weight: "10%",
+       unit: "%",
+       frequency: "ربع سنوي/سنوي",
+       page_source: 9,
+      },
+     ],
+    },
+   ],
+  },
+  {
+   goal_id: 4,
+   goal_title: "تعزيز الانضباط المالي من خلال تعظيم كفاءة رأس المال وتطبيق نظام موحد لكفاءة الإنفاق",
+   strategic_kpis: [
+    { id: "4.1", title: "نسبة الالتزام بتطبيق النظام", formula_avg_KPIs: [] },
+    { id: "4.2", title: "نسبة الانحرافات المالية", formula_avg_KPIs: [] },
+    { id: "4.3", title: "معدل خفض الانحرافات المالية", formula_avg_KPIs: [] },
+    { id: "4.4", title: "معدل الانخفاض في المصروفات غير المبررة", formula_avg_KPIs: [] },
+    { id: "4.5", title: "عدد التقارير المالية الموحدة", formula_avg_KPIs: [] },
+   ],
+  },
+  {
+   goal_id: 5,
+   goal_title: "رفع الجاهزية للإدراج من خلال رفع مستوى الحوكمة وتفعيل النموذج التشغيلي بحلول 2027",
+   strategic_kpis: [
+    { id: "5.1", title: "نسبة الامتثال لمتطلبات تقرير الجاهزية للإدراج", formula_avg_KPIs: [] },
+    { id: "5.2", title: "نسبة تفعيل النموذج التشغيلي", formula_avg_KPIs: [] },
+    { id: "5.3", title: "عدد المراجعات الداخلية والخارجية الناجحة", formula_avg_KPIs: [] },
+   ],
+  },
+  {
+   goal_id: 6,
+   goal_title: "رفع مستوى الإنتاجية للموظفين بنسبة 85% بنهاية 2028",
+   strategic_kpis: [
+    { id: "6.1", title: "معدل المشاركة في الدورات التدريبية", formula_avg_KPIs: [] },
+    { id: "6.2", title: "نسبة التحسن في إنتاجية الموظفين بعد التدريب", formula_avg_KPIs: [] },
+    { id: "6.3", title: "نسبة الالتزام بالمدة الزمنية لتنفيذ المهام", formula_avg_KPIs: [] },
+    { id: "6.4", title: "مؤشر الثقافة التنظيمية", formula_avg_KPIs: [] },
+   ],
+  },
+  {
+   goal_id: 7,
+   goal_title: "تعزيز الوعي بالعلامة التجارية",
+   strategic_kpis: [
+    { id: "7.1", title: "مؤشر الوعي بالعلامة التجارية", formula_avg_KPIs: [] },
+    { id: "7.2", title: "عدد المشاركات في الفعاليات والمؤتمرات", formula_avg_KPIs: [] },
+    { id: "7.3", title: "معدل التفاعل الرقمي", formula_avg_KPIs: [] },
+    { id: "7.4", title: "عدد الحملات التسويقية المنفذة سنوياً", formula_avg_KPIs: [] },
+   ],
+  },
+ ],
+};
 
  function dateAtStartOfDay(d: Date) {
   return new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0, 0);
@@ -111,6 +584,15 @@ import {
   await prisma.organization.deleteMany();
  }
 
+ async function wipeOrgEntities(orgId: string) {
+  await prismaUserEntityAssignment?.deleteMany({ where: { entity: { orgId } } } as never);
+  await prismaEntityVariableValue?.deleteMany({ where: { entityValue: { entity: { orgId } } } } as never);
+  await prismaEntityValue?.deleteMany({ where: { entity: { orgId } } } as never);
+  await prismaEntityVariable?.deleteMany({ where: { entity: { orgId } } } as never);
+  await prismaEntity?.deleteMany({ where: { orgId } } as never);
+  await prismaOrgEntityType?.deleteMany({ where: { orgId } } as never);
+ }
+
  async function ensureOrg(input: {
   domain?: string | null;
   name: string;
@@ -179,55 +661,79 @@ import {
   role: Role;
   managerId?: string | null;
   title?: string | null;
- }) {
+}) {
+  const email = String(input.email ?? "").trim().toLowerCase();
+
   const existingUser = await prisma.user.findFirst({
-    where: { orgId: input.orgId, email: input.email, deletedAt: null },
+    where: { orgId: input.orgId, email, deletedAt: null },
     select: { id: true },
   });
 
+  const passwordHash = await hashPassword(String(input.password ?? ""));
+
   if (existingUser) {
+    await prisma.user.update({
+      where: { id: existingUser.id },
+      data: {
+        name: input.name,
+        role: input.role,
+        hashedPassword: passwordHash,
+        managerId: typeof input.managerId === "undefined" ? undefined : input.managerId,
+        title: typeof input.title === "undefined" ? undefined : input.title,
+      },
+    });
+
     const credentialAccount = await prisma.account.findFirst({
       where: { userId: existingUser.id, providerId: "credential" },
       select: { id: true },
     });
 
     if (credentialAccount) {
-      await prisma.user.update({
-        where: { id: existingUser.id },
+      await prisma.account.update({
+        where: { id: credentialAccount.id },
+        data: { password: passwordHash, accountId: existingUser.id },
+      });
+    } else {
+      await prisma.account.create({
         data: {
-          role: input.role,
-          managerId: typeof input.managerId === "undefined" ? undefined : input.managerId,
-          title: typeof input.title === "undefined" ? undefined : input.title,
+          userId: existingUser.id,
+          providerId: "credential",
+          accountId: existingUser.id,
+          password: passwordHash,
         },
       });
-      return { id: String(existingUser.id) };
     }
 
-    await prisma.user.delete({ where: { id: existingUser.id } });
+    return { id: String(existingUser.id) };
   }
 
-  const result = await auth.api.signUpEmail({
-    body: {
-      email: input.email,
-      password: input.password,
+  const created = await prisma.user.create({
+    data: {
+      orgId: input.orgId,
+      email,
+      emailVerified: false,
       name: input.name,
       role: input.role,
-      orgId: input.orgId,
+      hashedPassword: passwordHash,
+      managerId: typeof input.managerId === "undefined" ? null : input.managerId ?? null,
+      title: typeof input.title === "undefined" ? null : input.title ?? null,
     },
+    select: { id: true },
   });
 
-  await prisma.user.update({
-    where: { id: result.user.id },
+  await prisma.account.create({
     data: {
-      managerId: typeof input.managerId === "undefined" ? undefined : input.managerId,
-      title: typeof input.title === "undefined" ? undefined : input.title,
+      userId: created.id,
+      providerId: "credential",
+      accountId: created.id,
+      password: passwordHash,
     },
   });
 
-  return { id: String(result.user.id) };
- }
+  return { id: String(created.id) };
+}
 
- async function ensureOrgEntityTypes(orgId: string) {
+async function ensureOrgEntityTypes(orgId: string) {
   if (!prismaOrgEntityType) throw new Error("Prisma client missing orgEntityType model. Run prisma generate.");
 
   await prismaOrgEntityType.deleteMany({ where: { orgId } });
@@ -431,9 +937,53 @@ import {
   }
 } 
 
+function periodTypeFromFrequency(input: string | undefined): KpiPeriodType {
+ const f = String(input ?? "").trim().toLowerCase();
+ const fa = String(input ?? "").trim();
+ if (f === "monthly") return KpiPeriodType.MONTHLY;
+ if (f === "quarterly") return KpiPeriodType.QUARTERLY;
+ if (f === "yearly" || f === "annual") return KpiPeriodType.YEARLY;
+ if (fa.includes("شهري")) return KpiPeriodType.MONTHLY;
+ if (fa.includes("ربع")) return KpiPeriodType.QUARTERLY;
+ if (fa.includes("سنوي") || fa.includes("سنويا") || fa.includes("سنوية")) return KpiPeriodType.YEARLY;
+ return KpiPeriodType.YEARLY;
+}
+
+function dataTypeFromUnit(input: string | undefined): KpiVariableDataType {
+ const u = String(input ?? "").toLowerCase();
+ if (u.includes("percent") || u.includes("%") || u.includes("٪")) return KpiVariableDataType.PERCENTAGE;
+ return KpiVariableDataType.NUMBER;
+}
+
+function weightToNumber(input: string | undefined) {
+ const raw = String(input ?? "").trim();
+ const cleaned = raw.replace(/%/g, "").replace(/٪/g, "").trim();
+ const num = Number(cleaned);
+ return typeof num === "number" && Number.isFinite(num) ? num : 0;
+}
+
+function buildWeightedAvgGetFormula(items: Array<{ key: string; weight: number }>) {
+ const normalized = (items ?? [])
+  .map((i) => ({ key: String(i.key ?? "").trim(), weight: typeof i.weight === "number" ? i.weight : 0 }))
+  .filter((i) => i.key.length > 0 && Number.isFinite(i.weight) && i.weight > 0);
+ if (normalized.length === 0) return "0";
+ if (normalized.length === 1) return `get("${normalized[0].key}")`;
+ const denom = normalized.reduce((sum, i) => sum + i.weight, 0);
+ if (!Number.isFinite(denom) || denom <= 0) return "0";
+ const numerator = normalized.map((i) => `get("${i.key}") * ${i.weight}`).join(" + ");
+ return `((${numerator}) / ${denom})`;
+}
+
+function buildAvgGetFormula(keys: string[]) {
+ const ks = (keys ?? []).map((k) => String(k ?? "").trim()).filter(Boolean);
+ if (ks.length === 0) return "0";
+ if (ks.length === 1) return `get("${ks[0]}")`;
+ const sum = ks.map((k) => `get("${k}")`).join(" + ");
+ return `(${sum}) / ${ks.length}`;
+}
+
  async function seed() {
   await assertEntitySystemReady();
-  await wipeDatabase();
 
   const org = await ensureOrg({
     domain: process.env.SEED_ORG_DOMAIN ?? "almousa.local",
@@ -452,6 +1002,8 @@ import {
       website: "https://almousaholding.com",
     },
   });
+
+  await wipeOrgEntities(org.id);
 
   const password = process.env.SEED_DEFAULT_PASSWORD ?? "password123";
 
@@ -560,161 +1112,163 @@ import {
   const kpiTypeId = getTypeId("kpi");
   const pillarTypeId = getTypeId("pillar");
 
-  await ensureEntity({
+  const headInvestment = await ensureUser({
     orgId: org.id,
-    orgEntityTypeId: deptTypeId,
-    key: "dept_finance",
-    title: "Finance",
-    titleAr: "القطاع المالي",
-    ownerUserId: headFinance.id,
-    sourceType: KpiSourceType.DERIVED,
-    periodType: KpiPeriodType.QUARTERLY,
-    unit: "score",
-    formula: "0",
+    email: "investment@almousa.local",
+    password,
+    name: "مدير الاستثمار",
+    role: Role.MANAGER,
+    managerId: ceo.id,
+    title: "Head of Investment",
   });
 
-  await ensureEntity({
-    orgId: org.id,
-    orgEntityTypeId: objectiveTypeId,
-    key: "obj_brand_awareness",
-    title: "Brand awareness",
-    titleAr: "تعزيز الوعي بالعلامة التجارية",
-    ownerUserId: headMarketing.id,
-    sourceType: KpiSourceType.DERIVED,
-    periodType: KpiPeriodType.YEARLY,
-    unit: "score",
-    formula: "(kpi_brand_awareness_pct + kpi_digital_engagement_rate) / 2",
-  });
+  const deptKpiNameToMeta = new Map<string, { unit?: string; frequency?: string }>();
+  const orderedDeptKpiNames: string[] = [];
 
-  await ensureEntity({
-    orgId: org.id,
-    orgEntityTypeId: initiativeTypeId,
-    key: "init_marketing_strategy",
-    title: "Marketing strategy",
-    titleAr: "تحديث وتنفيذ استراتيجية شاملة للتواصل والتسويق",
-    ownerUserId: headMarketing.id,
-    sourceType: KpiSourceType.DERIVED,
-    periodType: KpiPeriodType.QUARTERLY,
-    unit: "score",
-    formula: "(kpi_brand_awareness_pct + kpi_digital_engagement_rate) / 2",
-  });
+  for (const obj of strategicObjectivesSeed.strategic_objectives_map) {
+    for (const okpi of obj.strategic_kpis) {
+      for (const link of okpi.formula_avg_KPIs ?? []) {
+        const name = String(link.department_kpi_name ?? "").trim();
+        if (!name) continue;
+        if (!deptKpiNameToMeta.has(name)) {
+          deptKpiNameToMeta.set(name, { unit: link.unit, frequency: link.frequency });
+          orderedDeptKpiNames.push(name);
+        }
+      }
+    }
+  }
 
-  await ensureEntity({
-    orgId: org.id,
-    orgEntityTypeId: pillarTypeId,
-    key: "pillar_brand",
-    title: "Brand",
-    titleAr: "العلامة التجارية",
-    ownerUserId: headMarketing.id,
-    sourceType: KpiSourceType.DERIVED,
-    periodType: KpiPeriodType.YEARLY,
-    unit: "score",
-    formula: "obj_brand_awareness",
-  });
+  // Target is 10 department KPIs (under Investment department)
+  const deptKpiNames: string[] = orderedDeptKpiNames.slice(0, 10);
+  while (deptKpiNames.length < 10) {
+    deptKpiNames.push(`مؤشر مؤقت ${deptKpiNames.length + 1}`);
+  }
 
-  const kpiSpecs: Array<{
-    key: string;
-    title: string;
-    titleAr: string;
-    periodType: KpiPeriodType;
-    unit: string;
-    direction: KpiDirection;
-    formula: string;
-    variables: Array<{ code: string; displayName: string; nameAr: string; dataType: KpiVariableDataType; isRequired?: boolean }>;
-  }> = [
-    {
-      key: "kpi_brand_awareness_pct",
-      title: "Brand awareness (%)",
-      titleAr: "الوعي بالعلامة التجارية (%)",
-      periodType: KpiPeriodType.QUARTERLY,
-      unit: "%",
-      direction: KpiDirection.INCREASE_IS_GOOD,
-      formula: "value",
-      variables: [{ code: "value", displayName: "Value", nameAr: "القيمة", dataType: KpiVariableDataType.PERCENTAGE, isRequired: true }],
-    },
-    {
-      key: "kpi_digital_engagement_rate",
-      title: "Digital engagement rate (%)",
-      titleAr: "معدل التفاعل الرقمي (%)",
-      periodType: KpiPeriodType.MONTHLY,
-      unit: "%",
-      direction: KpiDirection.INCREASE_IS_GOOD,
-      formula: "(engagements / (impressions + 0.000001)) * 100",
-      variables: [
-        { code: "engagements", displayName: "Engagements", nameAr: "التفاعلات", dataType: KpiVariableDataType.NUMBER, isRequired: true },
-        { code: "impressions", displayName: "Impressions", nameAr: "مرات الظهور", dataType: KpiVariableDataType.NUMBER, isRequired: true },
-      ],
-    },
-    {
-      key: "kpi_training_participation_pct",
-      title: "Training participation (%)",
-      titleAr: "نسبة المشاركة في التدريب (%)",
-      periodType: KpiPeriodType.QUARTERLY,
-      unit: "%",
-      direction: KpiDirection.INCREASE_IS_GOOD,
-      formula: "(participants / (employees_total + 0.000001)) * 100",
-      variables: [
-        { code: "participants", displayName: "Participants", nameAr: "المشاركون", dataType: KpiVariableDataType.NUMBER, isRequired: true },
-        { code: "employees_total", displayName: "Employees total", nameAr: "إجمالي الموظفين", dataType: KpiVariableDataType.NUMBER, isRequired: true },
-      ],
-    },
-    {
-      key: "kpi_operating_model_adoption_pct",
-      title: "Operating model adoption (%)",
-      titleAr: "نسبة تطبيق النموذج التشغيلي (%)",
-      periodType: KpiPeriodType.QUARTERLY,
-      unit: "%",
-      direction: KpiDirection.INCREASE_IS_GOOD,
-      formula: "(subsidiaries_adopted / (subsidiaries_total + 0.000001)) * 100",
-      variables: [
-        { code: "subsidiaries_adopted", displayName: "Adopted", nameAr: "شركات طبقت", dataType: KpiVariableDataType.NUMBER, isRequired: true },
-        { code: "subsidiaries_total", displayName: "Total", nameAr: "إجمالي الشركات", dataType: KpiVariableDataType.NUMBER, isRequired: true },
-      ],
-    },
-  ];
+  const deptKpiKeyByName = new Map<string, string>();
+  const deptKpiKeys: string[] = [];
 
-  for (const spec of kpiSpecs) {
-    const entity = await ensureEntity({
+  for (let i = 0; i < deptKpiNames.length; i++) {
+    const name = deptKpiNames[i];
+    const key = `dept_investment_kpi_${String(i + 1).padStart(2, "0")}`;
+    deptKpiKeyByName.set(name, key);
+    deptKpiKeys.push(key);
+
+    const meta = deptKpiNameToMeta.get(name);
+    const periodType = periodTypeFromFrequency(meta?.frequency);
+    const variableDataType = dataTypeFromUnit(meta?.unit);
+
+    const deptKpi = await ensureEntity({
       orgId: org.id,
       orgEntityTypeId: kpiTypeId,
-      key: spec.key,
-      title: spec.title,
-      titleAr: spec.titleAr,
-      ownerUserId: admin.id,
+      key,
+      title: name,
+      titleAr: name,
+      ownerUserId: headInvestment.id,
       status: Status.ACTIVE,
       sourceType: KpiSourceType.CALCULATED,
-      periodType: spec.periodType,
-      unit: spec.unit,
-      unitAr: spec.unit,
-      direction: spec.direction,
+      periodType,
+      unit: meta?.unit ?? null,
+      unitAr: meta?.unit ?? null,
+      direction: KpiDirection.INCREASE_IS_GOOD,
       aggregation: KpiAggregationMethod.LAST_VALUE,
-      formula: spec.formula,
+      formula: "value",
     });
 
-    await ensureEntityVariables(
-      entity.id,
-      spec.variables.map((v) => ({
-        code: v.code,
-        displayName: v.displayName,
-        nameAr: v.nameAr,
-        dataType: v.dataType,
-        isRequired: v.isRequired,
-      })),
-    );
-
-    const values: Record<string, number> = {};
-    for (const v of spec.variables) values[v.code] = sampleValueForVar(v.code);
+    await ensureEntityVariables(deptKpi.id, [
+      {
+        code: "value",
+        displayName: "Value",
+        nameAr: "القيمة",
+        dataType: variableDataType,
+        isRequired: true,
+      },
+    ]);
 
     await createEntityValueByVariableCodes({
-      entityId: entity.id,
+      entityId: deptKpi.id,
       status: KpiValueStatus.APPROVED,
       approvalType: KpiApprovalType.MANUAL,
       note: "Seeded (approved).",
       enteredBy: superAdmin.id,
       submittedBy: superAdmin.id,
       approvedBy: ceo.id,
-      formula: spec.formula,
-      variableValues: values,
+      formula: "value",
+      variableValues: { value: 0 },
+    });
+  }
+
+  await ensureEntity({
+    orgId: org.id,
+    orgEntityTypeId: deptTypeId,
+    key: "dept_investment",
+    title: "Investment Department",
+    titleAr: "إدارة الاستثمار",
+    ownerUserId: headInvestment.id,
+    status: Status.ACTIVE,
+    sourceType: KpiSourceType.DERIVED,
+    periodType: KpiPeriodType.YEARLY,
+    unit: "score",
+    unitAr: "score",
+    formula: buildAvgGetFormula(deptKpiKeys),
+  });
+
+  for (const obj of strategicObjectivesSeed.strategic_objectives_map) {
+    const objectiveKpiKeys: string[] = [];
+
+    for (const okpi of obj.strategic_kpis) {
+      const links = (okpi.formula_avg_KPIs ?? [])
+        .map((l) => {
+          const deptKey = deptKpiKeyByName.get(String(l.department_kpi_name ?? "").trim());
+          return {
+            deptKey,
+            weight: weightToNumber(l.weight),
+            unit: l.unit,
+            frequency: l.frequency,
+          };
+        })
+        .filter((x) => typeof x.deptKey === "string" && x.deptKey.length > 0);
+
+      const periodType = periodTypeFromFrequency(links[0]?.frequency);
+      const unit = links[0]?.unit ?? null;
+
+      const formula =
+        links.length === 0
+          ? "0"
+          : buildWeightedAvgGetFormula(links.map((l) => ({ key: l.deptKey as string, weight: l.weight })));
+
+      await ensureEntity({
+        orgId: org.id,
+        orgEntityTypeId: kpiTypeId,
+        key: okpi.id,
+        title: okpi.title,
+        titleAr: okpi.title,
+        ownerUserId: headStrategy.id,
+        status: Status.ACTIVE,
+        sourceType: KpiSourceType.DERIVED,
+        periodType,
+        unit,
+        unitAr: unit,
+        direction: KpiDirection.INCREASE_IS_GOOD,
+        aggregation: KpiAggregationMethod.LAST_VALUE,
+        formula,
+      });
+
+      objectiveKpiKeys.push(okpi.id);
+    }
+
+    await ensureEntity({
+      orgId: org.id,
+      orgEntityTypeId: objectiveTypeId,
+      key: String(obj.goal_id),
+      title: obj.goal_title,
+      titleAr: obj.goal_title,
+      ownerUserId: headStrategy.id,
+      status: Status.ACTIVE,
+      sourceType: KpiSourceType.DERIVED,
+      periodType: KpiPeriodType.YEARLY,
+      unit: "score",
+      unitAr: "score",
+      formula: buildAvgGetFormula(objectiveKpiKeys),
     });
   }
 
