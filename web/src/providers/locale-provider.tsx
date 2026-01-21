@@ -23,12 +23,14 @@ interface LocaleContextValue {
 
 const LocaleContext = createContext<LocaleContextValue | null>(null);
 
-const dictionary = {
-  en: enMessages,
-  ar: arMessages,
-} as const;
-
 export type TranslationKey = keyof typeof enMessages;
+
+type Messages = Partial<Record<TranslationKey, string>>;
+
+const dictionary: Record<Locale, Messages> = {
+  en: enMessages as Messages,
+  ar: arMessages as Messages,
+};
 
 const nodeTypeKeyMap: Partial<Record<string, TranslationKey>> = {
   strategy: "strategy",
@@ -74,7 +76,7 @@ export function LocaleProvider({ children, locale }: { children: React.ReactNode
       dir,
       isArabic: activeLocale === "ar",
       t: (key, params) => {
-        let msg = dictionary[activeLocale][key] || key;
+        let msg = dictionary[activeLocale][key] ?? key;
         if (params) {
           Object.entries(params).forEach(([k, v]) => {
             msg = msg.replace(`{${k}}`, String(v));
@@ -85,12 +87,12 @@ export function LocaleProvider({ children, locale }: { children: React.ReactNode
       tr: (en, ar) => (activeLocale === "ar" ? ar : en),
       te: (error, issues) => {
         if (!error) return null;
-        const msg = dictionary[activeLocale][error as TranslationKey] || error;
+        const msg = dictionary[activeLocale][error as TranslationKey] ?? error;
 
         if (issues && issues.length > 0) {
           const formatted = issues
             .map((i) => {
-              const translatedMsg = dictionary[activeLocale][i.message as TranslationKey] || i.message;
+              const translatedMsg = dictionary[activeLocale][i.message as TranslationKey] ?? i.message;
               let finalMsg = translatedMsg;
               if (i.params) {
                 Object.entries(i.params).forEach(([k, v]) => {
@@ -112,12 +114,12 @@ export function LocaleProvider({ children, locale }: { children: React.ReactNode
       },
       nodeTypeLabel: (code, fallback) => {
         const key = code ? nodeTypeKeyMap[code.toLowerCase()] : undefined;
-        if (key) return dictionary[activeLocale][key];
+        if (key) return dictionary[activeLocale][key] ?? key;
         return fallback ?? code ?? "";
       },
       kpiValueStatusLabel: (status) => {
         const key = status ? kpiStatusKeyMap[status.toUpperCase()] : undefined;
-        if (key) return dictionary[activeLocale][key];
+        if (key) return dictionary[activeLocale][key] ?? key;
         return status ?? "—";
       },
       formatDate: (date, options) => {
