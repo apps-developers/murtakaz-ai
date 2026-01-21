@@ -1,36 +1,11 @@
 "use server";
 
-import { headers } from "next/headers";
 import { z } from "zod";
 import { KpiValueStatus } from "@/generated/prisma-client";
 import { prisma } from "@/lib/prisma";
-import { auth } from "@/lib/auth";
 import { canEditEntityValues, getSubordinateIds } from "@/lib/permissions";
 import { resolveRoleRank } from "@/lib/roles";
-
-async function requireOrgMember() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-
-  if (!session?.user?.id) {
-    throw new Error("unauthorized");
-  }
-
-  if (!session.user.orgId) {
-    throw new Error("unauthorizedMissingOrg");
-  }
-
-  return session;
-}
-
-async function getOrgApprovalLevel(orgId: string): Promise<"MANAGER" | "EXECUTIVE" | "ADMIN"> {
-  const org = await prisma.organization.findFirst({
-    where: { id: orgId, deletedAt: null },
-    select: { kpiApprovalLevel: true },
-  });
-  return (org?.kpiApprovalLevel as "MANAGER" | "EXECUTIVE" | "ADMIN") ?? "MANAGER";
-}
+import { getOrgKpiApprovalLevel, requireOrgMember } from "@/lib/server-action-auth";
 
 /**
  * Submit entity value for approval
@@ -48,9 +23,12 @@ export async function submitEntityForApproval(input: { entityId: string; periodI
 
   try {
     // Check if user can edit this entity
-    const canEdit = await canEditEntityValues(session.user.id, parsed.data.entityId, session.user.orgId);
-    if (!canEdit) {
-      return { success: false as const, error: "unauthorized" };
+    const isAdmin = String(session.user.role) === "ADMIN";
+    if (!isAdmin) {
+      const canEdit = await canEditEntityValues(session.user.id, parsed.data.entityId, session.user.orgId);
+      if (!canEdit) {
+        return { success: false as const, error: "unauthorized" };
+      }
     }
 
     // Verify entity belongs to user's org
@@ -84,7 +62,7 @@ export async function submitEntityForApproval(input: { entityId: string; periodI
     }
 
     // Get org approval level
-    const orgApprovalLevel = await getOrgApprovalLevel(session.user.orgId);
+    const orgApprovalLevel = await getOrgKpiApprovalLevel(session.user.orgId);
     const userRole = session.user.role as string;
     const userRoleRank = resolveRoleRank(userRole);
     const requiredRoleRank = resolveRoleRank(orgApprovalLevel);
@@ -92,33 +70,37 @@ export async function submitEntityForApproval(input: { entityId: string; periodI
     // Auto-approve if user role >= required approval level
     const canAutoApprove = userRoleRank >= requiredRoleRank;
 
+    const now = new Date();
+
     if (canAutoApprove) {
-      await prisma.entityValue.update({
-        where: { id: parsed.data.periodId },
+      const res = await prisma.entityValue.updateMany({
+        where: { id: parsed.data.periodId, entityId: parsed.data.entityId, status: KpiValueStatus.DRAFT },
         data: {
           status: KpiValueStatus.APPROVED,
           submittedBy: session.user.id,
-          submittedAt: new Date(),
+          submittedAt: now,
           approvedBy: session.user.id,
-          approvedAt: new Date(),
+          approvedAt: now,
           approvalType: "AUTO",
         },
       });
 
+      if (res.count === 0) return { success: false as const, error: "periodNotDraft" };
       return { success: true as const, autoApproved: true };
-    } else {
-      await prisma.entityValue.update({
-        where: { id: parsed.data.periodId },
-        data: {
-          status: KpiValueStatus.SUBMITTED,
-          submittedBy: session.user.id,
-          submittedAt: new Date(),
-          approvalType: "MANUAL",
-        },
-      });
-
-      return { success: true as const, autoApproved: false };
     }
+
+    const res = await prisma.entityValue.updateMany({
+      where: { id: parsed.data.periodId, entityId: parsed.data.entityId, status: KpiValueStatus.DRAFT },
+      data: {
+        status: KpiValueStatus.SUBMITTED,
+        submittedBy: session.user.id,
+        submittedAt: now,
+        approvalType: "MANUAL",
+      },
+    });
+
+    if (res.count === 0) return { success: false as const, error: "periodNotDraft" };
+    return { success: true as const, autoApproved: false };
   } catch (error: unknown) {
     console.error("Failed to submit for approval:", error);
     return { success: false as const, error: "failedToSubmit" };
@@ -141,7 +123,7 @@ export async function approveEntityValue(input: { entityId: string; periodId: st
 
   try {
     // Get org approval level
-    const orgApprovalLevel = await getOrgApprovalLevel(session.user.orgId);
+    const orgApprovalLevel = await getOrgKpiApprovalLevel(session.user.orgId);
     const userRole = session.user.role as string;
     const userRoleRank = resolveRoleRank(userRole);
     const requiredRoleRank = resolveRoleRank(orgApprovalLevel);
@@ -182,14 +164,16 @@ export async function approveEntityValue(input: { entityId: string; periodId: st
       return { success: false as const, error: "periodNotSubmitted" };
     }
 
-    await prisma.entityValue.update({
-      where: { id: parsed.data.periodId },
+    const res = await prisma.entityValue.updateMany({
+      where: { id: parsed.data.periodId, entityId: parsed.data.entityId, status: KpiValueStatus.SUBMITTED },
       data: {
         status: KpiValueStatus.APPROVED,
         approvedBy: session.user.id,
         approvedAt: new Date(),
       },
     });
+
+    if (res.count === 0) return { success: false as const, error: "periodNotSubmitted" };
 
     return { success: true as const };
   } catch (error: unknown) {
@@ -215,7 +199,7 @@ export async function rejectEntityValue(input: { entityId: string; periodId: str
 
   try {
     // Get org approval level
-    const orgApprovalLevel = await getOrgApprovalLevel(session.user.orgId);
+    const orgApprovalLevel = await getOrgKpiApprovalLevel(session.user.orgId);
     const userRole = session.user.role as string;
     const userRoleRank = resolveRoleRank(userRole);
     const requiredRoleRank = resolveRoleRank(orgApprovalLevel);
@@ -260,14 +244,16 @@ export async function rejectEntityValue(input: { entityId: string; periodId: str
       ? `${period.note ? period.note + "\n\n" : ""}[REJECTED] ${parsed.data.reason}`
       : period.note;
 
-    await prisma.entityValue.update({
-      where: { id: parsed.data.periodId },
+    const res = await prisma.entityValue.updateMany({
+      where: { id: parsed.data.periodId, entityId: parsed.data.entityId, status: KpiValueStatus.SUBMITTED },
       data: {
         status: KpiValueStatus.DRAFT,
         note: rejectionNote,
         // Keep submitted info for audit trail
       },
     });
+
+    if (res.count === 0) return { success: false as const, error: "periodNotSubmitted" };
 
     return { success: true as const };
   } catch (error: unknown) {
@@ -281,13 +267,10 @@ export async function rejectEntityValue(input: { entityId: string; periodId: str
  */
 export async function getEntityApprovals(input?: { status?: "SUBMITTED" | "APPROVED" }) {
   const session = await requireOrgMember();
+  const isAdmin = String(session.user.role) === "ADMIN";
   
   // Check if user has approval authority
-  const org = await prisma.organization.findFirst({
-    where: { id: session.user.orgId, deletedAt: null },
-    select: { kpiApprovalLevel: true },
-  });
-  const orgApprovalLevel = (org?.kpiApprovalLevel as "MANAGER" | "EXECUTIVE" | "ADMIN") ?? "MANAGER";
+  const orgApprovalLevel = await getOrgKpiApprovalLevel(session.user.orgId);
   
   const userRoleRank = resolveRoleRank(session.user.role as string);
   const requiredRoleRank = resolveRoleRank(orgApprovalLevel);
@@ -297,9 +280,7 @@ export async function getEntityApprovals(input?: { status?: "SUBMITTED" | "APPRO
     throw new Error("unauthorized");
   }
   
-  // Get subordinate IDs to filter entities
-  const subordinateIds = await getSubordinateIds(session.user.id, session.user.orgId);
-  const relevantUserIds = [session.user.id, ...subordinateIds];
+  const relevantUserIds = isAdmin ? [] : [session.user.id, ...(await getSubordinateIds(session.user.id, session.user.orgId))];
   
   // Parse status filter
   const parsed = z
@@ -314,11 +295,15 @@ export async function getEntityApprovals(input?: { status?: "SUBMITTED" | "APPRO
       entity: {
         orgId: session.user.orgId,
         deletedAt: null,
-        assignments: {
-          some: {
-            userId: { in: relevantUserIds },
-          },
-        },
+        ...(isAdmin
+          ? {}
+          : {
+              assignments: {
+                some: {
+                  userId: { in: relevantUserIds },
+                },
+              },
+            }),
       },
       status: statusFilter
         ? (statusFilter as KpiValueStatus)

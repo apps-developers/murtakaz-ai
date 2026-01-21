@@ -2,7 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
+import { requireSession } from "@/lib/server-action-auth";
 import { z } from "zod";
 import { KpiApprovalLevel, Role } from "@/generated/prisma-client";
 import type { Prisma } from "@/generated/prisma-client";
@@ -151,11 +151,9 @@ const deleteUserSchema = z.object({
 
 // Helper to check if current user is SUPER_ADMIN
 async function requireSuperAdmin() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const session = await requireSession({ unauthorizedError: "unauthorized" });
 
-  if (!session || session.user.role !== "SUPER_ADMIN") {
+  if (session.user.role !== "SUPER_ADMIN") {
     throw new Error("unauthorized");
   }
   return session;

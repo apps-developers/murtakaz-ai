@@ -1,8 +1,7 @@
 "use server";
 
-import { headers } from "next/headers";
-import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { requireSession } from "@/lib/server-action-auth";
 
 const prismaOrgEntityType = (prisma as unknown as { orgEntityType?: unknown }).orgEntityType as
   | {
@@ -11,13 +10,7 @@ const prismaOrgEntityType = (prisma as unknown as { orgEntityType?: unknown }).o
   | undefined;
 
 export async function getMyOrganizationEntityTypes() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-
-  if (!session?.user?.id) {
-    throw new Error("Unauthorized");
-  }
+  const session = await requireSession({ unauthorizedError: "Unauthorized" });
 
   if (!session.user.orgId) {
     return [];

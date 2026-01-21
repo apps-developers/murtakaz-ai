@@ -2,51 +2,13 @@
 
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
+import { requireOrgAdmin, requireOrgMember } from "@/lib/server-action-auth";
 
 /**
  * Admin actions for managing entity assignments across the organization
  */
 
 import { getSubordinateIds } from "@/lib/permissions";
-
-async function requireOrgMember() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-
-  if (!session?.user?.id) {
-    throw new Error("unauthorized");
-  }
-
-  if (!session.user.orgId) {
-    throw new Error("unauthorizedMissingOrg");
-  }
-
-  return session;
-}
-
-async function requireOrgAdmin() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-
-  if (!session?.user?.id) {
-    throw new Error("unauthorized");
-  }
-
-  if (!session.user.orgId) {
-    throw new Error("unauthorizedMissingOrg");
-  }
-
-  const userRole = (session.user as { role?: string }).role;
-  if (userRole !== "ADMIN") {
-    throw new Error("unauthorized");
-  }
-
-  return session;
-}
 
 export async function getAllEntitiesWithAssignments() {
   try {

@@ -1,6 +1,5 @@
 "use server";
 
-import { headers } from "next/headers";
 import { z } from "zod";
 import {
   KpiAggregationMethod,
@@ -13,7 +12,7 @@ import {
   Status,
 } from "@/generated/prisma-client";
 import { prisma } from "@/lib/prisma";
-import { auth } from "@/lib/auth";
+import { getOrgKpiApprovalLevel, requireOrgAdmin, requireOrgMember } from "@/lib/server-action-auth";
 import { ActionValidationIssue } from "@/types/actions";
 import { getUserReadableEntityIds, getEntityAccess, canEditEntityValues, type EntityAccess } from "@/lib/permissions";
 import { resolveRoleRank } from "@/lib/roles";
@@ -23,30 +22,6 @@ function zodIssues(error: z.ZodError): ActionValidationIssue[] {
     path: i.path.map((p) => (typeof p === "string" || typeof p === "number" ? p : String(p))),
     message: i.message,
   }));
-}
-
-async function requireOrgMember() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-
-  if (!session?.user?.id) {
-    throw new Error("unauthorized");
-  }
-
-  if (!session.user.orgId) {
-    throw new Error("unauthorizedMissingOrg");
-  }
-
-  return session;
-}
-
-async function requireOrgAdmin() {
-  const session = await requireOrgMember();
-  if (session.user.role !== "ADMIN") {
-    throw new Error("unauthorizedAdminRequired");
-  }
-  return session;
 }
 
 
@@ -692,12 +667,7 @@ export async function getOrgEntityDetail(input: { entityId: string }) {
   }
 
   // Get approval context
-  const org = await prisma.organization.findFirst({
-    where: { id: session.user.orgId, deletedAt: null },
-    select: { kpiApprovalLevel: true },
-  });
-  const orgApprovalLevel = (org?.kpiApprovalLevel as "MANAGER" | "EXECUTIVE" | "ADMIN") ?? "MANAGER";
-
+  const orgApprovalLevel = await getOrgKpiApprovalLevel(session.user.orgId);
   const userRoleRank = resolveRoleRank(session.user.role);
   const requiredRoleRank = resolveRoleRank(orgApprovalLevel);
   const canApprove = userRoleRank >= requiredRoleRank;

@@ -1,18 +1,17 @@
 "use server";
 
-import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { headers } from "next/headers";
+import { requireOrgMember } from "@/lib/server-action-auth";
 
-async function requireOrgMember() {
-  const session = await auth.api.getSession({ headers: await headers() });
-  if (!session?.user?.id) throw new Error("Unauthorized");
-  if (!session.user.orgId) throw new Error("Unauthorized: Missing organization scope");
-  return session;
+async function requireProfileOrgMember() {
+  return requireOrgMember({
+    unauthorizedError: "Unauthorized",
+    missingOrgError: "Unauthorized: Missing organization scope",
+  });
 }
 
 export async function getMyProfile() {
-  const session = await requireOrgMember();
+  const session = await requireProfileOrgMember();
 
   const user = await prisma.user.findFirst({
     where: {

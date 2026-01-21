@@ -1,9 +1,8 @@
 "use server";
 
-import { headers } from "next/headers";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
-import { auth } from "@/lib/auth";
+import { requireOrgMember } from "@/lib/server-action-auth";
 import { ActionValidationIssue } from "@/types/actions";
 
 const prismaNode = (prisma as unknown as { node: unknown }).node as {
@@ -41,13 +40,6 @@ function zodIssues(error: z.ZodError): ActionValidationIssue[] {
     path: i.path.map((p) => (typeof p === "string" || typeof p === "number" ? p : String(p))),
     message: i.message,
   }));
-}
-
-async function requireOrgMember() {
-  const session = await auth.api.getSession({ headers: await headers() });
-  if (!session?.user?.id) throw new Error("unauthorized");
-  if (!session.user.orgId) throw new Error("unauthorizedMissingOrg");
-  return session;
 }
 
 function assertCanUseResponsibilities(role: unknown) {

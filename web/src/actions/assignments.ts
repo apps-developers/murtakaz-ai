@@ -2,32 +2,14 @@
 
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
+import { requireOrgAdmin } from "@/lib/server-action-auth";
 
 /**
  * Actions for managing entity assignments
  */
 
-async function requireOrgAdmin() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-
-  if (!session?.user?.id) {
-    throw new Error("unauthorized");
-  }
-
-  if (!session.user.orgId) {
-    throw new Error("unauthorizedMissingOrg");
-  }
-
-  const userRole = (session.user as { role?: string }).role;
-  if (userRole !== "ADMIN") {
-    throw new Error("unauthorized");
-  }
-
-  return session;
+async function requireAssignmentsAdmin() {
+  return requireOrgAdmin({ adminRequiredError: "unauthorized" });
 }
 
 const assignEntitySchema = z.object({
@@ -37,7 +19,7 @@ const assignEntitySchema = z.object({
 
 export async function assignEntityToUsers(input: z.infer<typeof assignEntitySchema>) {
   try {
-    const session = await requireOrgAdmin();
+    const session = await requireAssignmentsAdmin();
     const parsed = assignEntitySchema.safeParse(input);
 
     if (!parsed.success) {
@@ -109,7 +91,7 @@ const unassignEntitySchema = z.object({
 
 export async function unassignEntityFromUsers(input: z.infer<typeof unassignEntitySchema>) {
   try {
-    const session = await requireOrgAdmin();
+    await requireAssignmentsAdmin();
     const parsed = unassignEntitySchema.safeParse(input);
 
     if (!parsed.success) {
@@ -139,7 +121,7 @@ const getEntityAssignmentsSchema = z.object({
 
 export async function getEntityAssignments(input: z.infer<typeof getEntityAssignmentsSchema>) {
   try {
-    const session = await requireOrgAdmin();
+    const session = await requireAssignmentsAdmin();
     const parsed = getEntityAssignmentsSchema.safeParse(input);
 
     if (!parsed.success) {
@@ -188,7 +170,7 @@ export async function getEntityAssignments(input: z.infer<typeof getEntityAssign
 
 export async function getUserAssignableUsers() {
   try {
-    const session = await requireOrgAdmin();
+    const session = await requireAssignmentsAdmin();
 
     const users = await prisma.user.findMany({
       where: {

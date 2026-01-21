@@ -1,9 +1,8 @@
 "use server";
 
-import { headers } from "next/headers";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
-import { auth } from "@/lib/auth";
+import { requireOrgMember } from "@/lib/server-action-auth";
 import { getMyEffectiveKpiIds } from "@/actions/responsibilities";
 import type { Role, Status } from "@/generated/prisma-client";
 
@@ -102,13 +101,6 @@ function buildAncestorIds(input: { startIds: string[]; parentById: Map<string, s
   }
 
   return out;
-}
-
-async function requireOrgMember() {
-  const session = await auth.api.getSession({ headers: await headers() });
-  if (!session?.user?.id) throw new Error("Unauthorized");
-  if (!session.user.orgId) throw new Error("Unauthorized: Missing organization scope");
-  return session;
 }
 
 async function getEnabledNodeTypesByOrder(orgId: string) {

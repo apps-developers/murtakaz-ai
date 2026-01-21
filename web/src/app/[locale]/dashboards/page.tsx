@@ -61,7 +61,7 @@ export default function DashboardsPage() {
               </Link>
             </Button>
             <Button asChild size="sm">
-              <Link href={`/${locale}/kpis`}>
+              <Link href={`/${locale}/entities/kpi`}>
                 <Icon name="tabler:target" className="me-2 h-4 w-4" />
                 {t("viewAllKpis")}
               </Link>
@@ -189,7 +189,7 @@ export default function DashboardsPage() {
                 <CardDescription className="mt-1">{t("kpiUpdatesAndSubmissions")}</CardDescription>
               </div>
               <Button variant="ghost" size="sm" asChild>
-                <Link href={`/${locale}/kpis`}>{t("viewDetails")}<Icon name="tabler:arrow-right" className="ms-2 h-4 w-4" /></Link>
+                <Link href={`/${locale}/entities/kpi`}>{t("viewDetails")}<Icon name="tabler:arrow-right" className="ms-2 h-4 w-4" /></Link>
               </Button>
             </div>
           </CardHeader>
@@ -231,7 +231,7 @@ export default function DashboardsPage() {
           <CardContent>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
               <Button asChild variant="outline" className="h-auto flex-col items-start gap-2 p-4">
-                <Link href={`/${locale}/kpis`}>
+                <Link href={`/${locale}/entities/kpi`}>
                   <Icon name="tabler:target" className="h-5 w-5 text-blue-500" />
                   <div className="text-left">
                     <div className="font-semibold">{t("kpiManagement")}</div>

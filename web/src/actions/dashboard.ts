@@ -1,9 +1,8 @@
 "use server";
 
-import { headers } from "next/headers";
-import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { getMyEffectiveKpiIds } from "@/actions/responsibilities";
+import { requireOrgMember } from "@/lib/server-action-auth";
 import { KpiValueStatus } from "@/generated/prisma-client";
 
 const prismaOrganization = (prisma as any).organization;
@@ -24,13 +23,6 @@ const ROLE_RANK: Record<string, number> = {
 function resolveRoleRank(role: unknown) {
   if (typeof role !== "string") return 0;
   return ROLE_RANK[role] ?? 0;
-}
-
-async function requireOrgMember() {
-  const session = await auth.api.getSession({ headers: await headers() });
-  if (!session?.user?.id) throw new Error("Unauthorized");
-  if (!session.user.orgId) throw new Error("Unauthorized: Missing organization scope");
-  return session;
 }
 
 function buildChildrenByParent(nodes: Array<{ id: string; parentId: string | null }>) {

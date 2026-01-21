@@ -1,26 +1,14 @@
 "use server";
 
-import { headers } from "next/headers";
 import { z } from "zod";
 import { Role, KpiApprovalLevel } from "@/generated/prisma-client";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
+import { requireOrgAdmin as requireOrgAdminSession } from "@/lib/server-action-auth";
 import { ActionValidationIssue } from "@/types/actions";
 
 async function requireOrgAdmin() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-
-  if (!session || session.user.role !== "ADMIN") {
-    throw new Error("unauthorizedAdminRequired");
-  }
-
-  if (!session.user.orgId) {
-    throw new Error("unauthorizedMissingOrg");
-  }
-
-  return session;
+  return requireOrgAdminSession({ unauthorizedError: "unauthorizedAdminRequired" });
 }
 
 const managerEligibleRoles = [Role.MANAGER, Role.EXECUTIVE, Role.ADMIN] as const;
