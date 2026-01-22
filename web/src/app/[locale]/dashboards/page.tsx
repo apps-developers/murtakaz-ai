@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
 import { PageHeader } from "@/components/page-header";
 import { Icon } from "@/components/icon";
 import { AreaLine, Bar, Donut, SparkLine } from "@/components/charts/dashboard-charts";
@@ -9,42 +10,72 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { useLocale } from "@/providers/locale-provider";
-import type { TranslationKey } from "@/providers/locale-provider";
+import { getDashboardInsights } from "@/actions/insights";
 
-const SAMPLE_DATA = {
-  metrics: { totalKpis: 42, completionRate: 87, activeProjects: 15, revenue: 2458000, revenueChange: 12.5, performance: 94, teamMembers: 24, tasksCompleted: 156 },
-  kpiTrends: [65, 72, 68, 78, 85, 82, 87, 91, 89, 94, 92, 96],
-  revenueTrends: [1200, 1450, 1380, 1620, 1890, 1750, 2100, 2250, 2180, 2400, 2320, 2458],
-  categoryPerformance: { categories: ["Strategy", "Operations", "Finance", "Marketing", "HR", "IT"], values: [92, 88, 95, 85, 90, 87] },
-  statusDistribution: [
-    { nameKey: "onTrack", value: 28, color: "#10b981" },
-    { nameKey: "atRisk", value: 8, color: "#f59e0b" },
-    { nameKey: "behind", value: 4, color: "#ef4444" },
-    { nameKey: "completed", value: 18, color: "#3b82f6" },
-  ],
-  monthlyActivity: { categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"], values: [45, 52, 48, 61, 58, 67] },
-  topPerformers: [
-    { name: "Customer Satisfaction", value: 98, target: 95, status: "exceeded" },
-    { name: "Revenue Growth", value: 112, target: 100, status: "exceeded" },
-    { name: "Cost Efficiency", value: 94, target: 90, status: "ontrack" },
-    { name: "Team Productivity", value: 89, target: 85, status: "ontrack" },
-    { name: "Innovation Index", value: 76, target: 80, status: "atrisk" },
-  ],
-};
-
-function formatCurrency(value: number) {
-  return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(value);
+function clamp(value: number, min: number, max: number) {
+  return Math.max(min, Math.min(max, value));
 }
 
-function getStatusColor(status: string) {
-  if (status === "exceeded") return "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20";
-  if (status === "ontrack") return "bg-blue-500/10 text-blue-700 dark:text-blue-400 border-blue-500/20";
+function statusColorForAchievement(value: number) {
+  if (value >= 85) return "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20";
+  if (value >= 70) return "bg-blue-500/10 text-blue-700 dark:text-blue-400 border-blue-500/20";
   return "bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/20";
 }
 
 export default function DashboardsPage() {
-  const { locale, t } = useLocale();
-  const data = SAMPLE_DATA;
+  const { locale, t, df, formatDate } = useLocale();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [data, setData] = useState<Awaited<ReturnType<typeof getDashboardInsights>> | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+    setLoading(true);
+    setError(null);
+    void (async () => {
+      try {
+        const res = await getDashboardInsights();
+        if (!mounted) return;
+        setData(res);
+      } catch (e: unknown) {
+        if (!mounted) return;
+        setError(e instanceof Error ? e.message : t("failedToLoad"));
+        setData(null);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    })();
+
+    return () => {
+      mounted = false;
+    };
+  }, [t]);
+
+  const topTypeBar = useMemo(() => {
+    const types = data?.topTypes ?? [];
+    return {
+      categories: types.map((x) => df(x.name, x.nameAr)),
+      values: types.map((x) => x.count),
+    };
+  }, [data?.topTypes, df]);
+
+  const monthLabels = useMemo(() => {
+    const cats = data?.monthlyActivity.categories ?? [];
+    return cats.map((iso) => formatDate(iso, { month: "short" }));
+  }, [data?.monthlyActivity.categories, formatDate]);
+
+  const statusDonut = useMemo(() => {
+    const counts = data?.statusCounts ?? [];
+    const items = counts
+      .map((x) => {
+        const up = String(x.status ?? "").toUpperCase();
+        const label = up === "ACTIVE" ? t("active") : up === "AT_RISK" ? t("atRisk") : up === "COMPLETED" ? t("completed") : t("planned");
+        const color = up === "COMPLETED" ? "#3b82f6" : up === "AT_RISK" ? "#f59e0b" : up === "ACTIVE" ? "#10b981" : "#64748b";
+        return { name: label, value: x.count, color };
+      })
+      .filter((x) => x.value > 0);
+    return items;
+  }, [data?.statusCounts, t]);
 
   return (
     <div className="space-y-6">
@@ -70,6 +101,15 @@ export default function DashboardsPage() {
         }
       />
 
+      {error ? (
+        <Card className="bg-card/70 backdrop-blur shadow-sm">
+          <CardHeader>
+            <CardTitle className="text-base">{t("dashboardFailedToLoad")}</CardTitle>
+            <CardDescription className="text-muted-foreground">{error}</CardDescription>
+          </CardHeader>
+        </Card>
+      ) : null}
+
       <section className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card className="relative overflow-hidden bg-gradient-to-br from-blue-500/10 via-card to-card backdrop-blur border-blue-500/20">
           <CardHeader className="pb-3">
@@ -77,33 +117,31 @@ export default function DashboardsPage() {
               <Icon name="tabler:target" className="h-4 w-4 text-blue-500" />
               {t("totalKpis")}
             </CardDescription>
-            <CardTitle className="text-4xl font-bold">{data.metrics.totalKpis}</CardTitle>
+            <CardTitle className="text-4xl font-bold">{loading ? "—" : (data?.metrics.totalKpis ?? 0)}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center justify-between text-sm">
               <span className="text-muted-foreground">{t("completionRate")}</span>
-              <Badge variant="secondary" className="bg-blue-500/10 text-blue-700 dark:text-blue-400">{data.metrics.completionRate}%</Badge>
+              <Badge variant="secondary" className="bg-blue-500/10 text-blue-700 dark:text-blue-400">{loading ? "—" : `${data?.metrics.completionRate ?? 0}%`}</Badge>
             </div>
-            <div className="mt-3"><SparkLine values={data.kpiTrends} height={60} color="#3b82f6" /></div>
+            <div className="mt-3"><SparkLine values={data?.monthlyActivity.values ?? []} height={60} color="#3b82f6" /></div>
           </CardContent>
         </Card>
 
         <Card className="relative overflow-hidden bg-gradient-to-br from-emerald-500/10 via-card to-card backdrop-blur border-emerald-500/20">
           <CardHeader className="pb-3">
             <CardDescription className="flex items-center gap-2">
-              <Icon name="tabler:currency-dollar" className="h-4 w-4 text-emerald-500" />
-              {t("revenue")}
+              <Icon name="tabler:activity" className="h-4 w-4 text-emerald-500" />
+              {t("monthlyActivityTrend")}
             </CardDescription>
-            <CardTitle className="text-4xl font-bold">{formatCurrency(data.metrics.revenue)}</CardTitle>
+            <CardTitle className="text-4xl font-bold">{loading ? "—" : (data?.metrics.updatesLast30Days ?? 0)}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center justify-between text-sm">
-              <span className="text-muted-foreground">{t("growth")}</span>
-              <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-700 dark:text-emerald-400">
-                <Icon name="tabler:trending-up" className="me-1 h-3 w-3" />+{data.metrics.revenueChange}%
-              </Badge>
+              <span className="text-muted-foreground">{t("kpiUpdatesAndSubmissions")}</span>
+              <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-700 dark:text-emerald-400">{t("daysShort")} 30</Badge>
             </div>
-            <div className="mt-3"><SparkLine values={data.revenueTrends} height={60} color="#10b981" /></div>
+            <div className="mt-3"><SparkLine values={data?.monthlyActivity.values ?? []} height={60} color="#10b981" /></div>
           </CardContent>
         </Card>
 
@@ -113,15 +151,15 @@ export default function DashboardsPage() {
               <Icon name="tabler:briefcase" className="h-4 w-4 text-violet-500" />
               {t("activeProjects")}
             </CardDescription>
-            <CardTitle className="text-4xl font-bold">{data.metrics.activeProjects}</CardTitle>
+            <CardTitle className="text-4xl font-bold">{loading ? "—" : (data?.metrics.activeProjects ?? 0)}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center justify-between text-sm">
-              <span className="text-muted-foreground">{t("teamMembers")}</span>
-              <Badge variant="secondary" className="bg-violet-500/10 text-violet-700 dark:text-violet-400">{data.metrics.teamMembers}</Badge>
+              <span className="text-muted-foreground">{t("totalUsers")}</span>
+              <Badge variant="secondary" className="bg-violet-500/10 text-violet-700 dark:text-violet-400">{loading ? "—" : (data?.metrics.users ?? 0)}</Badge>
             </div>
-            <Progress value={75} className="mt-3 h-2" />
-            <p className="mt-2 text-xs text-muted-foreground">75% {t("onTrack")}</p>
+            <Progress value={clamp(loading ? 0 : (data?.metrics.completionRate ?? 0), 0, 100)} className="mt-3 h-2" />
+            <p className="mt-2 text-xs text-muted-foreground">{t("completionRate")} • {loading ? "—" : `${data?.metrics.completionRate ?? 0}%`}</p>
           </CardContent>
         </Card>
 
@@ -131,15 +169,15 @@ export default function DashboardsPage() {
               <Icon name="tabler:chart-bar" className="h-4 w-4 text-amber-500" />
               {t("performanceScore")}
             </CardDescription>
-            <CardTitle className="text-4xl font-bold">{data.metrics.performance}%</CardTitle>
+            <CardTitle className="text-4xl font-bold">{loading ? "—" : `${data?.metrics.overallHealth ?? 0}%`}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center justify-between text-sm">
-              <span className="text-muted-foreground">{t("tasksCompleted")}</span>
-              <Badge variant="secondary" className="bg-amber-500/10 text-amber-700 dark:text-amber-400">{data.metrics.tasksCompleted}</Badge>
+              <span className="text-muted-foreground">{t("approved")}</span>
+              <Badge variant="secondary" className="bg-amber-500/10 text-amber-700 dark:text-amber-400">{loading ? "—" : (data?.metrics.approvedLast30Days ?? 0)}</Badge>
             </div>
-            <Progress value={data.metrics.performance} className="mt-3 h-2" />
-            <p className="mt-2 text-xs text-muted-foreground">{t("excellentPerformance")}</p>
+            <Progress value={data?.metrics.overallHealth ?? 0} className="mt-3 h-2" />
+            <p className="mt-2 text-xs text-muted-foreground">{t("atAGlanceKpiPerformanceDesc")}</p>
           </CardContent>
         </Card>
       </section>
@@ -149,13 +187,21 @@ export default function DashboardsPage() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle className="text-lg">{t("categoryPerformance")}</CardTitle>
-                <CardDescription className="mt-1">{t("performanceMetricsAcrossDepartments")}</CardDescription>
+                <CardTitle className="text-lg">{t("browseByTypeDesc")}</CardTitle>
+                <CardDescription className="mt-1">{t("browseByTypeDesc")}</CardDescription>
               </div>
-              <Badge variant="outline" className="border-border bg-muted/30">6 {t("categories")}</Badge>
+              <Badge variant="outline" className="border-border bg-muted/30">{loading ? "—" : `${(data?.topTypes?.length ?? 0)} ${t("categories")}`}</Badge>
             </div>
           </CardHeader>
-          <CardContent><Bar categories={data.categoryPerformance.categories} values={data.categoryPerformance.values} height={300} color="#3b82f6" /></CardContent>
+          <CardContent>
+            {loading ? (
+              <div className="rounded-xl border border-border bg-muted/10 p-8 text-center text-sm text-muted-foreground">{t("loading")}</div>
+            ) : topTypeBar.categories.length === 0 ? (
+              <div className="rounded-xl border border-border bg-muted/10 p-8 text-center text-sm text-muted-foreground">{t("noItemsYet")}</div>
+            ) : (
+              <Bar categories={topTypeBar.categories} values={topTypeBar.values} height={300} color="#3b82f6" />
+            )}
+          </CardContent>
         </Card>
 
         <Card className="bg-card/70 backdrop-blur shadow-sm">
@@ -164,18 +210,13 @@ export default function DashboardsPage() {
             <CardDescription className="mt-1">{t("currentStatusOverview")}</CardDescription>
           </CardHeader>
           <CardContent>
-            <Donut items={data.statusDistribution.map(item => ({ name: t(item.nameKey as TranslationKey), value: item.value, color: item.color }))} height={280} />
-            <div className="mt-4 space-y-2">
-              {data.statusDistribution.map((item) => (
-                <div key={item.nameKey} className="flex items-center justify-between text-sm">
-                  <div className="flex items-center gap-2">
-                    <div className="h-3 w-3 rounded-full" style={{ backgroundColor: item.color }} />
-                    <span className="text-muted-foreground">{t(item.nameKey as TranslationKey)}</span>
-                  </div>
-                  <span className="font-semibold">{item.value}</span>
-                </div>
-              ))}
-            </div>
+            {loading ? (
+              <div className="rounded-xl border border-border bg-muted/10 p-8 text-center text-sm text-muted-foreground">{t("loading")}</div>
+            ) : statusDonut.length === 0 ? (
+              <div className="rounded-xl border border-border bg-muted/10 p-8 text-center text-sm text-muted-foreground">{t("noItemsYet")}</div>
+            ) : (
+              <Donut items={statusDonut} height={280} />
+            )}
           </CardContent>
         </Card>
       </section>
@@ -193,7 +234,13 @@ export default function DashboardsPage() {
               </Button>
             </div>
           </CardHeader>
-          <CardContent><AreaLine categories={data.monthlyActivity.categories} values={data.monthlyActivity.values} height={280} color="#8b5cf6" /></CardContent>
+          <CardContent>
+            {loading ? (
+              <div className="rounded-xl border border-border bg-muted/10 p-8 text-center text-sm text-muted-foreground">{t("loading")}</div>
+            ) : (
+              <AreaLine categories={monthLabels} values={data?.monthlyActivity.values ?? []} height={280} color="#8b5cf6" />
+            )}
+          </CardContent>
         </Card>
 
         <Card className="bg-card/70 backdrop-blur shadow-sm">
@@ -202,22 +249,30 @@ export default function DashboardsPage() {
             <CardDescription className="mt-1">{t("kpisExceedingTargets")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            {data.topPerformers.map((performer, idx) => (
-              <div key={idx} className="space-y-2">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="font-medium">{performer.name}</span>
-                  <Badge variant="outline" className={getStatusColor(performer.status)}>{performer.value}%</Badge>
+            {loading ? (
+              <div className="rounded-xl border border-border bg-muted/10 p-8 text-center text-sm text-muted-foreground">{t("loading")}</div>
+            ) : (data?.topKpis?.length ?? 0) === 0 ? (
+              <div className="rounded-xl border border-border bg-muted/10 p-8 text-center text-sm text-muted-foreground">{t("noKpisFound")}</div>
+            ) : (
+              data?.topKpis?.map((kpi) => (
+                <div key={kpi.id} className="space-y-2">
+                  <div className="flex items-center justify-between text-sm">
+                    <Link
+                      href={`/${locale}/entities/kpi/${kpi.id}`}
+                      className="font-medium hover:underline underline-offset-4 decoration-primary/40 hover:decoration-primary/70"
+                    >
+                      {df(kpi.title, kpi.titleAr)}
+                    </Link>
+                    <Badge variant="outline" className={statusColorForAchievement(kpi.value ?? 0)}>{kpi.value ?? 0}%</Badge>
+                  </div>
+                  <Progress value={kpi.value ?? 0} className="h-2" />
+                  <div className="flex items-center justify-between text-xs text-muted-foreground">
+                    <span>{t("target")}: 100%</span>
+                    <span>{kpi.updatedAt ? formatDate(kpi.updatedAt) : "—"}</span>
+                  </div>
                 </div>
-                <div className="relative">
-                  <Progress value={(performer.value / performer.target) * 100} className="h-2" />
-                  <div className="absolute top-0 h-2 w-0.5 bg-muted-foreground/40" style={{ left: `${(100 / performer.target) * 100}%` }} />
-                </div>
-                <div className="flex items-center justify-between text-xs text-muted-foreground">
-                  <span>{t("target")}: {performer.target}%</span>
-                  <span>{performer.value >= performer.target ? <span className="text-emerald-600 dark:text-emerald-400">+{performer.value - performer.target}%</span> : <span className="text-amber-600 dark:text-amber-400">{performer.value - performer.target}%</span>}</span>
-                </div>
-              </div>
-            ))}
+              )) ?? null
+            )}
           </CardContent>
         </Card>
       </section>

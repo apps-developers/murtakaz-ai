@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
 import { PageHeader } from "@/components/page-header";
 import { Icon } from "@/components/icon";
 import { AreaLine, Bar, Donut } from "@/components/charts/dashboard-charts";
@@ -9,54 +10,64 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { useLocale } from "@/providers/locale-provider";
-import type { TranslationKey } from "@/providers/locale-provider";
+import { getOverviewInsights } from "@/actions/insights";
 
-const SAMPLE_DATA = {
-  summary: { totalStrategies: 5, totalObjectives: 24, totalKpis: 42, overallHealth: 89, criticalAlerts: 3, upcomingDeadlines: 7 },
-  strategicAlignment: { categories: ["Vision", "Mission", "Values", "Goals", "Initiatives"], values: [95, 92, 88, 85, 90] },
-  healthDistribution: [
-    { nameKey: "excellent", value: 18, color: "#10b981" },
-    { nameKey: "good", value: 14, color: "#3b82f6" },
-    { nameKey: "fair", value: 7, color: "#f59e0b" },
-    { nameKey: "needsAttention", value: 3, color: "#ef4444" },
-  ],
-  quarterlyProgress: { categories: ["Q1", "Q2", "Q3", "Q4"], values: [78, 85, 88, 92] },
-  recentActivities: [
-    { title: "Strategic Review Completed", time: "2 hours ago", status: "completed", icon: "tabler:check" },
-    { title: "Q4 Targets Updated", time: "5 hours ago", status: "updated", icon: "tabler:edit" },
-    { title: "New Initiative Approved", time: "1 day ago", status: "new", icon: "tabler:plus" },
-    { title: "Risk Assessment Pending", time: "2 days ago", status: "pending", icon: "tabler:alert-circle" },
-  ],
-  upcomingMilestones: [
-    { name: "Annual Strategy Review", date: "Jan 30, 2026", progress: 75, daysLeft: 16 },
-    { name: "Q1 OKR Planning", date: "Feb 15, 2026", progress: 45, daysLeft: 32 },
-    { name: "Budget Approval", date: "Mar 1, 2026", progress: 30, daysLeft: 46 },
-  ],
-  teamPerformance: [
-    { team: "Executive", score: 96, trendKey: "up", color: "#8b5cf6" },
-    { team: "Operations", score: 91, trendKey: "up", color: "#3b82f6" },
-    { team: "Sales", score: 88, trendKey: "stable", color: "#10b981" },
-    { team: "Marketing", score: 85, trendKey: "down", color: "#f59e0b" },
-    { team: "IT", score: 92, trendKey: "up", color: "#06b6d4" },
-  ],
-};
-
-function getActivityIcon(status: string) {
-  if (status === "completed") return { name: "tabler:check", color: "text-emerald-500" };
-  if (status === "updated") return { name: "tabler:edit", color: "text-blue-500" };
-  if (status === "new") return { name: "tabler:plus", color: "text-violet-500" };
-  return { name: "tabler:alert-circle", color: "text-amber-500" };
-}
-
-function getTrendIcon(trend: string) {
-  if (trend === "up") return { name: "tabler:trending-up", color: "text-emerald-500" };
-  if (trend === "down") return { name: "tabler:trending-down", color: "text-rose-500" };
-  return { name: "tabler:minus", color: "text-slate-500" };
+function activityBadge(status: string) {
+  const up = String(status ?? "").toUpperCase();
+  if (up === "APPROVED") return { icon: "tabler:check", color: "text-emerald-500" };
+  if (up === "SUBMITTED") return { icon: "tabler:send", color: "text-blue-500" };
+  if (up === "DRAFT") return { icon: "tabler:pencil", color: "text-slate-500" };
+  return { icon: "tabler:clock", color: "text-amber-500" };
 }
 
 export default function OverviewPage() {
-  const { locale, t } = useLocale();
-  const data = SAMPLE_DATA;
+  const { locale, t, df, formatDate, kpiValueStatusLabel } = useLocale();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [data, setData] = useState<Awaited<ReturnType<typeof getOverviewInsights>> | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+    setLoading(true);
+    setError(null);
+    void (async () => {
+      try {
+        const res = await getOverviewInsights();
+        if (!mounted) return;
+        setData(res);
+      } catch (e: unknown) {
+        if (!mounted) return;
+        setError(e instanceof Error ? e.message : t("failedToLoad"));
+        setData(null);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    })();
+
+    return () => {
+      mounted = false;
+    };
+  }, [t]);
+
+  const topTypeBar = useMemo(() => {
+    const types = data?.topTypes ?? [];
+    return {
+      categories: types.map((x) => df(x.name, x.nameAr)),
+      values: types.map((x) => x.count),
+    };
+  }, [data?.topTypes, df]);
+
+  const freshnessDonut = useMemo(() => {
+    const f = data?.freshness;
+    if (!f) return [];
+    return [
+      { name: t("excellent"), value: f.excellent, color: "#10b981" },
+      { name: t("good"), value: f.good, color: "#3b82f6" },
+      { name: t("fair"), value: f.fair, color: "#f59e0b" },
+      { name: t("needsAttention"), value: f.needsAttention, color: "#ef4444" },
+      { name: t("statusNoData"), value: f.noData, color: "#64748b" },
+    ].filter((x) => x.value > 0);
+  }, [data?.freshness, t]);
 
   return (
     <div className="space-y-6">
@@ -82,6 +93,81 @@ export default function OverviewPage() {
         }
       />
 
+      {error ? (
+        <Card className="bg-card/70 backdrop-blur shadow-sm">
+          <CardHeader>
+            <CardTitle className="text-base">{t("dashboardFailedToLoad")}</CardTitle>
+            <CardDescription className="text-muted-foreground">{error}</CardDescription>
+          </CardHeader>
+        </Card>
+      ) : null}
+
+      <section className="grid gap-6 lg:grid-cols-3">
+        <Card className="bg-gradient-to-br from-primary/15 via-card to-card backdrop-blur border-primary/20 lg:col-span-2">
+          <CardHeader className="space-y-2">
+            <CardTitle className="text-lg">{t("welcomeBack")}</CardTitle>
+            <CardDescription className="text-muted-foreground">
+              {loading
+                ? t("loading")
+                : `${data?.user?.name ?? "—"} • ${df(data?.org?.name ?? "—", data?.org?.nameAr ?? null)}`}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              <Button asChild variant="outline" className="h-auto justify-start gap-3 p-4">
+                <Link href={`/${locale}/entities/kpi`}>
+                  <Icon name="tabler:target" className="h-5 w-5 text-blue-500" />
+                  <div className="text-left">
+                    <div className="font-semibold">{t("kpiManagement")}</div>
+                    <div className="text-xs text-muted-foreground">{t("viewAndManageKpis")}</div>
+                  </div>
+                </Link>
+              </Button>
+              <Button asChild variant="outline" className="h-auto justify-start gap-3 p-4">
+                <Link href={`/${locale}/approvals`}>
+                  <Icon name="tabler:gavel" className="h-5 w-5 text-amber-500" />
+                  <div className="text-left">
+                    <div className="font-semibold">{t("approvals")}</div>
+                    <div className="text-xs text-muted-foreground">{t("approvalsSubtitle")}</div>
+                  </div>
+                </Link>
+              </Button>
+              <Button asChild variant="outline" className="h-auto justify-start gap-3 p-4">
+                <Link href={`/${locale}/responsibilities`}>
+                  <Icon name="tabler:user-check" className="h-5 w-5 text-violet-500" />
+                  <div className="text-left">
+                    <div className="font-semibold">{t("responsibilities")}</div>
+                    <div className="text-xs text-muted-foreground">{t("manageAssignments")}</div>
+                  </div>
+                </Link>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-card/70 backdrop-blur shadow-sm">
+          <CardHeader>
+            <CardTitle className="text-base">{t("coverageSnapshot")}</CardTitle>
+            <CardDescription className="text-muted-foreground">{t("atAGlanceKpiPerformanceDesc")}</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-muted-foreground">{t("kpis")}</span>
+              <span className="font-semibold">{loading ? "—" : (data?.summary.totalKpis ?? 0)}</span>
+            </div>
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-muted-foreground">{t("approvalQueueAgingDesc")}</span>
+              <span className="font-semibold">{loading ? "—" : (data?.summary.pendingApprovals ?? 0)}</span>
+            </div>
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-muted-foreground">{t("health")}</span>
+              <span className="font-semibold">{loading ? "—" : `${data?.summary.overallHealth ?? 0}%`}</span>
+            </div>
+            <Progress value={data?.summary.overallHealth ?? 0} className="h-2" />
+          </CardContent>
+        </Card>
+      </section>
+
       <section className="grid gap-4 md:grid-cols-2 lg:grid-cols-6">
         <Card className="bg-gradient-to-br from-violet-500/10 to-card backdrop-blur border-violet-500/20">
           <CardHeader className="pb-3">
@@ -89,7 +175,7 @@ export default function OverviewPage() {
               <Icon name="tabler:target-arrow" className="h-4 w-4" />
               {t("strategies")}
             </CardDescription>
-            <CardTitle className="text-3xl font-bold">{data.summary.totalStrategies}</CardTitle>
+            <CardTitle className="text-3xl font-bold">{loading ? "—" : (data?.summary.totalStrategies ?? 0)}</CardTitle>
           </CardHeader>
           <CardContent><p className="text-xs text-muted-foreground">{t("activeStrategicInitiatives")}</p></CardContent>
         </Card>
@@ -100,7 +186,7 @@ export default function OverviewPage() {
               <Icon name="tabler:flag-3" className="h-4 w-4" />
               {t("objectives")}
             </CardDescription>
-            <CardTitle className="text-3xl font-bold">{data.summary.totalObjectives}</CardTitle>
+            <CardTitle className="text-3xl font-bold">{loading ? "—" : (data?.summary.totalObjectives ?? 0)}</CardTitle>
           </CardHeader>
           <CardContent><p className="text-xs text-muted-foreground">{t("organizationalObjectives")}</p></CardContent>
         </Card>
@@ -111,7 +197,7 @@ export default function OverviewPage() {
               <Icon name="tabler:chart-bar" className="h-4 w-4" />
               {t("kpis")}
             </CardDescription>
-            <CardTitle className="text-3xl font-bold">{data.summary.totalKpis}</CardTitle>
+            <CardTitle className="text-3xl font-bold">{loading ? "—" : (data?.summary.totalKpis ?? 0)}</CardTitle>
           </CardHeader>
           <CardContent><p className="text-xs text-muted-foreground">{t("keyPerformanceIndicators")}</p></CardContent>
         </Card>
@@ -122,31 +208,31 @@ export default function OverviewPage() {
               <Icon name="tabler:activity" className="h-4 w-4" />
               {t("health")}
             </CardDescription>
-            <CardTitle className="text-3xl font-bold">{data.summary.overallHealth}%</CardTitle>
+            <CardTitle className="text-3xl font-bold">{loading ? "—" : `${data?.summary.overallHealth ?? 0}%`}</CardTitle>
           </CardHeader>
-          <CardContent><Progress value={data.summary.overallHealth} className="h-1.5" /></CardContent>
+          <CardContent><Progress value={data?.summary.overallHealth ?? 0} className="h-1.5" /></CardContent>
         </Card>
 
         <Card className="bg-gradient-to-br from-amber-500/10 to-card backdrop-blur border-amber-500/20">
           <CardHeader className="pb-3">
             <CardDescription className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
               <Icon name="tabler:alert-triangle" className="h-4 w-4" />
-              {t("alerts")}
+              {t("approvals")}
             </CardDescription>
-            <CardTitle className="text-3xl font-bold">{data.summary.criticalAlerts}</CardTitle>
+            <CardTitle className="text-3xl font-bold">{loading ? "—" : (data?.summary.pendingApprovals ?? 0)}</CardTitle>
           </CardHeader>
-          <CardContent><p className="text-xs text-muted-foreground">{t("itemsNeedAttention")}</p></CardContent>
+          <CardContent><p className="text-xs text-muted-foreground">{t("approvalQueueAgingDesc")}</p></CardContent>
         </Card>
 
         <Card className="bg-gradient-to-br from-rose-500/10 to-card backdrop-blur border-rose-500/20">
           <CardHeader className="pb-3">
             <CardDescription className="flex items-center gap-2 text-rose-600 dark:text-rose-400">
               <Icon name="tabler:calendar-due" className="h-4 w-4" />
-              {t("deadlines")}
+              {t("users")}
             </CardDescription>
-            <CardTitle className="text-3xl font-bold">{data.summary.upcomingDeadlines}</CardTitle>
+            <CardTitle className="text-3xl font-bold">{loading ? "—" : (data?.summary.users ?? 0)}</CardTitle>
           </CardHeader>
-          <CardContent><p className="text-xs text-muted-foreground">{t("dueWithin30Days")}</p></CardContent>
+          <CardContent><p className="text-xs text-muted-foreground">{t("totalUsers")}</p></CardContent>
         </Card>
       </section>
 
@@ -155,13 +241,21 @@ export default function OverviewPage() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle className="text-lg">{t("strategicAlignment")}</CardTitle>
-                <CardDescription className="mt-1">{t("alignmentAcrossStrategicDimensions")}</CardDescription>
+                <CardTitle className="text-lg">{t("browseByTypeDesc")}</CardTitle>
+                <CardDescription className="mt-1">{t("browseByTypeDesc")}</CardDescription>
               </div>
-              <Badge variant="outline" className="bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20">{t("strong")}</Badge>
+              <Badge variant="outline" className="border-border bg-muted/30">{loading ? "—" : `${(data?.topTypes?.length ?? 0)} ${t("categories")}`}</Badge>
             </div>
           </CardHeader>
-          <CardContent><Bar categories={data.strategicAlignment.categories} values={data.strategicAlignment.values} height={280} color="#8b5cf6" /></CardContent>
+          <CardContent>
+            {loading ? (
+              <div className="rounded-xl border border-border bg-muted/10 p-8 text-center text-sm text-muted-foreground">{t("loading")}</div>
+            ) : topTypeBar.categories.length === 0 ? (
+              <div className="rounded-xl border border-border bg-muted/10 p-8 text-center text-sm text-muted-foreground">{t("noItemsYet")}</div>
+            ) : (
+              <Bar categories={topTypeBar.categories} values={topTypeBar.values} height={280} color="#8b5cf6" />
+            )}
+          </CardContent>
         </Card>
 
         <Card className="bg-card/70 backdrop-blur shadow-sm">
@@ -170,18 +264,13 @@ export default function OverviewPage() {
             <CardDescription className="mt-1">{t("performanceDistribution")}</CardDescription>
           </CardHeader>
           <CardContent>
-            <Donut items={data.healthDistribution.map(item => ({ name: t(item.nameKey as TranslationKey), value: item.value, color: item.color }))} height={240} />
-            <div className="mt-4 space-y-2">
-              {data.healthDistribution.map((item) => (
-                <div key={item.nameKey} className="flex items-center justify-between text-sm">
-                  <div className="flex items-center gap-2">
-                    <div className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: item.color }} />
-                    <span className="text-muted-foreground">{t(item.nameKey as TranslationKey)}</span>
-                  </div>
-                  <span className="font-medium">{item.value}</span>
-                </div>
-              ))}
-            </div>
+            {loading ? (
+              <div className="rounded-xl border border-border bg-muted/10 p-8 text-center text-sm text-muted-foreground">{t("loading")}</div>
+            ) : freshnessDonut.length === 0 ? (
+              <div className="rounded-xl border border-border bg-muted/10 p-8 text-center text-sm text-muted-foreground">{t("noItemsYet")}</div>
+            ) : (
+              <Donut items={freshnessDonut} height={240} />
+            )}
           </CardContent>
         </Card>
       </section>
@@ -193,18 +282,30 @@ export default function OverviewPage() {
             <CardDescription className="mt-1">{t("latestUpdatesAndChanges")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
-            {data.recentActivities.map((activity, idx) => {
-              const iconData = getActivityIcon(activity.status);
+            {loading ? (
+              <div className="rounded-xl border border-border bg-muted/10 p-8 text-center text-sm text-muted-foreground">{t("loading")}</div>
+            ) : (data?.recentActivities?.length ?? 0) === 0 ? (
+              <div className="rounded-xl border border-border bg-muted/10 p-8 text-center text-sm text-muted-foreground">{t("noItemsYet")}</div>
+            ) : (
+              data?.recentActivities?.map((activity) => {
+                const iconData = activityBadge(activity.status);
+                const when = formatDate(activity.createdAt, { dateStyle: "medium", timeStyle: "short" });
               return (
-                <div key={idx} className="flex items-start gap-3 rounded-lg border border-border bg-background/50 p-3">
-                  <div className={`rounded-full bg-muted p-2 ${iconData.color}`}><Icon name={iconData.name} className="h-4 w-4" /></div>
+                <div key={activity.id} className="flex items-start gap-3 rounded-lg border border-border bg-background/50 p-3">
+                  <div className={`rounded-full bg-muted p-2 ${iconData.color}`}><Icon name={iconData.icon} className="h-4 w-4" /></div>
                   <div className="flex-1 space-y-1">
-                    <p className="text-sm font-medium">{activity.title}</p>
-                    <p className="text-xs text-muted-foreground">{activity.time}</p>
+                    <Link
+                      href={`/${locale}/entities/kpi/${activity.entityId}`}
+                      className="text-sm font-medium hover:underline underline-offset-4 decoration-primary/40 hover:decoration-primary/70"
+                    >
+                      {df(activity.title, activity.titleAr)}
+                    </Link>
+                    <p className="text-xs text-muted-foreground">{kpiValueStatusLabel(activity.status)} • {when}</p>
                   </div>
                 </div>
               );
-            })}
+              }) ?? null
+            )}
           </CardContent>
         </Card>
 
@@ -220,57 +321,77 @@ export default function OverviewPage() {
               </Button>
             </div>
           </CardHeader>
-          <CardContent><AreaLine categories={data.quarterlyProgress.categories} values={data.quarterlyProgress.values} height={260} color="#10b981" /></CardContent>
+          <CardContent>
+            {loading ? (
+              <div className="rounded-xl border border-border bg-muted/10 p-8 text-center text-sm text-muted-foreground">{t("loading")}</div>
+            ) : (
+              <AreaLine
+                categories={data?.quarterlyProgress.categories ?? []}
+                values={data?.quarterlyProgress.values ?? []}
+                height={260}
+                color="#10b981"
+              />
+            )}
+          </CardContent>
         </Card>
       </section>
 
       <section className="grid gap-6 lg:grid-cols-2">
         <Card className="bg-card/70 backdrop-blur shadow-sm">
           <CardHeader>
-            <CardTitle className="text-lg">{t("upcomingMilestones")}</CardTitle>
-            <CardDescription className="mt-1">{t("keyDeliverablesAndCheckpoints")}</CardDescription>
+            <CardTitle className="text-lg">{t("needsAttention")}</CardTitle>
+            <CardDescription className="mt-1">{t("daysSinceLastUpdate")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            {data.upcomingMilestones.map((milestone, idx) => (
-              <div key={idx} className="space-y-2">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <p className="font-medium">{milestone.name}</p>
-                    <p className="text-xs text-muted-foreground">{milestone.date}</p>
+            {loading ? (
+              <div className="rounded-xl border border-border bg-muted/10 p-8 text-center text-sm text-muted-foreground">{t("loading")}</div>
+            ) : (data?.attentionKpis?.length ?? 0) === 0 ? (
+              <div className="rounded-xl border border-border bg-muted/10 p-8 text-center text-sm text-muted-foreground">{t("noItemsYet")}</div>
+            ) : (
+              data?.attentionKpis?.map((kpi) => (
+                <div key={kpi.id} className="space-y-2">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <Link
+                        href={`/${locale}/entities/kpi/${kpi.id}`}
+                        className="font-medium hover:underline underline-offset-4 decoration-primary/40 hover:decoration-primary/70"
+                      >
+                        {df(kpi.title, kpi.titleAr)}
+                      </Link>
+                      <p className="text-xs text-muted-foreground">{kpi.daysSinceLastUpdate === null ? t("statusNoData") : `${kpi.daysSinceLastUpdate} ${t("daysShort")}`}</p>
+                    </div>
+                    <Badge variant="outline" className="border-amber-500/25 bg-amber-500/10 text-amber-700 dark:text-amber-400">
+                      {kpi.daysSinceLastUpdate === null ? "—" : `${kpi.daysSinceLastUpdate}${t("daysShort")}`}
+                    </Badge>
                   </div>
-                  <Badge variant="outline" className="border-blue-500/20 bg-blue-500/10 text-blue-700 dark:text-blue-400">{milestone.daysLeft} {t("daysLeft")}</Badge>
+                  <Progress value={Math.max(0, 100 - (kpi.daysSinceLastUpdate ?? 100))} className="h-2" />
                 </div>
-                <Progress value={milestone.progress} className="h-2" />
-                <p className="text-xs text-muted-foreground">{milestone.progress}% {t("complete")}</p>
-              </div>
-            ))}
+              )) ?? null
+            )}
           </CardContent>
         </Card>
 
         <Card className="bg-card/70 backdrop-blur shadow-sm">
           <CardHeader>
             <CardTitle className="text-lg">{t("teamPerformance")}</CardTitle>
-            <CardDescription className="mt-1">{t("departmentLevelScorecard")}</CardDescription>
+            <CardDescription className="mt-1">{t("assignOwners")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
-            {data.teamPerformance.map((team, idx) => {
-              const trendData = getTrendIcon(team.trendKey);
-              return (
-                <div key={idx} className="flex items-center justify-between rounded-lg border border-border bg-background/50 p-3">
-                  <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-lg flex items-center justify-center text-sm font-bold text-white" style={{ backgroundColor: team.color }}>{team.score}</div>
-                    <div>
-                      <p className="font-medium">{team.team}</p>
-                      <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                        <Icon name={trendData.name} className={`h-3 w-3 ${trendData.color}`} />
-                        <span className="capitalize">{t(team.trendKey as TranslationKey)}</span>
-                      </div>
-                    </div>
+            {loading ? (
+              <div className="rounded-xl border border-border bg-muted/10 p-8 text-center text-sm text-muted-foreground">{t("loading")}</div>
+            ) : (data?.topOwners?.length ?? 0) === 0 ? (
+              <div className="rounded-xl border border-border bg-muted/10 p-8 text-center text-sm text-muted-foreground">{t("noItemsYet")}</div>
+            ) : (
+              data?.topOwners?.map((owner) => (
+                <div key={owner.userId} className="flex items-center justify-between rounded-lg border border-border bg-background/50 p-3">
+                  <div className="space-y-1">
+                    <p className="font-medium">{owner.name}</p>
+                    <p className="text-xs text-muted-foreground">{t("assignedToYou")}</p>
                   </div>
-                  <Progress value={team.score} className="h-1.5 w-24" />
+                  <Badge variant="outline" className="border-border bg-muted/30">{owner.count}</Badge>
                 </div>
-              );
-            })}
+              )) ?? null
+            )}
           </CardContent>
         </Card>
       </section>

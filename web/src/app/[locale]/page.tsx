@@ -394,7 +394,7 @@ export default function LandingPage() {
         <div className="absolute -top-24 -end-24 h-64 w-64 rounded-full bg-primary/20 blur-3xl opacity-30" />
         
         <m.div
-          className={cn("relative z-10 flex flex-col gap-8 md:flex-row md:items-center md:justify-between", isArabic && "md:flex-row-reverse")}
+          className={cn("relative z-10 flex flex-col gap-8 md:flex-row md:items-center md:justify-between")}
           variants={cardVariants}
           initial={shouldReduceMotion ? false : "hidden"}
           whileInView={shouldReduceMotion ? undefined : "show"}
