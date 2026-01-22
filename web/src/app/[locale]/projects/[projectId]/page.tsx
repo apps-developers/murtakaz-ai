@@ -118,7 +118,7 @@ export default function ProjectDetailPage() {
                 {t("linkedToInitiative")}{" "}
                 {parentInitiative ? (
                   <Link
-                    href={`/${locale}/strategy/initiatives/${parentInitiative.id}`}
+                    href={`/${locale}/entities/initiative/${parentInitiative.id}`}
                     className="text-foreground underline underline-offset-4 decoration-primary/40 hover:decoration-primary/70"
                   >
                     {isArabic ? parentInitiative.titleAr ?? parentInitiative.title : parentInitiative.title}

@@ -51,7 +51,7 @@ export default function ManagerDashboardPage() {
             {atRisk.map((initiative) => (
               <Link
                 key={initiative.id}
-                href={`/${locale}/strategy/initiatives/${initiative.id}`}
+                href={`/${locale}/entities/initiative/${initiative.id}`}
                 className="block rounded-xl border border-border bg-muted/30 px-4 py-3 transition hover:bg-card/50"
               >
                 <div className="flex items-start justify-between gap-3">

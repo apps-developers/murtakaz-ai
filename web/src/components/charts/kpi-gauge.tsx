@@ -32,8 +32,10 @@ export function KpiGauge({
     const safeTarget =
       typeof target === "number" && Number.isFinite(target) && target > 0 ? target : null;
 
-    const max = safeTarget ?? Math.max(100, Math.abs(safeValue) * 1.25);
-    const ratio = safeTarget && hasValue ? safeValue / safeTarget : 0;
+    const isPercentUnit = typeof unit === "string" && (unit.includes("%") || unit.includes("٪"));
+    const effectiveTarget = safeTarget ?? (isPercentUnit ? 100 : null);
+    const max = effectiveTarget ?? (isPercentUnit ? 100 : Math.max(100, Math.abs(safeValue) * 1.25));
+    const ratio = effectiveTarget && hasValue ? safeValue / effectiveTarget : null;
 
     // thresholds
     const red = 0.6;
@@ -51,19 +53,23 @@ export function KpiGauge({
     const cRed = "#ef4444";
     const cAmber = "#f59e0b";
     const cGreen = "#10b981";
+    const cNeutral = "#64748b";
 
     const status =
       !hasValue
         ? "—"
-        : ratio >= amber
-          ? t("onTrack")
-          : ratio >= red
-            ? t("atRisk")
-            : safeTarget
-              ? t("offTrack")
-              : "—";
+        : ratio === null
+          ? "—"
+          : ratio >= amber
+            ? t("onTrack")
+            : ratio >= red
+              ? t("atRisk")
+              : effectiveTarget
+                ? t("offTrack")
+                : "—";
 
-    const statusColor = ratio >= amber ? cGreen : ratio >= red ? cAmber : cRed;
+    const statusColor =
+      !hasValue ? cNeutral : ratio === null ? cNeutral : ratio >= amber ? cGreen : ratio >= red ? cAmber : cRed;
 
     const fmt = (n: number) => {
       if (!Number.isFinite(n)) return "0";
@@ -92,7 +98,7 @@ export function KpiGauge({
           "border-radius: 14px; box-shadow: 0 18px 60px rgba(0,0,0,0.28); padding: 10px 12px;",
         formatter: () => {
           const v = safeValue;
-          const targetVal = safeTarget;
+          const targetVal = effectiveTarget;
           const pct = targetVal && hasValue ? `${Math.round((v / targetVal) * 100)}%` : "—";
           return `
             <div style="display:flex; flex-direction:column; gap:6px;">
@@ -215,7 +221,7 @@ export function KpiGauge({
             formatter: (v: number) => {
               // Only show key labels (0, target-ish, max) to keep it clean
               if (Math.abs(v - 0) < 1e-9) return "0";
-              if (safeTarget && Math.abs(v - safeTarget) / max < 0.02) return "T";
+              if (effectiveTarget && Math.abs(v - effectiveTarget) / max < 0.02) return "T";
               if (Math.abs(v - max) / max < 0.02) return fmt(max);
               return "";
             },
@@ -228,7 +234,7 @@ export function KpiGauge({
             formatter: (val: number) => {
               const v = Number.isFinite(val) ? val : 0;
               const u = unit ?? "";
-              const tgtLine = safeTarget ? `{muted|${t("target")} ${fmt(safeTarget)}${u}}` : `{muted| }`;
+              const tgtLine = effectiveTarget ? `{muted|${t("target")} ${fmt(effectiveTarget)}${u}}` : `{muted| }`;
               return [
                 `{value|${hasValue ? `${fmt(v)}${u}` : "—"}}`,
                 `{label|${effectiveLabel}}`,

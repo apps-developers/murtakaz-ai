@@ -11,6 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Progress } from "@/components/ui/progress";
 import { useLocale } from "@/providers/locale-provider";
 import { getOverviewInsights } from "@/actions/insights";
+import { getFirstEntityTypeCode } from "@/actions/navigation";
 
 function activityBadge(status: string) {
   const up = String(status ?? "").toUpperCase();
@@ -25,6 +26,7 @@ export default function OverviewPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<Awaited<ReturnType<typeof getOverviewInsights>> | null>(null);
+  const [firstEntityTypeCode, setFirstEntityTypeCode] = useState<string | null>(null);
 
   useEffect(() => {
     let mounted = true;
@@ -32,9 +34,13 @@ export default function OverviewPage() {
     setError(null);
     void (async () => {
       try {
-        const res = await getOverviewInsights();
+        const [res, entityTypeCode] = await Promise.all([
+          getOverviewInsights(),
+          getFirstEntityTypeCode(),
+        ]);
         if (!mounted) return;
         setData(res);
+        setFirstEntityTypeCode(entityTypeCode);
       } catch (e: unknown) {
         if (!mounted) return;
         setError(e instanceof Error ? e.message : t("failedToLoad"));
@@ -83,12 +89,14 @@ export default function OverviewPage() {
                 {t("dashboards")}
               </Link>
             </Button>
-            <Button asChild size="sm">
-              <Link href={`/${locale}/strategy`}>
-                <Icon name="tabler:target-arrow" className="me-2 h-4 w-4" />
-                {t("strategy")}
-              </Link>
-            </Button>
+            {firstEntityTypeCode && (
+              <Button asChild size="sm">
+                <Link href={`/${locale}/entities/${firstEntityTypeCode}`}>
+                  <Icon name="tabler:target" className="me-2 h-4 w-4" />
+                  {t("kpiManagement")}
+                </Link>
+              </Button>
+            )}
           </div>
         }
       />
@@ -114,15 +122,17 @@ export default function OverviewPage() {
           </CardHeader>
           <CardContent>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              <Button asChild variant="outline" className="h-auto justify-start gap-3 p-4">
-                <Link href={`/${locale}/entities/kpi`}>
-                  <Icon name="tabler:target" className="h-5 w-5 text-blue-500" />
-                  <div className="text-left">
-                    <div className="font-semibold">{t("kpiManagement")}</div>
-                    <div className="text-xs text-muted-foreground">{t("viewAndManageKpis")}</div>
-                  </div>
-                </Link>
-              </Button>
+              {firstEntityTypeCode && (
+                <Button asChild variant="outline" className="h-auto justify-start gap-3 p-4">
+                  <Link href={`/${locale}/entities/${firstEntityTypeCode}`}>
+                    <Icon name="tabler:target" className="h-5 w-5 text-blue-500" />
+                    <div className="text-left">
+                      <div className="font-semibold">{t("kpiManagement")}</div>
+                      <div className="text-xs text-muted-foreground">{t("viewAndManageKpis")}</div>
+                    </div>
+                  </Link>
+                </Button>
+              )}
               <Button asChild variant="outline" className="h-auto justify-start gap-3 p-4">
                 <Link href={`/${locale}/approvals`}>
                   <Icon name="tabler:gavel" className="h-5 w-5 text-amber-500" />
@@ -404,15 +414,17 @@ export default function OverviewPage() {
           </CardHeader>
           <CardContent>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              <Button asChild variant="outline" className="h-auto justify-start gap-3 p-4">
-                <Link href={`/${locale}/strategy`}>
-                  <Icon name="tabler:target-arrow" className="h-6 w-6 text-violet-500" />
-                  <div className="text-left">
-                    <div className="font-semibold">{t("strategicPlanning")}</div>
-                    <div className="text-xs text-muted-foreground">{t("defineAndTrackStrategy")}</div>
-                  </div>
-                </Link>
-              </Button>
+              {firstEntityTypeCode && (
+                <Button asChild variant="outline" className="h-auto justify-start gap-3 p-4">
+                  <Link href={`/${locale}/entities/${firstEntityTypeCode}`}>
+                    <Icon name="tabler:target" className="h-6 w-6 text-violet-500" />
+                    <div className="text-left">
+                      <div className="font-semibold">{t("kpiManagement")}</div>
+                      <div className="text-xs text-muted-foreground">{t("viewAndManageKpis")}</div>
+                    </div>
+                  </Link>
+                </Button>
+              )}
               <Button asChild variant="outline" className="h-auto justify-start gap-3 p-4">
                 <Link href={`/${locale}/pillars`}>
                   <Icon name="tabler:columns-3" className="h-6 w-6 text-blue-500" />
