@@ -587,7 +587,7 @@ export default function NewEntityPage() {
 
                 <div className="space-y-2">
                   <Label>{tr("Formula code", "كود المعادلة")}</Label>
-                  <div className="rounded-xl border border-border overflow-hidden bg-card">
+                  <div dir="ltr" className="rounded-xl border border-border overflow-hidden bg-card text-left">
                     <MonacoEditor
                       height="260px"
                       defaultLanguage="javascript"
