@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "TURBOPACK= next dev",
     "dev:turbo": "TURBOPACK=1 next dev --turbopack",
+    "prisma:generate": "prisma generate --schema=../prisma/schema.prisma",
+    "prebuild": "pnpm run prisma:generate",
     "build": "next build",
     "start": "sh -c 'next start -H 0.0.0.0 -p ${PORT:-3000}'",
     "lint": "next lint"
