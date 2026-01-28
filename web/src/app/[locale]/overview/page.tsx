@@ -58,8 +58,8 @@ export default function OverviewPage() {
   const topTypeBar = useMemo(() => {
     const types = data?.topTypes ?? [];
     return {
-      categories: types.map((x) => df(x.name, x.nameAr)),
-      values: types.map((x) => x.count),
+      categories: types.map((x: any) => df(x.name, x.nameAr)),
+      values: types.map((x: any) => x.count),
     };
   }, [data?.topTypes, df]);
 
@@ -312,7 +312,7 @@ export default function OverviewPage() {
             ) : (data?.recentActivities?.length ?? 0) === 0 ? (
               <div className="rounded-xl border border-border bg-muted/10 p-8 text-center text-sm text-muted-foreground">{t("noItemsYet")}</div>
             ) : (
-              data?.recentActivities?.map((activity) => {
+              data?.recentActivities?.map((activity: any) => {
                 const iconData = activityBadge(activity.status);
                 const when = formatDate(activity.createdAt, { dateStyle: "medium", timeStyle: "short" });
               return (

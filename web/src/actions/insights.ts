@@ -288,7 +288,7 @@ export async function getOverviewInsights() {
     topTypes,
     freshness,
     quarterlyProgress: { categories: quarters.map((q) => q.label), values: quarterValues },
-    recentActivities: recent.map((r) => ({
+    recentActivities: recent.map((r: any) => ({
       id: String(r.id),
       status: String(r.status),
       createdAt: r.createdAt.toISOString(),
@@ -536,7 +536,7 @@ export async function getExecutiveDashboardInsights() {
   return {
     confidenceTrend,
     pillarsActive: pillarsCount,
-    atRiskInitiatives: initiativesAtRisk.map((i) => ({
+    atRiskInitiatives: initiativesAtRisk.map((i: any) => ({
       id: String(i.id),
       title: String(i.title),
       titleAr: i.titleAr ? String(i.titleAr) : null,
