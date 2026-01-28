@@ -103,6 +103,11 @@ Pillars (4)
 - `deprtments/` - Folder containing JSON files for each of the 8 departments
   - Each department file contains sector information and its respective KPIs
 
+## Org Admins
+
+- `o.alharbi@almosa.com.sa`
+- `m.alamri@almosa.com.sa`
+
 ## Notes
 
 - Department KPIs are classified as either "استراتيجي" (Strategic) or "تشغيلي" (Operational)

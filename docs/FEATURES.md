@@ -18,7 +18,7 @@ In Murtakaz, **entities** are the configurable building blocks (business objects
 - **Strong governance model**
   - Change requests + approvals flow (governance queue, approve/reject, audit visibility).
 - **Role-based experience for different personas**
-  - Admin, Executive, Manager, Super Admin (with different navigation + access scope).
+  - Admin, Executive, Manager, (with different navigation + access scope).
 - **KPI governance & consistency**
   - KPI definitions include owner, target, unit, period type, direction, aggregation, and formula-driven KPIs.
 - **Automated calculations**
