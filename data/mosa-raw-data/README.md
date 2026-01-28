@@ -7,10 +7,12 @@ This folder contains the raw data for the Mosa Group strategic framework, includ
 ### Strategic Framework Components
 
 - **Objectives**: 7 strategic objectives
+- **Initiatives**: 11 strategic initiatives
 - **Departments**: 8 organizational departments
-- **Total KPIs**: 86 performance indicators
+- **Total KPIs**: 109
   - Department KPIs: 66
   - Objective KPIs: 20
+  - Initiative KPIs: 23
 
 ## Database Schema
 
@@ -57,7 +59,16 @@ Organizational departments that implement the strategic objectives:
    - KPIs: 8
    - File: `deprtments/legal-department.json`
 
-### 3. KPIs (86 Total)
+### 3. Initiatives (11 Total)
+
+Strategic initiatives linked to strategic goals and optionally linked to objective KPIs.
+
+**Location**: `initiatives.json`
+
+- Total initiatives: 11
+- Total initiative KPIs (operational only): 23
+
+### 4. KPIs (109 Total)
 
 #### Department KPIs: 66
 Performance indicators assigned to departments to measure operational and strategic performance.
@@ -93,6 +104,7 @@ Departments (8)
 ## Files in this Directory
 
 - `objectives.json` - Contains the 7 strategic objectives and their 20 associated KPIs
+- `initiatives.json` - Contains the 11 strategic initiatives and their linked/operational KPI references
 - `deprtments/` - Folder containing JSON files for each of the 8 departments
   - Each department file contains sector information and its respective KPIs
 

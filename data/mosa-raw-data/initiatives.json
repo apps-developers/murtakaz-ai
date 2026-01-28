@@ -1,0 +1,265 @@
+{
+  "initiatives_mapping": [
+    {
+      "initiative_id": "1",
+      "initiative_name_ar": "تصميم اطر الاستثمار",
+      "initiative_name_en": "Design Investment Frameworks",
+      "linked_strategic_goals": ["1", "2"],
+      "page_reference": 62,
+      "kpis": [
+        {
+          "type": "operational",
+          "value": "% إنجاز وتوثيق الأطر الاستثمارية"
+        },
+        {
+          "type": "linked",
+          "id": "3.4",
+          "note": "Matches 'نسبة مساهمة القطاعات الجديدة في الإيرادات المستدامة'"
+        },
+        {
+          "type": "operational",
+          "value": "% تغطية المخاطر ضمن الإطار المعياري الجديد"
+        }
+      ]
+    },
+    {
+      "initiative_id": "2",
+      "initiative_name_ar": "تنفيذ اطر الاستثمار",
+      "initiative_name_en": "Execute Investment Frameworks",
+      "linked_strategic_goals": ["2"],
+      "page_reference": 63,
+      "kpis": [
+        {
+          "type": "linked",
+          "id": "1.4",
+          "note": "Matches 'العائد على الاستثمارات الجديدة'"
+        },
+        {
+          "type": "linked",
+          "id": "1.2",
+          "note": "Matches 'نسبة مساهمة القطاعات الجديدة في إجمالي المحفظة'"
+        },
+        {
+          "type": "operational",
+          "value": "نسبة الإيرادات المحققة عبر الشراكات الاستراتيجية"
+        },
+        {
+          "type": "operational",
+          "value": "كفاءة إدارة التخارج"
+        },
+        {
+          "type": "operational",
+          "value": "معدل الامتثال للمعيار الاستثماري الجديد"
+        },
+        {
+          "type": "linked",
+          "id": "Investment Sector KPI (Page 10)",
+          "note": "Matches 'متوسط الوقت لإغلاق صفقات الاستثمار'"
+        }
+      ]
+    },
+    {
+      "initiative_id": "3",
+      "initiative_name_ar": "إعداد الدراسات وأبحاث السوق وتأسيس ذكاء الأعمال",
+      "initiative_name_en": "Market Research & Business Intelligence Setup",
+      "linked_strategic_goals": ["1", "2"],
+      "page_reference": 64,
+      "kpis": [
+        {
+          "type": "operational",
+          "value": "% اكتمال بناء وتغطية مستودع بيانات وذكاء الأعمال"
+        },
+        {
+          "type": "operational",
+          "value": "زمن دورة تجهيز القرار الاستثماري"
+        },
+        {
+          "type": "operational",
+          "value": "نسبة القرارات الاستثمارية المدعومة بذكاء الاعمال"
+        },
+        {
+          "type": "operational",
+          "value": "دقة التوقعات في دراسات الجدوى"
+        }
+      ]
+    },
+    {
+      "initiative_id": "4",
+      "initiative_name_ar": "تعزيز التكامل والامتثال المالي بين المجموعة والشركات التابعة",
+      "initiative_name_en": "Enhance Financial Integration and Compliance",
+      "linked_strategic_goals": ["4"],
+      "page_reference": 65,
+      "kpis": [
+        {
+          "type": "operational",
+          "value": "% توحيد السياسات والإجراءات المالية بين المجموعة والشركات التابعة"
+        },
+        {
+          "type": "linked",
+          "id": "4.1",
+          "note": "Matches 'نسبة الالتزام بتطبيق النظام' (Financial Compliance)"
+        }
+      ]
+    },
+    {
+      "initiative_id": "5",
+      "initiative_name_ar": "مراجعة هيكلة رأس المال والتدفقات المالية",
+      "initiative_name_en": "Review Capital Structure and Financial Flows",
+      "linked_strategic_goals": ["4"],
+      "page_reference": 66,
+      "kpis": [
+        {
+          "type": "operational",
+          "value": "درجة التوافق بين نتائج نموذج المحاكاة والواقع المالي"
+        }
+      ]
+    },
+    {
+      "initiative_id": "6",
+      "initiative_name_ar": "تفعيل الخطط المتعلقة بالمخاطر والمراجعة الداخلية",
+      "initiative_name_en": "Activate Risk and Internal Audit Plans",
+      "linked_strategic_goals": ["5"],
+      "page_reference": 67,
+      "kpis": [
+        {
+          "type": "linked",
+          "id": "Internal Audit Dept KPI (Page 16)",
+          "note": "Matches 'نسبة خطط التدقيق المنجزة'"
+        },
+        {
+          "type": "operational",
+          "value": "% انخفاض عدد المخاطر الحرجة"
+        }
+      ]
+    },
+    {
+      "initiative_id": "7",
+      "initiative_name_ar": "تفعيل النموذج التشغيلي المعتمد",
+      "initiative_name_en": "Activate Approved Operating Model",
+      "linked_strategic_goals": ["5"],
+      "page_reference": 68,
+      "kpis": [
+        {
+          "type": "linked",
+          "id": "5.2",
+          "note": "Matches 'نسبة تفعيل النموذج التشغيلي'"
+        },
+        {
+          "type": "operational",
+          "value": "تحسن جودة وسرعة التقارير ووضوحها للإدارة العليا"
+        },
+        {
+          "type": "linked",
+          "id": "Support Services Dept KPI (Page 14)",
+          "note": "Matches 'رفع جودة وموثوقية الخدمات المساندة' concept"
+        }
+      ]
+    },
+    {
+      "initiative_id": "8",
+      "initiative_name_ar": "مبادرة تمكين الشركات التابعة وتفعيل استقلاليتها التشغيلية",
+      "initiative_name_en": "Enable Subsidiaries and Activate Operational Independence",
+      "linked_strategic_goals": ["5"],
+      "page_reference": 69,
+      "kpis": [
+        {
+          "type": "operational",
+          "value": "تحسن الأداء التشغيلي للشركات التابعة (%)"
+        },
+        {
+          "type": "operational",
+          "value": "مستوى نضج الاستقلالية التشغيلية للشركات التابعة"
+        },
+        {
+          "type": "linked",
+          "id": "5.2",
+          "note": "Variation of 'نسبة تفعيل النموذج التشغيلي' specifically for subsidiaries"
+        }
+      ]
+    },
+    {
+      "initiative_id": "9",
+      "initiative_name_ar": "تطوير وتنمية الموارد البشرية في المجموعة والشركات التابعة",
+      "initiative_name_en": "Human Resources Development",
+      "linked_strategic_goals": ["6"],
+      "page_reference": 70,
+      "kpis": [
+        {
+          "type": "linked",
+          "id": "6.1",
+          "note": "Matches 'معدل المشاركة في الدورات التدريبية'"
+        },
+        {
+          "type": "operational",
+          "value": "% الاحتفاظ بالموظفين ذوي الأداء المرتفع"
+        },
+        {
+          "type": "operational",
+          "value": "% إكتمال السياسات واللوائح للموارد البشرية"
+        },
+        {
+          "type": "operational",
+          "value": "% جاهزية الوظائف الحرجة"
+        },
+        {
+          "type": "operational",
+          "value": "% الرضا الوظيفي"
+        },
+        {
+          "type": "operational",
+          "value": "معدل الدوران الوظيفي"
+        }
+      ]
+    },
+    {
+      "initiative_id": "10",
+      "initiative_name_ar": "تحديث وتنفيذ استراتيجية شاملة للتواصل والتسويق",
+      "initiative_name_en": "Update and Execute Comprehensive Communication Strategy",
+      "linked_strategic_goals": ["7"],
+      "page_reference": 71,
+      "kpis": [
+        {
+          "type": "linked",
+          "id": "7.1",
+          "note": "Matches 'مؤشر الوعي بالعلامة التجارية'"
+        },
+        {
+          "type": "linked",
+          "id": "7.3",
+          "note": "Matches 'معدل التفاعل الرقمي'"
+        },
+        {
+          "type": "linked",
+          "id": "7.4",
+          "note": "Matches 'عدد الحملات التسويقية المنفذة سنوياً'"
+        },
+        {
+          "type": "operational",
+          "value": "مؤشر الارتباط بالعلامة"
+        },
+        {
+          "type": "linked",
+          "id": "7.2",
+          "note": "Matches 'عدد المشاركات في الفعاليات والمؤتمرات'"
+        }
+      ]
+    },
+    {
+      "initiative_id": "11",
+      "initiative_name_ar": "تطوير وتفعيل استراتيجية التحول الرقمي",
+      "initiative_name_en": "Develop and Activate Digital Transformation Strategy",
+      "linked_strategic_goals": ["5", "7"],
+      "page_reference": 72,
+      "kpis": [
+        {
+          "type": "operational",
+          "value": "% العمليات الأساسية التي تم رقمنتها بالكامل"
+        },
+        {
+          "type": "operational",
+          "value": "% التحسن في كفاءة الأداء التشغيلي نتيجة التحول الرقمي"
+        }
+      ]
+    }
+  ]
+}

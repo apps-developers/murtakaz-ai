@@ -1,0 +1,28 @@
+{
+  "pillar_objective_mapping": [
+    {
+      "pillar_id": 3,
+      "pillar_name_ar": "التوسع والنمو",
+      "pillar_name_en": "Expansion and Growth",
+      "associated_strategic_goals": ["1", "2"]
+    },
+    {
+      "pillar_id": 2,
+      "pillar_name_ar": "الاستدامة",
+      "pillar_name_en": "Sustainability",
+      "associated_strategic_goals": ["3", "4"]
+    },
+    {
+      "pillar_id": 1,
+      "pillar_name_ar": "التمكين",
+      "pillar_name_en": "Enablement",
+      "associated_strategic_goals": ["5", "6"]
+    },
+    {
+      "pillar_id": 4,
+      "pillar_name_ar": "التنافسية",
+      "pillar_name_en": "Competitiveness",
+      "associated_strategic_goals": ["7"]
+    }
+  ]
+}
