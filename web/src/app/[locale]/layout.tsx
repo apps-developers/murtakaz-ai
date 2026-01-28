@@ -19,6 +19,9 @@ export default async function RootLayout({
 }>) {
   const { locale } = await params;
   const dir = locale === "ar" ? "rtl" : "ltr";
+  const hideLogoRaw = process.env.HIDE_LOGO;
+  const hideLogo = !hideLogoRaw ? false : ["true", "1", "yes", "on"].includes(hideLogoRaw.toLowerCase());
+  const showLogo = !hideLogo;
 
   return (
     <html lang={locale} dir={dir}>
@@ -32,7 +35,7 @@ export default async function RootLayout({
       </head>
       <body className="antialiased">
         <Providers locale={locale}>
-          <AppShell>{children}</AppShell>
+          <AppShell showLogo={showLogo}>{children}</AppShell>
         </Providers>
       </body>
     </html>

@@ -187,7 +187,7 @@ function useDelayedVisibility(isOpen: boolean, delayMs = 160) {
   return visible;
 }
 
-export function AppShell({ children }: { children: React.ReactNode }) {
+export function AppShell({ children, showLogo = true }: { children: React.ReactNode; showLogo?: boolean }) {
   const router = useRouter();
   const pathname = usePathname();
   const { t, locale } = useLocale();
@@ -544,7 +544,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               {isMarketingRoute ? (
                 <div className="flex items-center gap-6">
                   <Link href={`/${locale}`} className="flex items-center gap-3">
-                    <BrandLogo />
+                    {showLogo ? <BrandLogo /> : null}
                     <div className={cn("leading-tight")}>
                       <p className="text-sm font-semibold text-foreground">{t("murtakaz")}</p>
                       <p className="text-xs text-muted-foreground">{t("strategyExecutionPlatform")}</p>
@@ -572,7 +572,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 </div>
               ) : (
                 <Link href={`/${locale}`} className="flex items-center gap-3">
-                  <BrandLogo />
+                  {showLogo ? <BrandLogo /> : null}
                   <div className="leading-tight">
                     <p className="text-xs uppercase tracking-[0.24em] text-muted-foreground">{t("appTitle")}</p>
                     <p className="text-sm font-semibold text-foreground">{t("appTagline")}</p>
