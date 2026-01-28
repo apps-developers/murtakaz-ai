@@ -17,6 +17,10 @@ BETTER_AUTH_SECRET="your-secure-random-string-here"
 # Your Deployed Domain (CRITICAL)
 BETTER_AUTH_URL="https://yourdomain.com"
 NEXT_PUBLIC_BETTER_AUTH_URL="https://yourdomain.com"
+
+# Allowed Origins for CORS (comma-separated)
+# Add your frontend domain if different from BETTER_AUTH_URL
+ALLOWED_ORIGINS="https://murtakaz-test.hsafa.com,https://murtakaz.numakin.dev"
 ```
 
 ## Common Issues & Solutions
@@ -30,12 +34,14 @@ NEXT_PUBLIC_BETTER_AUTH_URL="https://yourdomain.com"
 - Generate a proper secret: `openssl rand -base64 32`
 
 ### Issue 2: CORS Errors
-**Cause**: Domain mismatch between client and server
+**Cause**: Domain mismatch between client and server, or frontend domain not in trustedOrigins
 
 **Solution**:
 - Both `BETTER_AUTH_URL` and `NEXT_PUBLIC_BETTER_AUTH_URL` must be identical
 - Must include the protocol (https:// or http://)
 - Must NOT have trailing slashes
+- If your frontend is on a different domain, add it to `ALLOWED_ORIGINS` (comma-separated)
+- Example: `ALLOWED_ORIGINS="https://murtakaz-test.hsafa.com,https://murtakaz.numakin.dev"`
 
 ### Issue 3: Session Not Persisting
 **Cause**: Cookie configuration issues in production
