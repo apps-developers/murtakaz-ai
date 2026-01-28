@@ -134,6 +134,7 @@ function convertFormulaToGetSyntax(formula: string): string {
 
 async function wipeOrgEntities(orgId: string) {
   console.log("  🗑️  Wiping existing org entities...");
+  await prisma.$executeRaw`DELETE FROM entity_attachments WHERE entity_id IN (SELECT id FROM entities WHERE org_id = ${orgId})`;
   await prisma.$executeRaw`DELETE FROM entity_variable_values WHERE entity_value_id IN (SELECT id FROM entity_values WHERE entity_id IN (SELECT id FROM entities WHERE org_id = ${orgId}))`;
   await prisma.$executeRaw`DELETE FROM entity_values WHERE entity_id IN (SELECT id FROM entities WHERE org_id = ${orgId})`;
   await prisma.$executeRaw`DELETE FROM entity_variables WHERE entity_id IN (SELECT id FROM entities WHERE org_id = ${orgId})`;

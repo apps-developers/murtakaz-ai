@@ -13,9 +13,6 @@ async function wipeDatabase() {
     console.log("Deleting entity values...");
     await prisma.entityValue.deleteMany();
 
-    console.log("Deleting entity attachments...");
-    await prisma.entityAttachment.deleteMany();
-
     console.log("Deleting entity variables...");
     await prisma.entityVariable.deleteMany();
 

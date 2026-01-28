@@ -26,6 +26,7 @@ pnpm-debug.log*
 # Prisma
 prisma/dev.db*
 prisma/*.db*
+web/src/generated/prisma-client/
 
 # Misc
 temp_pptx/
