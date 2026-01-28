@@ -7,18 +7,23 @@
       "initiative_name_en": "Design Investment Frameworks",
       "linked_strategic_goals": ["1", "2"],
       "page_reference": 62,
+      "formula": "(initiative_1_kpi_1 + objective_kpi_3_4 + initiative_1_kpi_2) / 3",
+      "formula_description": "Average of initiative KPIs: initiative_1_kpi_1, objective_kpi_3_4, initiative_1_kpi_2",
       "kpis": [
         {
           "type": "operational",
+          "kpi_code": "initiative_1_kpi_1",
           "value": "% إنجاز وتوثيق الأطر الاستثمارية"
         },
         {
           "type": "linked",
+          "kpi_code": "objective_kpi_3_4",
           "id": "3.4",
           "note": "Matches 'نسبة مساهمة القطاعات الجديدة في الإيرادات المستدامة'"
         },
         {
           "type": "operational",
+          "kpi_code": "initiative_1_kpi_2",
           "value": "% تغطية المخاطر ضمن الإطار المعياري الجديد"
         }
       ]
@@ -30,31 +35,39 @@
       "initiative_name_en": "Execute Investment Frameworks",
       "linked_strategic_goals": ["2"],
       "page_reference": 63,
+      "formula": "(objective_kpi_1_4 + objective_kpi_1_2 + initiative_2_kpi_1 + initiative_2_kpi_2 + initiative_2_kpi_3 + investment_dept_kpi_10) / 6",
+      "formula_description": "Average of initiative KPIs: objective_kpi_1_4, objective_kpi_1_2, initiative_2_kpi_1, initiative_2_kpi_2, initiative_2_kpi_3, investment_dept_kpi_10",
       "kpis": [
         {
           "type": "linked",
+          "kpi_code": "objective_kpi_1_4",
           "id": "1.4",
           "note": "Matches 'العائد على الاستثمارات الجديدة'"
         },
         {
           "type": "linked",
+          "kpi_code": "objective_kpi_1_2",
           "id": "1.2",
           "note": "Matches 'نسبة مساهمة القطاعات الجديدة في إجمالي المحفظة'"
         },
         {
           "type": "operational",
+          "kpi_code": "initiative_2_kpi_1",
           "value": "نسبة الإيرادات المحققة عبر الشراكات الاستراتيجية"
         },
         {
           "type": "operational",
+          "kpi_code": "initiative_2_kpi_2",
           "value": "كفاءة إدارة التخارج"
         },
         {
           "type": "operational",
+          "kpi_code": "initiative_2_kpi_3",
           "value": "معدل الامتثال للمعيار الاستثماري الجديد"
         },
         {
           "type": "linked",
+          "kpi_code": "investment_dept_kpi_10",
           "id": "Investment Sector KPI (Page 10)",
           "note": "Matches 'متوسط الوقت لإغلاق صفقات الاستثمار'"
         }
@@ -67,21 +80,27 @@
       "initiative_name_en": "Market Research & Business Intelligence Setup",
       "linked_strategic_goals": ["1", "2"],
       "page_reference": 64,
+      "formula": "(initiative_3_kpi_1 + initiative_3_kpi_2 + initiative_3_kpi_3 + initiative_3_kpi_4) / 4",
+      "formula_description": "Average of initiative KPIs: initiative_3_kpi_1, initiative_3_kpi_2, initiative_3_kpi_3, initiative_3_kpi_4",
       "kpis": [
         {
           "type": "operational",
+          "kpi_code": "initiative_3_kpi_1",
           "value": "% اكتمال بناء وتغطية مستودع بيانات وذكاء الأعمال"
         },
         {
           "type": "operational",
+          "kpi_code": "initiative_3_kpi_2",
           "value": "زمن دورة تجهيز القرار الاستثماري"
         },
         {
           "type": "operational",
+          "kpi_code": "initiative_3_kpi_3",
           "value": "نسبة القرارات الاستثمارية المدعومة بذكاء الاعمال"
         },
         {
           "type": "operational",
+          "kpi_code": "initiative_3_kpi_4",
           "value": "دقة التوقعات في دراسات الجدوى"
         }
       ]
@@ -93,13 +112,17 @@
       "initiative_name_en": "Enhance Financial Integration and Compliance",
       "linked_strategic_goals": ["4"],
       "page_reference": 65,
+      "formula": "(initiative_4_kpi_1 + objective_kpi_4_1) / 2",
+      "formula_description": "Average of initiative KPIs: initiative_4_kpi_1, objective_kpi_4_1",
       "kpis": [
         {
           "type": "operational",
+          "kpi_code": "initiative_4_kpi_1",
           "value": "% توحيد السياسات والإجراءات المالية بين المجموعة والشركات التابعة"
         },
         {
           "type": "linked",
+          "kpi_code": "objective_kpi_4_1",
           "id": "4.1",
           "note": "Matches 'نسبة الالتزام بتطبيق النظام' (Financial Compliance)"
         }
@@ -112,9 +135,12 @@
       "initiative_name_en": "Review Capital Structure and Financial Flows",
       "linked_strategic_goals": ["4"],
       "page_reference": 66,
+      "formula": "initiative_5_kpi_1",
+      "formula_description": "Single initiative KPI: initiative_5_kpi_1",
       "kpis": [
         {
           "type": "operational",
+          "kpi_code": "initiative_5_kpi_1",
           "value": "درجة التوافق بين نتائج نموذج المحاكاة والواقع المالي"
         }
       ]
@@ -126,14 +152,18 @@
       "initiative_name_en": "Activate Risk and Internal Audit Plans",
       "linked_strategic_goals": ["5"],
       "page_reference": 67,
+      "formula": "(internal_audit_dept_kpi_1 + initiative_6_kpi_1) / 2",
+      "formula_description": "Average of initiative KPIs: internal_audit_dept_kpi_1, initiative_6_kpi_1",
       "kpis": [
         {
           "type": "linked",
+          "kpi_code": "internal_audit_dept_kpi_1",
           "id": "Internal Audit Dept KPI (Page 16)",
           "note": "Matches 'نسبة خطط التدقيق المنجزة'"
         },
         {
           "type": "operational",
+          "kpi_code": "initiative_6_kpi_1",
           "value": "% انخفاض عدد المخاطر الحرجة"
         }
       ]
@@ -145,18 +175,23 @@
       "initiative_name_en": "Activate Approved Operating Model",
       "linked_strategic_goals": ["5"],
       "page_reference": 68,
+      "formula": "(objective_kpi_5_2 + initiative_7_kpi_1 + support_services_dept_kpi_1) / 3",
+      "formula_description": "Average of initiative KPIs: objective_kpi_5_2, initiative_7_kpi_1, support_services_dept_kpi_1",
       "kpis": [
         {
           "type": "linked",
+          "kpi_code": "objective_kpi_5_2",
           "id": "5.2",
           "note": "Matches 'نسبة تفعيل النموذج التشغيلي'"
         },
         {
           "type": "operational",
+          "kpi_code": "initiative_7_kpi_1",
           "value": "تحسن جودة وسرعة التقارير ووضوحها للإدارة العليا"
         },
         {
           "type": "linked",
+          "kpi_code": "support_services_dept_kpi_1",
           "id": "Support Services Dept KPI (Page 14)",
           "note": "Matches 'رفع جودة وموثوقية الخدمات المساندة' concept"
         }
@@ -169,17 +204,22 @@
       "initiative_name_en": "Enable Subsidiaries and Activate Operational Independence",
       "linked_strategic_goals": ["5"],
       "page_reference": 69,
+      "formula": "(initiative_8_kpi_1 + initiative_8_kpi_2 + objective_kpi_5_2) / 3",
+      "formula_description": "Average of initiative KPIs: initiative_8_kpi_1, initiative_8_kpi_2, objective_kpi_5_2",
       "kpis": [
         {
           "type": "operational",
+          "kpi_code": "initiative_8_kpi_1",
           "value": "تحسن الأداء التشغيلي للشركات التابعة (%)"
         },
         {
           "type": "operational",
+          "kpi_code": "initiative_8_kpi_2",
           "value": "مستوى نضج الاستقلالية التشغيلية للشركات التابعة"
         },
         {
           "type": "linked",
+          "kpi_code": "objective_kpi_5_2",
           "id": "5.2",
           "note": "Variation of 'نسبة تفعيل النموذج التشغيلي' specifically for subsidiaries"
         }
@@ -192,30 +232,38 @@
       "initiative_name_en": "Human Resources Development",
       "linked_strategic_goals": ["6"],
       "page_reference": 70,
+      "formula": "(objective_kpi_6_1 + initiative_9_kpi_1 + initiative_9_kpi_2 + initiative_9_kpi_3 + initiative_9_kpi_4 + initiative_9_kpi_5) / 6",
+      "formula_description": "Average of initiative KPIs: objective_kpi_6_1, initiative_9_kpi_1, initiative_9_kpi_2, initiative_9_kpi_3, initiative_9_kpi_4, initiative_9_kpi_5",
       "kpis": [
         {
           "type": "linked",
+          "kpi_code": "objective_kpi_6_1",
           "id": "6.1",
           "note": "Matches 'معدل المشاركة في الدورات التدريبية'"
         },
         {
           "type": "operational",
+          "kpi_code": "initiative_9_kpi_1",
           "value": "% الاحتفاظ بالموظفين ذوي الأداء المرتفع"
         },
         {
           "type": "operational",
+          "kpi_code": "initiative_9_kpi_2",
           "value": "% إكتمال السياسات واللوائح للموارد البشرية"
         },
         {
           "type": "operational",
+          "kpi_code": "initiative_9_kpi_3",
           "value": "% جاهزية الوظائف الحرجة"
         },
         {
           "type": "operational",
+          "kpi_code": "initiative_9_kpi_4",
           "value": "% الرضا الوظيفي"
         },
         {
           "type": "operational",
+          "kpi_code": "initiative_9_kpi_5",
           "value": "معدل الدوران الوظيفي"
         }
       ]
@@ -227,28 +275,35 @@
       "initiative_name_en": "Update and Execute Comprehensive Communication Strategy",
       "linked_strategic_goals": ["7"],
       "page_reference": 71,
+      "formula": "(objective_kpi_7_1 + objective_kpi_7_3 + objective_kpi_7_4 + initiative_10_kpi_1 + objective_kpi_7_2) / 5",
+      "formula_description": "Average of initiative KPIs: objective_kpi_7_1, objective_kpi_7_3, objective_kpi_7_4, initiative_10_kpi_1, objective_kpi_7_2",
       "kpis": [
         {
           "type": "linked",
+          "kpi_code": "objective_kpi_7_1",
           "id": "7.1",
           "note": "Matches 'مؤشر الوعي بالعلامة التجارية'"
         },
         {
           "type": "linked",
+          "kpi_code": "objective_kpi_7_3",
           "id": "7.3",
           "note": "Matches 'معدل التفاعل الرقمي'"
         },
         {
           "type": "linked",
+          "kpi_code": "objective_kpi_7_4",
           "id": "7.4",
           "note": "Matches 'عدد الحملات التسويقية المنفذة سنوياً'"
         },
         {
           "type": "operational",
+          "kpi_code": "initiative_10_kpi_1",
           "value": "مؤشر الارتباط بالعلامة"
         },
         {
           "type": "linked",
+          "kpi_code": "objective_kpi_7_2",
           "id": "7.2",
           "note": "Matches 'عدد المشاركات في الفعاليات والمؤتمرات'"
         }
@@ -261,13 +316,17 @@
       "initiative_name_en": "Develop and Activate Digital Transformation Strategy",
       "linked_strategic_goals": ["5", "7"],
       "page_reference": 72,
+      "formula": "(initiative_11_kpi_1 + initiative_11_kpi_2) / 2",
+      "formula_description": "Average of initiative KPIs: initiative_11_kpi_1, initiative_11_kpi_2",
       "kpis": [
         {
           "type": "operational",
+          "kpi_code": "initiative_11_kpi_1",
           "value": "% العمليات الأساسية التي تم رقمنتها بالكامل"
         },
         {
           "type": "operational",
+          "kpi_code": "initiative_11_kpi_2",
           "value": "% التحسن في كفاءة الأداء التشغيلي نتيجة التحول الرقمي"
         }
       ]
