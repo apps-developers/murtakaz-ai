@@ -84,6 +84,11 @@ enum KpiApprovalType {
   MANUAL
 }
 
+enum EntityAttachmentType {
+  FILE
+  URL
+}
+
 // Models
 
 model Organization {
@@ -174,6 +179,8 @@ model User {
   valuesApproved  EntityValue[] @relation("EntityValueApprovedBy")
 
   entityAssignments UserEntityAssignment[]
+
+  uploadedEntityAttachments EntityAttachment[] @relation("EntityAttachmentUploadedBy")
 
   @@unique([orgId, email], name: "user_email_org_unique")
   @@index([orgId])
@@ -317,6 +324,7 @@ model Entity {
   variables EntityVariable[]
   values    EntityValue[]
   assignments UserEntityAssignment[]
+  attachments EntityAttachment[]
 
   @@index([orgId])
   @@index([orgEntityTypeId])
@@ -324,6 +332,30 @@ model Entity {
   @@index([key])
   @@unique([orgId, key, deletedAt], name: "entity_key_org_soft_unique")
   @@map("entities")
+}
+
+model EntityAttachment {
+  id        String @id @default(uuid())
+
+  entityId  String @map("entity_id")
+  entity    Entity @relation(fields: [entityId], references: [id], onDelete: Cascade)
+
+  type      EntityAttachmentType
+  name      String
+  url       String?
+  mimeType  String? @map("mime_type")
+  sizeBytes Int?    @map("size_bytes")
+  storagePath String? @map("storage_path")
+
+  uploadedBy String? @map("uploaded_by")
+  uploadedByUser User? @relation("EntityAttachmentUploadedBy", fields: [uploadedBy], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([entityId])
+  @@index([uploadedBy])
+  @@index([createdAt])
+  @@map("entity_attachments")
 }
 
 model EntityVariable {

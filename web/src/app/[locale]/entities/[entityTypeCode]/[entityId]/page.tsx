@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import type { EChartsOption } from "echarts";
 import { useEffect, useMemo, useState } from "react";
-import { Loader2, Pencil, Trash2 } from "lucide-react";
+import { ExternalLink, FileText, Link2, Loader2, Pencil, Trash2, Upload } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -33,6 +33,12 @@ import {
   approveEntityValue,
   rejectEntityValue,
 } from "@/actions/approvals";
+import {
+  addEntityAttachmentUrl,
+  deleteEntityAttachment,
+  getEntityAttachments,
+  type EntityAttachment,
+} from "@/actions/entity-attachments";
 
 type EntityDetail = Awaited<ReturnType<typeof getOrgEntityDetail>>;
 
@@ -75,6 +81,7 @@ function extractFormulaKeys(formula: string): string[] {
     const key = String(match[1] ?? "").toUpperCase().trim();
     if (key) keys.push(key);
   }
+
   return Array.from(new Set(keys));
 }
 
@@ -126,6 +133,18 @@ export default function EntityDetailPage() {
   const [calculating, setCalculating] = useState(false);
   const [calculateError, setCalculateError] = useState<string | null>(null);
 
+  const [attachments, setAttachments] = useState<EntityAttachment[]>([]);
+  const [attachmentsLoading, setAttachmentsLoading] = useState(false);
+  const [attachmentsError, setAttachmentsError] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [uploadingFile, setUploadingFile] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const [urlName, setUrlName] = useState("");
+  const [urlValue, setUrlValue] = useState("");
+  const [addingUrl, setAddingUrl] = useState(false);
+  const [urlError, setUrlError] = useState<string | null>(null);
+  const [deletingAttachmentId, setDeletingAttachmentId] = useState<string | null>(null);
+
   async function reload() {
     setLoading(true);
     setLoadError(null);
@@ -175,6 +194,20 @@ export default function EntityDetailPage() {
         }
       }
 
+      if (result?.entity?.id) {
+        setAttachmentsLoading(true);
+        setAttachmentsError(null);
+        try {
+          const rows = await getEntityAttachments({ entityId: result.entity.id });
+          setAttachments(rows);
+        } catch (err) {
+          console.error("Failed to load attachments:", err);
+          setAttachmentsError(err instanceof Error ? err.message : "Failed to load attachments");
+        } finally {
+          setAttachmentsLoading(false);
+        }
+      }
+
     } catch (error: unknown) {
       console.error("Failed to load item", error);
       setData(null);
@@ -194,6 +227,99 @@ export default function EntityDetailPage() {
 
   const entity = data?.entity ?? null;
   const isKpiEntity = String(entity?.orgEntityType?.code ?? "").toUpperCase() === "KPI";
+
+  async function refreshAttachments(entityId: string) {
+    setAttachmentsLoading(true);
+    setAttachmentsError(null);
+    try {
+      const rows = await getEntityAttachments({ entityId });
+      setAttachments(rows);
+    } catch (err) {
+      console.error("Failed to load attachments:", err);
+      setAttachmentsError(err instanceof Error ? err.message : "Failed to load attachments");
+    } finally {
+      setAttachmentsLoading(false);
+    }
+  }
+
+  async function handleUploadAttachment() {
+    if (!entity) return;
+    if (!selectedFile) return;
+
+    setUploadingFile(true);
+    setUploadError(null);
+
+    try {
+      const fd = new FormData();
+      fd.set("entityId", entity.id);
+      fd.set("file", selectedFile);
+
+      const res = await fetch("/api/entity-attachments/upload", {
+        method: "POST",
+        body: fd,
+      });
+
+      if (!res.ok) {
+        const json = (await res.json().catch(() => null)) as { error?: string } | null;
+        setUploadError(te(json?.error) || json?.error || tr("Failed to upload", "فشل رفع الملف"));
+        return;
+      }
+
+      setSelectedFile(null);
+      await refreshAttachments(entity.id);
+    } catch (err: unknown) {
+      setUploadError(err instanceof Error ? err.message : tr("Failed to upload", "فشل رفع الملف"));
+    } finally {
+      setUploadingFile(false);
+    }
+  }
+
+  async function handleAddUrlAttachment() {
+    if (!entity) return;
+
+    setAddingUrl(true);
+    setUrlError(null);
+
+    try {
+      const res = await addEntityAttachmentUrl({
+        entityId: entity.id,
+        name: urlName.trim() ? urlName.trim() : urlValue.trim(),
+        url: urlValue.trim(),
+      });
+
+      if (!res.success) {
+        setUrlError(te(res.error) || res.error || tr("Failed to add", "فشل الإضافة"));
+        return;
+      }
+
+      setUrlName("");
+      setUrlValue("");
+      await refreshAttachments(entity.id);
+    } catch (err: unknown) {
+      setUrlError(err instanceof Error ? err.message : tr("Failed to add", "فشل الإضافة"));
+    } finally {
+      setAddingUrl(false);
+    }
+  }
+
+  async function handleDeleteAttachment(attachmentId: string) {
+    if (!entity) return;
+    setDeletingAttachmentId(attachmentId);
+    setAttachmentsError(null);
+
+    try {
+      const res = await deleteEntityAttachment({ attachmentId });
+      if (!res.success) {
+        setAttachmentsError(te(res.error) || res.error || tr("Failed to delete", "فشل الحذف"));
+        return;
+      }
+      await refreshAttachments(entity.id);
+    } catch (err: unknown) {
+      setAttachmentsError(err instanceof Error ? err.message : tr("Failed to delete", "فشل الحذف"));
+    } finally {
+      setDeletingAttachmentId(null);
+    }
+  }
 
   const staticVariables = useMemo(() => {
     return (entity?.variables ?? []).filter((v) => v.isStatic);
@@ -556,6 +682,174 @@ export default function EntityDetailPage() {
           </CardContent>
         </Card>
       ) : null}
+
+      <Card className="bg-card/70 backdrop-blur shadow-sm">
+        <CardHeader>
+          <CardTitle className="text-base">{tr("Attachments & Resources", "المرفقات والمصادر")}</CardTitle>
+          <CardDescription>
+            {tr("Upload files or add links related to this entity.", "ارفع ملفات أو أضف روابط متعلقة بهذا الكيان.")}
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {attachmentsError ? (
+            <div className="rounded-xl border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive whitespace-pre-line">
+              {attachmentsError}
+            </div>
+          ) : null}
+
+          <div className="grid gap-4 lg:grid-cols-2">
+            <div className="rounded-xl border border-border bg-muted/20 p-4 space-y-3">
+              <div className="text-sm font-semibold">{tr("Upload file", "رفع ملف")}</div>
+              {uploadError ? <div className="text-sm text-destructive whitespace-pre-line">{uploadError}</div> : null}
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                <Input
+                  type="file"
+                  className="bg-card"
+                  disabled={!canEditValues || uploadingFile}
+                  onChange={(e) => setSelectedFile(e.target.files?.[0] ?? null)}
+                />
+                <Button
+                  type="button"
+                  onClick={() => void handleUploadAttachment()}
+                  disabled={!canEditValues || uploadingFile || !selectedFile}
+                  className="shrink-0"
+                >
+                  {uploadingFile ? (
+                    <>
+                      <Loader2 className="me-2 h-4 w-4 animate-spin" />
+                      {tr("Uploading", "جارٍ الرفع")}
+                    </>
+                  ) : (
+                    <>
+                      <Upload className="me-2 h-4 w-4" />
+                      {tr("Upload", "رفع")}
+                    </>
+                  )}
+                </Button>
+              </div>
+              {!canEditValues ? (
+                <div className="text-xs text-muted-foreground">{tr("You don't have permission to add attachments.", "ليس لديك صلاحية لإضافة مرفقات.")}</div>
+              ) : null}
+            </div>
+
+            <div className="rounded-xl border border-border bg-muted/20 p-4 space-y-3">
+              <div className="text-sm font-semibold">{tr("Add link", "إضافة رابط")}</div>
+              {urlError ? <div className="text-sm text-destructive whitespace-pre-line">{urlError}</div> : null}
+              <div className="grid gap-3 sm:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="resource-name">{tr("Name", "الاسم")}</Label>
+                  <Input
+                    id="resource-name"
+                    value={urlName}
+                    onChange={(e) => setUrlName(e.target.value)}
+                    className="bg-card"
+                    disabled={!canEditValues || addingUrl}
+                    placeholder={tr("Optional", "اختياري")}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="resource-url">{tr("URL", "الرابط")}</Label>
+                  <Input
+                    id="resource-url"
+                    value={urlValue}
+                    onChange={(e) => setUrlValue(e.target.value)}
+                    className="bg-card"
+                    disabled={!canEditValues || addingUrl}
+                    placeholder="https://"
+                  />
+                </div>
+              </div>
+              <div className="flex justify-end">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={() => void handleAddUrlAttachment()}
+                  disabled={!canEditValues || addingUrl || !urlValue.trim()}
+                >
+                  {addingUrl ? (
+                    <>
+                      <Loader2 className="me-2 h-4 w-4 animate-spin" />
+                      {tr("Adding", "جارٍ الإضافة")}
+                    </>
+                  ) : (
+                    <>
+                      <Link2 className="me-2 h-4 w-4" />
+                      {tr("Add", "إضافة")}
+                    </>
+                  )}
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-xl border border-border bg-muted/10 p-4">
+            <div className="flex items-center justify-between gap-2">
+              <div className="text-sm font-semibold">{tr("Items", "العناصر")}</div>
+              <div className="text-xs text-muted-foreground">
+                {attachmentsLoading ? tr("Loading", "جارٍ التحميل") : tr("Count", "العدد") + `: ${attachments.length}`}
+              </div>
+            </div>
+            <div className="mt-3 space-y-2">
+              {attachments.length === 0 && !attachmentsLoading ? (
+                <div className="text-sm text-muted-foreground">{tr("No attachments yet.", "لا توجد مرفقات بعد.")}</div>
+              ) : null}
+
+              {attachments.map((att) => (
+                <div key={att.id} className="flex items-center justify-between gap-3 rounded-lg border border-border bg-card/40 px-3 py-2">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2 min-w-0">
+                      {att.type === "URL" ? (
+                        <Link2 className="h-4 w-4 text-muted-foreground shrink-0" />
+                      ) : (
+                        <FileText className="h-4 w-4 text-muted-foreground shrink-0" />
+                      )}
+                      <div className="text-sm font-medium truncate">{att.name}</div>
+                    </div>
+                    <div className="mt-1 text-xs text-muted-foreground">
+                      {(() => {
+                        const d = new Date(att.createdAt);
+                        return df(enDateFormatter.format(d), arDateFormatter.format(d));
+                      })()}
+                      {typeof att.sizeBytes === "number" && Number.isFinite(att.sizeBytes)
+                        ? ` · ${formatNumber(att.sizeBytes)} bytes`
+                        : ""}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <Button type="button" variant="outline" size="sm" asChild>
+                      <a href={`/api/entity-attachments/${att.id}`} target="_blank" rel="noreferrer">
+                        <ExternalLink className="me-2 h-4 w-4" />
+                        {tr("Open", "فتح")}
+                      </a>
+                    </Button>
+                    {canEditValues ? (
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => void handleDeleteAttachment(att.id)}
+                        disabled={deletingAttachmentId === att.id}
+                      >
+                        {deletingAttachmentId === att.id ? (
+                          <>
+                            <Loader2 className="me-2 h-4 w-4 animate-spin" />
+                            {tr("Deleting", "جارٍ الحذف")}
+                          </>
+                        ) : (
+                          <>
+                            <Trash2 className="me-2 h-4 w-4" />
+                            {t("delete")}
+                          </>
+                        )}
+                      </Button>
+                    ) : null}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {entity.formula || entity.targetValue ? (
         <div className="grid gap-6 lg:grid-cols-3">
