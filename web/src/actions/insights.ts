@@ -2,7 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { requireOrgMember } from "@/lib/server-action-auth";
-import { KpiValueStatus, Status } from "@prisma/client";
+import { KpiValueStatus, Status } from "@/generated/prisma-client";
 
 function clamp(value: number, min: number, max: number) {
   return Math.max(min, Math.min(max, value));

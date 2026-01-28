@@ -22,7 +22,7 @@ import {
   getOrgAdminUsers,
   updateOrgAdminUser,
 } from "@/actions/org-admin";
-import type { Role } from "@prisma/client";
+import type { Role } from "@/generated/prisma-client";
 
 type UserRow = Awaited<ReturnType<typeof getOrgAdminUsers>>[number];
 type ManagerOption = Awaited<ReturnType<typeof getOrgAdminManagerOptions>>[number];

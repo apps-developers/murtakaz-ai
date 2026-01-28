@@ -4,8 +4,8 @@ import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { requireSession } from "@/lib/server-action-auth";
 import { z } from "zod";
-import { KpiApprovalLevel, Role } from "@prisma/client";
-import type { Prisma } from "@prisma/client";
+import { KpiApprovalLevel, Role } from "@/generated/prisma-client";
+import type { Prisma } from "@/generated/prisma-client";
 import { ActionValidationIssue } from "@/types/actions";
 
 type OrgEntityTypeRow = {

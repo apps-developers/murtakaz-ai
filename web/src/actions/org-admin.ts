@@ -1,7 +1,7 @@
 "use server";
 
 import { z } from "zod";
-import { Role, KpiApprovalLevel } from "@prisma/client";
+import { Role, KpiApprovalLevel } from "@/generated/prisma-client";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { requireOrgAdmin as requireOrgAdminSession } from "@/lib/server-action-auth";

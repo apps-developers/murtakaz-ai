@@ -15,7 +15,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useLocale } from "@/providers/locale-provider";
 import { createUser, deleteOrganization, getOrganizationDetails, updateOrganization, updateOrganizationEntityTypes } from "@/actions/admin";
 import { ArrowDown, ArrowUp, Pencil, Plus, Trash2 } from "lucide-react";
-import type { Role } from "@prisma/client";
+import type { Role } from "@/generated/prisma-client";
 
 type OrgDetails = {
   id: string;

@@ -1,7 +1,7 @@
 "use server";
 
 import { z } from "zod";
-import { KpiValueStatus } from "@prisma/client";
+import { KpiValueStatus } from "@/generated/prisma-client";
 import { prisma } from "@/lib/prisma";
 import { canEditEntityValues, getSubordinateIds } from "@/lib/permissions";
 import { resolveRoleRank } from "@/lib/roles";

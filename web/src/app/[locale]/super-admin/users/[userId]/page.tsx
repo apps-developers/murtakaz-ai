@@ -15,7 +15,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useLocale } from "@/providers/locale-provider";
 import { deleteUser, getOrganizations, getUserDetails, updateUser } from "@/actions/admin";
 import { Pencil, Trash2 } from "lucide-react";
-import type { Organization, Role } from "@prisma/client";
+import type { Organization, Role } from "@/generated/prisma-client";
 
 type UserDetails = Awaited<ReturnType<typeof getUserDetails>>;
 
