@@ -1,0 +1,314 @@
+# US-01 — Executive / CEO AI User Stories
+## Role: EXECUTIVE
+
+The Executive role has read access to all entities in the organization and is responsible
+for strategic oversight. They do not enter KPI values but review, approve, and make
+decisions based on performance data. AI gives them instant insight without manual analysis.
+
+---
+
+### AI-EX-01 — Morning Performance Briefing via Chat
+
+**As an** Executive  
+**I want to** ask the AI chat assistant about my organization's performance in plain Arabic or English  
+**So that** I can get a clear, data-grounded briefing in seconds — without navigating multiple dashboards
+
+**Trigger:** Executive opens Rafed KPI in the morning and clicks the chat button  
+**Preconditions:**
+- Executive is logged in with `EXECUTIVE` role
+- Organization has at least 5 KPIs with approved values in the past 90 days
+
+---
+
+#### Happy Path Flow
+
+```
+1. Executive clicks the floating chat button (bottom-right of any page)
+   → Chat panel slides open
+
+2. AI greets with a suggested starter:
+   "Good morning! Would you like your performance briefing for today?"
+
+3. Executive types (in Arabic):
+   "كيف أداؤنا هذا الربع؟"
+   ("How are we performing this quarter?")
+
+4. AI responds (in Arabic, streaming):
+   "بناءً على البيانات المعتمدة حتى الآن:
+
+   📊 الصحة العامة: 68% (أصفر — تحتاج متابعة)
+
+   ✅ المؤشرات الجيدة (5 مؤشرات أخضر):
+   • معدل نمو الإيرادات: 91% — أعلى من الهدف
+   • رضا العملاء: 88% — في المسار الصحيح
+
+   ⚠️ تحتاج اهتمام (3 مؤشرات أصفر):
+   • كفاءة العمليات: 67% — تراجع 8% عن الربع الماضي
+   • معدل الاحتفاظ بالموظفين: 41% — أدنى مستوى في 12 شهراً
+
+   🔴 يحتاج تدخل عاجل (1 مؤشر أحمر):
+   • خفض التكاليف: 44% — بعيد عن الهدف
+
+   هل تريد التعمق في أي من هذه المؤشرات؟"
+
+5. Executive follows up:
+   "ما السبب وراء تراجع معدل الاحتفاظ بالموظفين؟"
+
+6. AI responds:
+   "لا توجد ملاحظات مرفقة بالقيمة الأخيرة لهذا المؤشر تشرح السبب.
+    آخر قيمة مُدخلة منذ 18 يوماً من قبل: أحمد الرشيدي.
+    القيمة: 41% مقارنة بـ 67% في الربع السابق — انخفاض بمقدار 26 نقطة.
+    أنصح بمراجعة مدير الموارد البشرية للاستفسار عن هذا التراجع."
+```
+
+---
+
+#### AI Interaction Design
+
+**System prompt context includes:**
+- Org name, vision, mission
+- All KPI titles, targets, latest approved values, achievement %, trend direction
+- Freshness data (days since last update per KPI)
+- Pending approval count
+
+**Scope rule enforced:** Executive sees all org KPIs (not limited like Manager)
+
+**Sample exchange:**
+```
+User:  "Which pillar is most at risk?"
+AI:    "Based on current data, 'People & Culture' is the most at-risk pillar with an
+        average achievement of 48% across its 3 KPIs. The primary driver is Employee
+        Retention (41%). Operational Excellence is a close second at 61%."
+```
+
+---
+
+#### Acceptance Criteria
+- [ ] Chat panel opens from any page via floating button
+- [ ] Arabic input returns Arabic response; English input returns English response
+- [ ] Response contains only numbers present in approved database values
+- [ ] KPI names in response link to the entity detail page
+- [ ] Response appears within 5 seconds (streaming starts < 1.5s)
+- [ ] "I don't know" response when asked about data not in context
+- [ ] Executive cannot retrieve data for other organizations via chat
+- [ ] Every response shows: "Data as of [timestamp]"
+
+#### Edge Cases
+| Scenario | Expected Behavior |
+|----------|------------------|
+| No approved KPI values exist | AI: "No approved performance data is available yet for this period." |
+| All KPIs are green | AI: "All KPIs are on track — overall health is 87%." |
+| Executive asks about a specific Manager's salary | AI: "I don't have access to that information." |
+| AI service is down | Graceful error: "AI assistant is temporarily unavailable. Please check the dashboards directly." |
+| Question is off-topic (weather, news) | AI: "I'm focused on your organization's performance data. Ask me about KPIs, pillars, or approval status." |
+
+**Phase:** 1 | **Priority:** P1
+
+---
+
+---
+
+### AI-EX-02 — One-Click Board Report Generation
+
+**As an** Executive  
+**I want to** generate a structured narrative performance report with one click  
+**So that** I can prepare board briefings and stakeholder communications in minutes instead of hours
+
+**Trigger:** Executive clicks "Generate Report" button on the Overview or Dashboards page  
+**Preconditions:**
+- At least one reporting period has closed with approved values
+- Organization has vision/mission text set in org settings
+
+---
+
+#### Happy Path Flow
+
+```
+1. Executive is on the Overview page
+
+2. Clicks "Generate Report" button (top-right of Overview page)
+   → Modal opens with options:
+     - Report type: [Full Board Report ▼] or [Weekly Digest]
+     - Language: [English] [العربية]
+     - Period: [Current Quarter ▼]
+   → Clicks "Generate"
+
+3. AI generates report (streaming, ~8–15 seconds):
+
+   ────────────────────────────────────────────
+   PERFORMANCE REPORT — Q1 2026
+   Al-Musa Group | Generated by Rafed KPI AI
+   ────────────────────────────────────────────
+
+   EXECUTIVE SUMMARY
+   Overall organizational health stands at 68% (Amber) for Q1 2026, representing
+   a 4-point decline from Q4 2025 (72%). While the Vision & Growth pillar continues
+   to perform strongly, People & Culture requires immediate executive attention.
+
+   PILLAR PERFORMANCE
+   ✅ Vision & Growth: 82% — On Track
+      Revenue Growth KPI leads at 91% achievement. Market Expansion at 73% is
+      approaching the amber threshold and should be monitored.
+
+   ⚠️ Operational Excellence: 61% — Needs Attention
+      Process Efficiency remains strong at 78%, however Cost Reduction has declined
+      to 44% — the lowest point in the past four quarters.
+
+   🔴 People & Culture: 48% — Urgent Intervention Required
+      Employee Retention has fallen to 41%, a 26-point drop from Q4 2025. Training
+      Completion is at 55%. This pillar requires escalation to the CHRO.
+
+   RECOMMENDED ACTIONS
+   1. Schedule emergency review of People & Culture KPIs with HR leadership
+   2. Investigate root cause of Cost Reduction decline — review procurement variance
+   3. 7 KPIs have not been updated in over 60 days — enforce data submission SLA
+
+   APPROVAL COMPLIANCE
+   • 12 KPI values pending approval | 4 submissions older than 10 days
+   ────────────────────────────────────────────
+
+4. Executive clicks "Copy" or "Download PDF"
+
+5. Optionally clicks language toggle to view Arabic version
+```
+
+---
+
+#### Acceptance Criteria
+- [ ] Report generates in < 15 seconds
+- [ ] All numbers in report match approved database values exactly
+- [ ] Arabic report is MSA quality, not machine-translation style
+- [ ] Report labeled: "AI-generated — verify before sharing externally"
+- [ ] Copy-to-clipboard button works
+- [ ] Download as PDF produces clean, formatted document
+- [ ] Report scoped to the current user's organization only
+- [ ] Weekly Digest variant is shorter (< 200 words)
+
+#### Edge Cases
+| Scenario | Expected Behavior |
+|----------|------------------|
+| No data for selected period | "Insufficient approved data for Q1 2026. Only 2 of 18 KPIs have approved values." |
+| Only DRAFT values exist | Report based only on APPROVED/LOCKED values; mentions: "Note: X KPIs have draft values not yet approved." |
+| Org has no vision/mission set | Report generated without strategic framing section; nudge to set vision/mission in settings |
+
+**Phase:** 1 | **Priority:** P1
+
+---
+
+---
+
+### AI-EX-03 — At-Risk KPI Early Warning Alert
+
+**As an** Executive  
+**I want to** receive a proactive alert when a KPI is trending toward RED before the period closes  
+**So that** I can intervene early rather than discovering the failure after the period ends
+
+**Trigger:** Automated daily check — runs at 6:00 AM org timezone  
+**Preconditions:**
+- KPI has at least 3 approved values (minimum for trend detection)
+- Current period is at least 50% elapsed (enough time for trend to be meaningful)
+
+---
+
+#### Happy Path Flow
+
+```
+1. Automated job runs daily at 6:00 AM
+
+2. For each KPI: calculate projected end-of-period achievement based on:
+   - Current achievement
+   - Historical trend (last 3 periods)
+   - Days remaining in period
+
+3. Flag KPIs where projected final < 75% (green threshold)
+
+4. Generate plain-language alert using LLM
+
+5. Deliver alert as:
+   a. In-app notification (bell icon badge)
+   b. Banner on the entity detail page
+   c. Listed in "AI Alerts" section on Overview page
+
+6. Executive sees notification:
+   "🚨 Early Warning: Employee Retention Rate
+    Current: 58% | Projected end-of-quarter: 51–55% (Amber)
+    Based on declining trend over 3 consecutive periods.
+    Recommended: Review with HR before Q closes."
+
+7. Executive clicks → goes to entity detail page
+   → AI banner is shown at top of the page with context
+```
+
+---
+
+#### Acceptance Criteria
+- [ ] Alert fires at least 7 days before period end (not same-day)
+- [ ] Projected range shown (not a single point estimate — acknowledges uncertainty)
+- [ ] Minimum 3 data points required; graceful message if fewer exist
+- [ ] Alert not repeated for the same KPI + period if already acknowledged
+- [ ] Executive can dismiss/snooze an alert with a reason
+- [ ] Alert links directly to the entity page
+- [ ] Arabic and English versions generated simultaneously
+
+#### Edge Cases
+| Scenario | Expected Behavior |
+|----------|------------------|
+| KPI has only 1–2 data points | No forecast — show "Insufficient history for early warning on this KPI" |
+| KPI is already RED | Show as "Already at risk" — different alert type, no "early" label |
+| KPI has a seasonal pattern (always dips mid-quarter) | Ideally suppressed if dip is within historical range (Phase 3 enhancement) |
+
+**Phase:** 3 | **Priority:** P1
+
+---
+
+---
+
+### AI-EX-04 — Trend Forecast for Strategic KPI
+
+**As an** Executive  
+**I want to** see a forecast of what a key KPI will be at the end of the year  
+**So that** I can assess whether the current trajectory will meet the annual strategic target
+
+**Trigger:** Executive opens a KPI entity detail page and clicks "Forecast" tab  
+**Preconditions:**
+- KPI has at least 6 approved values (minimum for reliable forecasting)
+
+---
+
+#### Happy Path Flow
+
+```
+1. Executive opens entity detail page for "Revenue Growth Rate"
+
+2. Clicks "Forecast" tab (next to History tab)
+
+3. Page shows:
+   ┌────────────────────────────────────────────────────────┐
+   │  Revenue Growth Rate — Annual Forecast                  │
+   │                                                          │
+   │  Historical:  ━━━━━━━━━━━━━━━━━━━━                       │
+   │  Forecast:                        ┅┅┅┅┅┅┅┅┅             │
+   │  Upper bound:                     ···············         │
+   │  Lower bound:                     ···············         │
+   │                                                          │
+   │  Predicted year-end achievement: 78–84%  🟢 On Track     │
+   │  Confidence: Moderate (based on 8 data points)           │
+   └────────────────────────────────────────────────────────┘
+
+4. Below chart, AI narrative:
+   "Based on the consistent upward trend over the past 8 months, Revenue Growth
+    Rate is forecast to reach 78–84% by year-end. This exceeds the 75% green
+    threshold. The forecast confidence is moderate — results may vary if market
+    conditions change significantly in Q3."
+```
+
+---
+
+#### Acceptance Criteria
+- [ ] Chart shows historical data + dotted forecast line + confidence band
+- [ ] Minimum data points requirement clearly stated (6 required, current count shown)
+- [ ] Confidence level disclosed (Low / Moderate / High based on data point count)
+- [ ] Narrative explicitly caveats uncertainty
+- [ ] "Insufficient data" shown gracefully for KPIs with < 6 values
+
+**Phase:** 3 | **Priority:** P2
