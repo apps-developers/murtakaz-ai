@@ -11,15 +11,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Progress } from "@/components/ui/progress";
 import { useLocale } from "@/providers/locale-provider";
 import { getDashboardInsights } from "@/actions/insights";
+import { statusColorForAchievement } from "@/lib/rag";
 
 function clamp(value: number, min: number, max: number) {
   return Math.max(min, Math.min(max, value));
-}
-
-function statusColorForAchievement(value: number) {
-  if (value >= 85) return "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20";
-  if (value >= 70) return "bg-blue-500/10 text-blue-700 dark:text-blue-400 border-blue-500/20";
-  return "bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/20";
 }
 
 export default function DashboardsPage() {

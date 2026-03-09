@@ -22,6 +22,7 @@ type EntityTypeRow = Awaited<ReturnType<typeof getOrgEntitiesByTypeCode>>["entit
 
 type StatusCode = "PLANNED" | "ACTIVE" | "AT_RISK" | "COMPLETED";
 type DirectionCode = "INCREASE_IS_GOOD" | "DECREASE_IS_GOOD";
+type IndicatorTypeCode = "LEADING" | "LAGGING";
 type PeriodTypeCode = "MONTHLY" | "QUARTERLY" | "YEARLY";
 
 type OwnerOption = Awaited<ReturnType<typeof getOrgOwnerOptions>>[number];
@@ -94,9 +95,12 @@ export default function NewEntityPage() {
   const [unitAr, setUnitAr] = useState("");
 
   const [direction, setDirection] = useState<DirectionCode>("INCREASE_IS_GOOD");
+  const [indicatorType, setIndicatorType] = useState<IndicatorTypeCode | "NONE">("NONE");
 
   const [baselineValue, setBaselineValue] = useState("");
   const [targetValue, setTargetValue] = useState("");
+  const [minValue, setMinValue] = useState("");
+  const [maxValue, setMaxValue] = useState("");
   const [weight, setWeight] = useState("");
   const [formula, setFormula] = useState("");
 
@@ -194,8 +198,11 @@ export default function NewEntityPage() {
         unit: unit.trim() ? unit : undefined,
         unitAr: unitAr.trim() ? unitAr : undefined,
         direction,
+        indicatorType: indicatorType === "NONE" ? undefined : indicatorType,
         baselineValue: baselineValue.trim() ? Number(baselineValue) : undefined,
         targetValue: targetValue.trim() ? Number(targetValue) : undefined,
+        minValue: minValue.trim() ? Number(minValue) : undefined,
+        maxValue: maxValue.trim() ? Number(maxValue) : undefined,
         weight: weight.trim() ? Number(weight) : undefined,
         formula: formula.trim() ? formula : undefined,
 
@@ -404,12 +411,25 @@ export default function NewEntityPage() {
                     </Select>
                   </div>
                   <div className="space-y-2">
-                    <Label>{tr("Weight", "الوزن")}</Label>
-                    <Input value={weight} onChange={(e) => setWeight(e.target.value)} className="bg-card" inputMode="decimal" />
+                    <Label>{tr("Indicator Type", "نوع المؤشر")}</Label>
+                    <Select value={indicatorType} onValueChange={(v) => setIndicatorType(v as IndicatorTypeCode | "NONE")}>
+                      <SelectTrigger className="bg-card">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="NONE">{tr("None", "بدون")}</SelectItem>
+                        <SelectItem value="LEADING">{tr("Leading", "قائد")}</SelectItem>
+                        <SelectItem value="LAGGING">{tr("Lagging", "متأخر")}</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
 
                 <div className="grid gap-4 md:grid-cols-3">
+                  <div className="space-y-2">
+                    <Label>{tr("Weight", "الوزن")}</Label>
+                    <Input value={weight} onChange={(e) => setWeight(e.target.value)} className="bg-card" inputMode="decimal" />
+                  </div>
                   <div className="space-y-2">
                     <Label>{t("unitAr")}</Label>
                     <Input value={unitAr} onChange={(e) => setUnitAr(e.target.value)} className="bg-card" />
@@ -418,9 +438,20 @@ export default function NewEntityPage() {
                     <Label>{t("baseline")}</Label>
                     <Input value={baselineValue} onChange={(e) => setBaselineValue(e.target.value)} className="bg-card" inputMode="decimal" />
                   </div>
+                </div>
+
+                <div className="grid gap-4 md:grid-cols-3">
                   <div className="space-y-2">
                     <Label>{t("target")}</Label>
                     <Input value={targetValue} onChange={(e) => setTargetValue(e.target.value)} className="bg-card" inputMode="decimal" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>{tr("Min Value", "الحد الأدنى")}</Label>
+                    <Input value={minValue} onChange={(e) => setMinValue(e.target.value)} className="bg-card" inputMode="decimal" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>{tr("Max Value", "الحد الأقصى")}</Label>
+                    <Input value={maxValue} onChange={(e) => setMaxValue(e.target.value)} className="bg-card" inputMode="decimal" />
                   </div>
                 </div>
 

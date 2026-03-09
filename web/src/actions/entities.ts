@@ -4,6 +4,7 @@ import { z } from "zod";
 import {
   KpiAggregationMethod,
   KpiDirection,
+  KpiIndicatorType,
   KpiPeriodType,
   KpiSourceType,
   KpiVariableDataType,
@@ -607,8 +608,11 @@ export async function getOrgEntityDetail(input: { entityId: string }) {
       unitAr: true,
       direction: true,
       aggregation: true,
+      indicatorType: true,
       baselineValue: true,
       targetValue: true,
+      minValue: true,
+      maxValue: true,
       weight: true,
       formula: true,
       createdAt: true,
@@ -735,8 +739,11 @@ export async function getOrgEntityDetail(input: { entityId: string }) {
       periodType: entity.periodType,
       direction: entity.direction,
       aggregation: entity.aggregation,
+      indicatorType: entity.indicatorType,
       baselineValue: entity.baselineValue,
       targetValue: entity.targetValue,
+      minValue: entity.minValue,
+      maxValue: entity.maxValue,
       weight: entity.weight,
       unit: entity.unit,
       unitAr: entity.unitAr,
@@ -799,12 +806,21 @@ const createOrgEntitySchema = z.object({
 
   direction: z.nativeEnum(KpiDirection).optional(),
   aggregation: z.nativeEnum(KpiAggregationMethod).optional(),
+  indicatorType: z.nativeEnum(KpiIndicatorType).nullable().optional(),
 
   baselineValue: z.preprocess(
     (v) => (v === "" || v === undefined || v === null ? undefined : Number(v)),
     z.number().finite().optional(),
   ),
   targetValue: z.preprocess(
+    (v) => (v === "" || v === undefined || v === null ? undefined : Number(v)),
+    z.number().finite().optional(),
+  ),
+  minValue: z.preprocess(
+    (v) => (v === "" || v === undefined || v === null ? undefined : Number(v)),
+    z.number().finite().optional(),
+  ),
+  maxValue: z.preprocess(
     (v) => (v === "" || v === undefined || v === null ? undefined : Number(v)),
     z.number().finite().optional(),
   ),
@@ -884,8 +900,11 @@ export async function createOrgEntity(input: z.infer<typeof createOrgEntitySchem
         unitAr: parsed.data.unitAr?.trim() ? parsed.data.unitAr.trim() : null,
         direction: parsed.data.direction ?? KpiDirection.INCREASE_IS_GOOD,
         aggregation: parsed.data.aggregation ?? KpiAggregationMethod.LAST_VALUE,
+        indicatorType: parsed.data.indicatorType ?? null,
         baselineValue: typeof parsed.data.baselineValue === "undefined" ? null : parsed.data.baselineValue,
         targetValue: typeof parsed.data.targetValue === "undefined" ? null : parsed.data.targetValue,
+        minValue: typeof parsed.data.minValue === "undefined" ? null : parsed.data.minValue,
+        maxValue: typeof parsed.data.maxValue === "undefined" ? null : parsed.data.maxValue,
         weight: typeof parsed.data.weight === "undefined" ? null : parsed.data.weight,
         formula,
 
@@ -952,12 +971,21 @@ const updateOrgEntitySchema = z.object({
 
   direction: z.nativeEnum(KpiDirection).optional(),
   aggregation: z.nativeEnum(KpiAggregationMethod).optional(),
+  indicatorType: z.nativeEnum(KpiIndicatorType).nullable().optional(),
 
   baselineValue: z.preprocess(
     (v) => (v === "" || v === undefined ? undefined : v === null ? null : Number(v)),
     z.number().finite().nullable().optional(),
   ),
   targetValue: z.preprocess(
+    (v) => (v === "" || v === undefined ? undefined : v === null ? null : Number(v)),
+    z.number().finite().nullable().optional(),
+  ),
+  minValue: z.preprocess(
+    (v) => (v === "" || v === undefined ? undefined : v === null ? null : Number(v)),
+    z.number().finite().nullable().optional(),
+  ),
+  maxValue: z.preprocess(
     (v) => (v === "" || v === undefined ? undefined : v === null ? null : Number(v)),
     z.number().finite().nullable().optional(),
   ),
@@ -1030,8 +1058,11 @@ export async function updateOrgEntity(input: z.infer<typeof updateOrgEntitySchem
           ...(typeof parsed.data.unitAr !== "undefined" ? { unitAr: parsed.data.unitAr.trim() || null } : {}),
           ...(typeof parsed.data.direction !== "undefined" ? { direction: parsed.data.direction } : {}),
           ...(typeof parsed.data.aggregation !== "undefined" ? { aggregation: parsed.data.aggregation } : {}),
+          ...(typeof parsed.data.indicatorType !== "undefined" ? { indicatorType: parsed.data.indicatorType } : {}),
           ...(typeof parsed.data.baselineValue !== "undefined" ? { baselineValue: parsed.data.baselineValue } : {}),
           ...(typeof parsed.data.targetValue !== "undefined" ? { targetValue: parsed.data.targetValue } : {}),
+          ...(typeof parsed.data.minValue !== "undefined" ? { minValue: parsed.data.minValue } : {}),
+          ...(typeof parsed.data.maxValue !== "undefined" ? { maxValue: parsed.data.maxValue } : {}),
           ...(typeof parsed.data.weight !== "undefined" ? { weight: parsed.data.weight } : {}),
           ...(typeof parsed.data.formula !== "undefined" ? { formula: parsed.data.formula && parsed.data.formula.trim() ? parsed.data.formula.trim() : null } : {}),
         },
@@ -1130,6 +1161,10 @@ export async function saveOrgEntityKpiValuesDraft(input: z.infer<typeof saveOrgE
       key: true,
       periodType: true,
       formula: true,
+      targetValue: true,
+      minValue: true,
+      maxValue: true,
+      direction: true,
       variables: {
         select: {
           id: true,
@@ -1195,7 +1230,33 @@ export async function saveOrgEntityKpiValuesDraft(input: z.infer<typeof saveOrgE
     calculatedValue = parsed.data.manualValue;
   }
 
+  if (calculatedValue !== null) {
+    if (typeof entity.minValue === "number" && calculatedValue < entity.minValue) {
+      return {
+        success: false as const,
+        error: "valueBelowMinimum",
+        issues: [{ path: ["manualValue"], message: "valueBelowMinimum", params: { min: entity.minValue } } satisfies ActionValidationIssue],
+      };
+    }
+    if (typeof entity.maxValue === "number" && calculatedValue > entity.maxValue) {
+      return {
+        success: false as const,
+        error: "valueAboveMaximum",
+        issues: [{ path: ["manualValue"], message: "valueAboveMaximum", params: { max: entity.maxValue } } satisfies ActionValidationIssue],
+      };
+    }
+  }
+
   const note = parsed.data.note?.trim() ? parsed.data.note.trim() : null;
+
+  let achievementValue: number | null = null;
+  if (calculatedValue !== null && typeof entity.targetValue === "number" && entity.targetValue !== 0) {
+    if (String(entity.direction) === "DECREASE_IS_GOOD") {
+      achievementValue = Math.max(0, Math.min(100, (entity.targetValue / calculatedValue) * 100));
+    } else {
+      achievementValue = Math.max(0, Math.min(100, (calculatedValue / entity.targetValue) * 100));
+    }
+  }
 
   try {
     const entityValue = await prisma.entityValue.create({
@@ -1207,6 +1268,7 @@ export async function saveOrgEntityKpiValuesDraft(input: z.infer<typeof saveOrgE
         actualValue: hasVariables ? null : parsed.data.manualValue ?? null,
         calculatedValue,
         finalValue: calculatedValue,
+        achievementValue,
       },
       select: { id: true },
     });

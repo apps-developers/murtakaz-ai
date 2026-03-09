@@ -27,9 +27,13 @@ Located at the top of the Admin page. Displays and allows editing of:
 | **Vision** | Vision statement (English) |
 | **Vision (Arabic)** | Vision statement in Arabic |
 | **KPI Approval Level** | Who approves submitted KPI values: `MANAGER`, `EXECUTIVE`, or `ADMIN` |
+| **RAG Green Threshold** | Minimum achievement % to be considered Green (default: 75) |
+| **RAG Amber Threshold** | Minimum achievement % to be considered Amber (default: 50). Values below this are Red. |
 | **Contacts** | Organization contact info (JSON) |
 
 > Changing the **KPI Approval Level** immediately affects which role sees submissions in the Approvals queue.
+
+> Changing **RAG thresholds** takes effect immediately on all dashboards and health displays across the organization.
 
 ---
 

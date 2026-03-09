@@ -6,6 +6,10 @@ import { prisma } from "@/lib/prisma";
 import { canEditEntityValues, getSubordinateIds } from "@/lib/permissions";
 import { resolveRoleRank } from "@/lib/roles";
 import { getOrgKpiApprovalLevel, requireOrgMember } from "@/lib/server-action-auth";
+import {
+  dispatchApprovalPendingNotification,
+  dispatchApprovalDecisionNotification,
+} from "@/actions/notifications";
 
 /**
  * Submit entity value for approval
@@ -38,7 +42,7 @@ export async function submitEntityForApproval(input: { entityId: string; periodI
         orgId: session.user.orgId,
         deletedAt: null 
       },
-      select: { id: true },
+      select: { id: true, title: true, titleAr: true },
     });
 
     if (!entity) {
@@ -100,6 +104,17 @@ export async function submitEntityForApproval(input: { entityId: string; periodI
     });
 
     if (res.count === 0) return { success: false as const, error: "periodNotDraft" };
+
+    // Dispatch notification to approvers (fire-and-forget)
+    void dispatchApprovalPendingNotification({
+      orgId: session.user.orgId,
+      entityId: entity.id,
+      entityValueId: parsed.data.periodId,
+      entityTitle: String(entity.title),
+      entityTitleAr: entity.titleAr ? String(entity.titleAr) : null,
+      submitterName: String(session.user.name ?? ""),
+    }).catch((e) => console.warn("Failed to dispatch approval notification:", e));
+
     return { success: true as const, autoApproved: false };
   } catch (error: unknown) {
     console.error("Failed to submit for approval:", error);
@@ -164,6 +179,17 @@ export async function approveEntityValue(input: { entityId: string; periodId: st
       return { success: false as const, error: "periodNotSubmitted" };
     }
 
+    // Verify entity belongs to user's org (fetch title for notification)
+    const entityForNotif = await prisma.entity.findFirst({
+      where: { id: parsed.data.entityId, orgId: session.user.orgId, deletedAt: null },
+      select: { id: true, title: true, titleAr: true },
+    });
+
+    const period2 = await prisma.entityValue.findFirst({
+      where: { id: parsed.data.periodId, entityId: parsed.data.entityId },
+      select: { id: true, status: true, submittedBy: true },
+    });
+
     const res = await prisma.entityValue.updateMany({
       where: { id: parsed.data.periodId, entityId: parsed.data.entityId, status: KpiValueStatus.SUBMITTED },
       data: {
@@ -174,6 +200,19 @@ export async function approveEntityValue(input: { entityId: string; periodId: st
     });
 
     if (res.count === 0) return { success: false as const, error: "periodNotSubmitted" };
+
+    // Notify submitter (fire-and-forget)
+    if (entityForNotif && period2?.submittedBy) {
+      void dispatchApprovalDecisionNotification({
+        orgId: session.user.orgId,
+        recipientUserId: period2.submittedBy,
+        entityId: entityForNotif.id,
+        entityValueId: parsed.data.periodId,
+        entityTitle: String(entityForNotif.title),
+        entityTitleAr: entityForNotif.titleAr ? String(entityForNotif.titleAr) : null,
+        approved: true,
+      }).catch((e) => console.warn("Failed to dispatch approval decision notification:", e));
+    }
 
     return { success: true as const };
   } catch (error: unknown) {
@@ -244,6 +283,12 @@ export async function rejectEntityValue(input: { entityId: string; periodId: str
       ? `${period.note ? period.note + "\n\n" : ""}[REJECTED] ${parsed.data.reason}`
       : period.note;
 
+    // Fetch entity title for notification
+    const entityForNotif = await prisma.entity.findFirst({
+      where: { id: parsed.data.entityId, orgId: session.user.orgId, deletedAt: null },
+      select: { id: true, title: true, titleAr: true },
+    });
+
     const res = await prisma.entityValue.updateMany({
       where: { id: parsed.data.periodId, entityId: parsed.data.entityId, status: KpiValueStatus.SUBMITTED },
       data: {
@@ -254,6 +299,25 @@ export async function rejectEntityValue(input: { entityId: string; periodId: str
     });
 
     if (res.count === 0) return { success: false as const, error: "periodNotSubmitted" };
+
+    // Notify submitter (fire-and-forget)
+    if (entityForNotif && period.status === KpiValueStatus.SUBMITTED) {
+      const submittedByUserId = await prisma.entityValue.findFirst({
+        where: { id: parsed.data.periodId },
+        select: { submittedBy: true },
+      });
+      if (submittedByUserId?.submittedBy) {
+        void dispatchApprovalDecisionNotification({
+          orgId: session.user.orgId,
+          recipientUserId: submittedByUserId.submittedBy,
+          entityId: entityForNotif.id,
+          entityValueId: parsed.data.periodId,
+          entityTitle: String(entityForNotif.title),
+          entityTitleAr: entityForNotif.titleAr ? String(entityForNotif.titleAr) : null,
+          approved: false,
+        }).catch((e) => console.warn("Failed to dispatch rejection notification:", e));
+      }
+    }
 
     return { success: true as const };
   } catch (error: unknown) {

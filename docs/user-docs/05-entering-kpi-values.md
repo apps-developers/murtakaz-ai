@@ -75,6 +75,17 @@ The system computes the formula automatically and shows the **Calculated Value**
 
 > **Tip:** For entities with `isStatic = true` variables, those values are pre-filled and cannot be changed per entry.
 
+### Value Range Validation
+
+If the entity has a **Min Value** or **Max Value** configured, the system will reject entries that fall outside the allowed range. You will see an inline error message:
+
+| Error | Meaning |
+|-------|---------|
+| `valueBelowMinimum` | The entered value is less than the configured minimum |
+| `valueAboveMaximum` | The entered value is greater than the configured maximum |
+
+Correct the value and save again. If the range seems wrong, contact an Admin to adjust the entity's Min/Max settings.
+
 ---
 
 ## Step 4 — Save as Draft
@@ -98,6 +109,8 @@ When the value is ready for review:
 The value status changes to **SUBMITTED** and it now appears in the **Approvals** queue for the designated approver.
 
 > **Note:** Once submitted, you cannot edit the value. If a mistake is found before approval, ask an Admin to reject it so you can re-enter.
+
+After submission, **eligible approvers automatically receive a bell notification** in the top header. The bell icon shows an unread count badge and clicking it clears notifications and navigates to the Approvals queue.
 
 ---
 
@@ -124,18 +137,16 @@ Only **DRAFT** values can be edited. SUBMITTED, APPROVED, and LOCKED values are 
 
 ## Achievement Value
 
-The system may display an **Achievement Value** alongside the actual/calculated value. This is derived as:
+The system automatically computes and stores an **Achievement Value** whenever a value is saved. The formula depends on the entity's **Direction**:
 
-```
-Achievement % = (Actual Value / Target Value) × 100
-```
+| Direction | Formula |
+|-----------|----------|
+| `INCREASE_IS_GOOD` | `(Actual Value ÷ Target Value) × 100` |
+| `DECREASE_IS_GOOD` | `(Target Value ÷ Actual Value) × 100` |
 
-For `DECREASE_IS_GOOD` direction:
-```
-Achievement % = (Target Value / Actual Value) × 100
-```
+Achievement is clamped between **0%** and **100%**, and is shown as a gauge on the entity list and detail pages. It is also the basis for RAG (Red/Amber/Green) health coloring.
 
-Achievement is shown as a gauge on the entity list and detail pages.
+> **Note:** If no Target Value is set on the entity, achievement cannot be calculated and the gauge will not display.
 
 ---
 
@@ -159,5 +170,6 @@ The system does not enforce cadence automatically, but stale entities surface in
 |---------|----------|
 | Cannot see the "Add Value" button | Check you are assigned to the entity, or ask an Admin |
 | Value shows wrong calculated result | Verify all variable inputs are correct; check the formula with an Admin |
+| Value rejected with "valueBelowMinimum" or "valueAboveMaximum" | The value is outside the entity's configured Min/Max range. Correct the value or ask an Admin to update the range. |
 | Submitted value has a mistake | Ask an Admin or the approver to reject it; re-enter after rejection |
-| Value stuck in SUBMITTED | Check the Approvals queue — the approver may not have seen it yet |
+| Value stuck in SUBMITTED | Check the Approvals queue — the approver may not have seen it yet. The approver should also see a bell notification in the header. |

@@ -14,6 +14,7 @@ function computeAchievement(input: {
   calculatedValue?: number | null;
   actualValue?: number | null;
   targetValue?: number | null;
+  direction?: string | null;
 }) {
   if (typeof input.achievementValue === "number" && Number.isFinite(input.achievementValue)) {
     return clamp(Number(input.achievementValue), 0, 100);
@@ -31,6 +32,9 @@ function computeAchievement(input: {
   if (typeof raw !== "number" || !Number.isFinite(raw)) return null;
   if (typeof input.targetValue !== "number" || !Number.isFinite(input.targetValue) || input.targetValue === 0) return null;
 
+  if (input.direction === "DECREASE_IS_GOOD") {
+    return clamp((input.targetValue / raw) * 100, 0, 100);
+  }
   return clamp((raw / input.targetValue) * 100, 0, 100);
 }
 
@@ -133,6 +137,7 @@ async function getKpisWithLatestValue(orgId: string, take = 500) {
       unit: true,
       unitAr: true,
       targetValue: true,
+      direction: true,
       ownerUser: { select: { id: true, name: true } },
       values: {
         orderBy: [{ createdAt: "desc" }],
@@ -182,6 +187,7 @@ export async function getOverviewInsights() {
       calculatedValue: v?.calculatedValue,
       actualValue: v?.actualValue,
       targetValue: k.targetValue,
+      direction: k.direction,
     });
 
     if (typeof ach === "number") {
@@ -336,6 +342,7 @@ export async function getDashboardInsights() {
         calculatedValue: v?.calculatedValue,
         actualValue: v?.actualValue,
         targetValue: k.targetValue,
+        direction: k.direction,
       });
       if (typeof achievement === "number") {
         sum += achievement;
@@ -518,6 +525,7 @@ export async function getExecutiveDashboardInsights() {
         calculatedValue: v?.calculatedValue,
         actualValue: v?.actualValue,
         targetValue: k.targetValue,
+        direction: k.direction,
       });
       return {
         id: String(k.id),

@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { LanguageToggle } from "@/components/language-toggle";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { getMyOrganizationEntityTypes } from "@/actions/navigation";
+import { getMyNotificationCount, markNotificationsRead } from "@/actions/notifications";
 import { useAuth } from "@/providers/auth-provider";
 import { type TranslationKey, useLocale } from "@/providers/locale-provider";
 import { Icon } from "@/components/icon";
@@ -266,6 +267,21 @@ export function AppShell({ children, showLogo = true }: { children: React.ReactN
   }, [canonicalPath]);
 
   const [orgEntityTypes, setOrgEntityTypes] = useState<Array<{ code: string; name: string; nameAr: string | null; sortOrder: number }>>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    if (!showAppNav || !user || userRole === "SUPER_ADMIN") return;
+    let cancelled = false;
+    async function fetchCount() {
+      try {
+        const count = await getMyNotificationCount();
+        if (!cancelled) setUnreadCount(count);
+      } catch { /* ignore */ }
+    }
+    void fetchCount();
+    const interval = setInterval(() => void fetchCount(), 60_000);
+    return () => { cancelled = true; clearInterval(interval); };
+  }, [showAppNav, user, userRole]);
 
   useEffect(() => {
     if (!showAppNav) return;
@@ -581,6 +597,25 @@ export function AppShell({ children, showLogo = true }: { children: React.ReactN
               )}
 
               <div className="flex items-center gap-3">
+                {showAppNav && userRole !== "SUPER_ADMIN" ? (
+                  <Button
+                    variant="ghost"
+                    className="relative h-9 w-9 px-0 text-muted-foreground hover:bg-accent hover:text-foreground"
+                    aria-label="Notifications"
+                    onClick={() => {
+                      void markNotificationsRead().catch(() => {});
+                      setUnreadCount(0);
+                      window.location.href = `/${locale}/approvals`;
+                    }}
+                  >
+                    <Icon name="tabler:bell" className="h-5 w-5" />
+                    {unreadCount > 0 ? (
+                      <span className="absolute -top-0.5 -end-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
+                        {unreadCount > 9 ? "9+" : unreadCount}
+                      </span>
+                    ) : null}
+                  </Button>
+                ) : null}
                 {showAppNav ? (
                   <Button
                     variant="ghost"

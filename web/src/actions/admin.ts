@@ -30,6 +30,8 @@ type OrganizationRow = {
   aboutAr: string | null;
   contacts: Prisma.JsonValue | null;
   kpiApprovalLevel: KpiApprovalLevel;
+  ragGreenMin: number;
+  ragAmberMin: number;
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date | null;
@@ -265,6 +267,8 @@ export async function getOrganizations() {
       aboutAr: true,
       contacts: true,
       kpiApprovalLevel: true,
+      ragGreenMin: true,
+      ragAmberMin: true,
       createdAt: true,
       updatedAt: true,
       deletedAt: true,
@@ -311,6 +315,8 @@ export async function updateOrganization(data: z.infer<typeof updateOrgSchema>) 
         aboutAr: true,
         contacts: true,
         kpiApprovalLevel: true,
+        ragGreenMin: true,
+        ragAmberMin: true,
         createdAt: true,
         updatedAt: true,
         deletedAt: true,
@@ -659,6 +665,8 @@ export async function getOrganizationDetails(orgId: string) {
       aboutAr: true,
       contacts: true,
       kpiApprovalLevel: true,
+      ragGreenMin: true,
+      ragAmberMin: true,
       createdAt: true,
       updatedAt: true,
       deletedAt: true,

@@ -102,7 +102,25 @@ To change this setting, navigate to **Admin** → **Organization Settings**.
 
 ## Notifications
 
-When a value is submitted, the designated approver should be notified (depending on notification settings configured in user preferences). Check your email or in-app notification settings if you are an approver and want to receive alerts when items enter your queue.
+The system sends **in-app notifications** automatically — no configuration required.
+
+### Bell Icon (Header)
+
+A bell icon (🔔) appears in the top header bar for all non-Super Admin users. When unread notifications exist, a red badge shows the count (capped at "9+").
+
+| Event | Who receives the notification |
+|-------|-------------------------------|
+| **Value submitted** | All users whose role rank ≥ the org's `kpiApprovalLevel` (i.e., eligible approvers) |
+| **Value approved** | The user who originally submitted the value |
+| **Value rejected** | The user who originally submitted the value |
+
+### Clearing Notifications
+
+Clicking the bell icon:
+1. Marks all unread notifications as read.
+2. Navigates to the **Approvals** page.
+
+The notification count refreshes automatically every **60 seconds** while the app is open.
 
 ---
 

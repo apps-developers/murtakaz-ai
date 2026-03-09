@@ -23,6 +23,7 @@ type OwnerOption = Awaited<ReturnType<typeof getOrgOwnerOptions>>[number];
 
 type StatusCode = "PLANNED" | "ACTIVE" | "AT_RISK" | "COMPLETED";
 type DirectionCode = "INCREASE_IS_GOOD" | "DECREASE_IS_GOOD";
+type IndicatorTypeCode = "LEADING" | "LAGGING";
 type PeriodTypeCode = "MONTHLY" | "QUARTERLY" | "YEARLY";
 type VariableDataTypeCode = "NUMBER" | "PERCENTAGE";
 
@@ -93,9 +94,12 @@ export default function EditEntityPage() {
   const [unitAr, setUnitAr] = useState("");
 
   const [direction, setDirection] = useState<DirectionCode>("INCREASE_IS_GOOD");
+  const [indicatorType, setIndicatorType] = useState<IndicatorTypeCode | "NONE">("NONE");
 
   const [baselineValue, setBaselineValue] = useState("");
   const [targetValue, setTargetValue] = useState("");
+  const [minValue, setMinValue] = useState("");
+  const [maxValue, setMaxValue] = useState("");
   const [weight, setWeight] = useState("");
   const [formula, setFormula] = useState("");
 
@@ -137,8 +141,11 @@ export default function EditEntityPage() {
           setUnit(e.unit ? String(e.unit) : "");
           setUnitAr(e.unitAr ? String(e.unitAr) : "");
           setDirection((e.direction as DirectionCode) ?? "INCREASE_IS_GOOD");
+          setIndicatorType((e.indicatorType as IndicatorTypeCode | null | undefined) ?? "NONE");
           setBaselineValue(typeof e.baselineValue === "number" ? String(e.baselineValue) : "");
           setTargetValue(typeof e.targetValue === "number" ? String(e.targetValue) : "");
+          setMinValue(typeof e.minValue === "number" ? String(e.minValue) : "");
+          setMaxValue(typeof e.maxValue === "number" ? String(e.maxValue) : "");
           setWeight(typeof e.weight === "number" ? String(e.weight) : "");
           setFormula(e.formula ? String(e.formula) : "");
 
@@ -230,8 +237,11 @@ export default function EditEntityPage() {
         unit: unit.trim() ? unit.trim() : undefined,
         unitAr: unitAr.trim() ? unitAr.trim() : undefined,
         direction,
+        indicatorType: indicatorType === "NONE" ? null : indicatorType,
         baselineValue: baselineValue.trim() ? Number(baselineValue) : undefined,
         targetValue: targetValue.trim() ? Number(targetValue) : undefined,
+        minValue: minValue.trim() ? Number(minValue) : undefined,
+        maxValue: maxValue.trim() ? Number(maxValue) : undefined,
         weight: weight.trim() ? Number(weight) : undefined,
         formula: formula.trim() ? formula.trim() : undefined,
         variables:
@@ -436,12 +446,25 @@ export default function EditEntityPage() {
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label>{tr("Weight", "الوزن")}</Label>
-                  <Input value={weight} onChange={(e) => setWeight(e.target.value)} className="bg-card" inputMode="decimal" />
+                  <Label>{tr("Indicator Type", "نوع المؤشر")}</Label>
+                  <Select value={indicatorType} onValueChange={(v) => setIndicatorType(v as IndicatorTypeCode | "NONE")}>
+                    <SelectTrigger className="bg-card">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="NONE">{tr("None", "بدون")}</SelectItem>
+                      <SelectItem value="LEADING">{tr("Leading", "قائد")}</SelectItem>
+                      <SelectItem value="LAGGING">{tr("Lagging", "متأخر")}</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
 
               <div className="grid gap-4 md:grid-cols-3">
+                <div className="space-y-2">
+                  <Label>{tr("Weight", "الوزن")}</Label>
+                  <Input value={weight} onChange={(e) => setWeight(e.target.value)} className="bg-card" inputMode="decimal" />
+                </div>
                 <div className="space-y-2">
                   <Label>{t("unitAr")}</Label>
                   <Input value={unitAr} onChange={(e) => setUnitAr(e.target.value)} className="bg-card" />
@@ -450,9 +473,20 @@ export default function EditEntityPage() {
                   <Label>{t("baseline")}</Label>
                   <Input value={baselineValue} onChange={(e) => setBaselineValue(e.target.value)} className="bg-card" inputMode="decimal" />
                 </div>
+              </div>
+
+              <div className="grid gap-4 md:grid-cols-3">
                 <div className="space-y-2">
                   <Label>{t("target")}</Label>
                   <Input value={targetValue} onChange={(e) => setTargetValue(e.target.value)} className="bg-card" inputMode="decimal" />
+                </div>
+                <div className="space-y-2">
+                  <Label>{tr("Min Value", "الحد الأدنى")}</Label>
+                  <Input value={minValue} onChange={(e) => setMinValue(e.target.value)} className="bg-card" inputMode="decimal" />
+                </div>
+                <div className="space-y-2">
+                  <Label>{tr("Max Value", "الحد الأقصى")}</Label>
+                  <Input value={maxValue} onChange={(e) => setMaxValue(e.target.value)} className="bg-card" inputMode="decimal" />
                 </div>
               </div>
 

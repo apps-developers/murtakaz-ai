@@ -2,6 +2,7 @@ import {
   PrismaClient,
   KpiAggregationMethod,
   KpiDirection,
+  KpiIndicatorType,
   KpiPeriodType,
   KpiSourceType,
   KpiApprovalLevel,
@@ -76,6 +77,8 @@ type DepartmentData = {
     kpi_code: string;
     measurement_indicator: string;
     measurement_indicator_en: string;
+    classification?: string;
+    classification_en?: string;
     weight: string;
     frequency: string;
     unit: string;
@@ -96,8 +99,36 @@ function periodTypeFromFrequency(input: string | undefined): KpiPeriodType {
   if (f === "yearly" || f === "annual") return KpiPeriodType.YEARLY;
   if (fa.includes("شهري")) return KpiPeriodType.MONTHLY;
   if (fa.includes("ربع")) return KpiPeriodType.QUARTERLY;
-  if (fa.includes("سنوي") || fa.includes("سنويا") || fa.includes("سنوية")) return KpiPeriodType.YEARLY;
+  // "نصف سنوي / سنوي", "نصف سنوي/سنوي", "سنوي", "سنوية", etc.
+  if (fa.includes("سنوي") || fa.includes("سنويا") || fa.includes("سنوية") || fa.includes("نصف")) return KpiPeriodType.YEARLY;
   return KpiPeriodType.YEARLY;
+}
+
+// Infer direction: KPIs where a lower value is better (errors, risks, delays, violations, non-compliance...)
+const DECREASE_IS_GOOD_KEYWORDS = [
+  "unapproved", "delayed", "high-risk", "non-compliance", "unimplemented",
+  "missed", "violation", "error", "average response time", "غير المعتمدة",
+  "المتأخرة", "المخاطر عالية", "عدم الالتزام", "المخالفات", "وقت الاستجابة",
+  "غير المنفذة", "الفائتة",
+];
+
+function inferDirection(name_en: string, name_ar: string): KpiDirection {
+  const combined = (name_en + " " + name_ar).toLowerCase();
+  for (const kw of DECREASE_IS_GOOD_KEYWORDS) {
+    if (combined.includes(kw.toLowerCase())) return KpiDirection.DECREASE_IS_GOOD;
+  }
+  return KpiDirection.INCREASE_IS_GOOD;
+}
+
+// Infer indicator type:
+// - Strategic dept KPIs and objective KPIs → LAGGING (measure outcomes)
+// - Operational dept KPIs and initiative KPIs → LEADING (drive/predict)
+function inferIndicatorType(classification_en?: string, entityClass?: "objective" | "initiative" | "department_strategic" | "department_operational"): KpiIndicatorType {
+  if (entityClass === "initiative") return KpiIndicatorType.LEADING;
+  if (entityClass === "objective") return KpiIndicatorType.LAGGING;
+  if (classification_en?.toLowerCase() === "strategic") return KpiIndicatorType.LAGGING;
+  if (classification_en?.toLowerCase() === "operational") return KpiIndicatorType.LEADING;
+  return KpiIndicatorType.LAGGING;
 }
 
 function weightToNumber(input: string | undefined | number): number {
@@ -274,6 +305,7 @@ async function ensureEntity(input: {
   unit?: string | null;
   unitAr?: string | null;
   direction?: KpiDirection;
+  indicatorType?: KpiIndicatorType | null;
   aggregation?: KpiAggregationMethod;
   targetValue?: number | null;
   weight?: number | null;
@@ -299,6 +331,7 @@ async function ensureEntity(input: {
     unit: input.unit ?? null,
     unitAr: input.unitAr ?? null,
     direction: input.direction ?? KpiDirection.INCREASE_IS_GOOD,
+    indicatorType: input.indicatorType ?? null,
     aggregation: input.aggregation ?? KpiAggregationMethod.LAST_VALUE,
     targetValue: input.targetValue ?? null,
     weight: input.weight ?? null,
@@ -460,8 +493,15 @@ async function seed() {
       const periodType = periodTypeFromFrequency(kpi.frequency);
       const unit = String(kpi.unit_en ?? "").toLowerCase();
       const isPercentage = unit.includes("%") || unit.includes("percent");
-      const targetValue = isPercentage ? 85 : 100;
-      
+      const direction = inferDirection(kpi.measurement_indicator_en, kpi.measurement_indicator);
+      const isDecreaseGood = direction === KpiDirection.DECREASE_IS_GOOD;
+      // For decrease-is-good KPIs, target should be low (e.g. 0 violations), else % → 90, count → 100
+      const targetValue = isDecreaseGood ? 0 : (isPercentage ? 90 : 100);
+      const indicatorType = inferIndicatorType(
+        kpi.classification_en,
+        kpi.classification_en?.toLowerCase() === "strategic" ? "department_strategic" : "department_operational"
+      );
+
       await ensureEntity({
         orgId: org.id,
         orgEntityTypeId: kpiTypeId,
@@ -473,6 +513,8 @@ async function seed() {
         periodType,
         unit: kpi.unit_en,
         unitAr: kpi.unit,
+        direction,
+        indicatorType,
         weight: weightToNumber(kpi.weight),
         targetValue,
       });
@@ -488,6 +530,7 @@ async function seed() {
   for (const goal of objectivesData.strategic_goals) {
     // Seed Objective KPIs first
     for (const indicator of goal.indicators) {
+      const direction = inferDirection(indicator.name_en, indicator.name_ar);
       await ensureEntity({
         orgId: org.id,
         orgEntityTypeId: kpiTypeId,
@@ -498,6 +541,8 @@ async function seed() {
         status: Status.ACTIVE,
         sourceType: KpiSourceType.DERIVED,
         periodType: KpiPeriodType.YEARLY,
+        direction,
+        indicatorType: KpiIndicatorType.LAGGING,
         weight: weightToNumber(indicator.weight),
         formula: convertFormulaToGetSyntax(indicator.formula),
         targetValue: 85,
@@ -531,6 +576,7 @@ async function seed() {
     // Seed operational initiative KPIs
     for (const kpi of initiative.kpis) {
       if (kpi.type === "operational" && kpi.value) {
+        const direction = inferDirection(kpi.value, kpi.value);
         await ensureEntity({
           orgId: org.id,
           orgEntityTypeId: kpiTypeId,
@@ -540,6 +586,8 @@ async function seed() {
           status: Status.ACTIVE,
           sourceType: KpiSourceType.MANUAL,
           periodType: KpiPeriodType.QUARTERLY,
+          direction,
+          indicatorType: KpiIndicatorType.LEADING,
           targetValue: 80,
         });
         totalInitiativeKpis++;

@@ -91,6 +91,17 @@ enum EntityAttachmentType {
   URL
 }
 
+enum KpiIndicatorType {
+  LEADING
+  LAGGING
+}
+
+enum NotificationType {
+  APPROVAL_PENDING
+  VALUE_APPROVED
+  VALUE_REJECTED
+}
+
 // Models
 
 model Organization {
@@ -99,6 +110,8 @@ model Organization {
   nameAr    String?   @map("name_ar")
   domain    String?
   kpiApprovalLevel KpiApprovalLevel @default(MANAGER) @map("kpi_approval_level")
+  ragGreenMin  Int @default(75) @map("rag_green_min")
+  ragAmberMin  Int @default(50) @map("rag_amber_min")
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
@@ -116,6 +129,7 @@ model Organization {
   entities       Entity[]
   entityTypes    OrgEntityType[]
   changeRequests ChangeRequest[]
+  notifications  Notification[]
 
   @@index([domain])
 }
@@ -173,6 +187,7 @@ model User {
 
   approvals      ChangeApproval[]
   changeRequests ChangeRequest[]
+  notifications  Notification[]
 
   ownedEntities Entity[] @relation("EntityOwner")
 
@@ -310,11 +325,14 @@ model Entity {
   unit        String?
   unitAr      String? @map("unit_ar")
 
-  direction   KpiDirection @default(INCREASE_IS_GOOD)
-  aggregation KpiAggregationMethod @default(LAST_VALUE)
+  direction     KpiDirection @default(INCREASE_IS_GOOD)
+  aggregation   KpiAggregationMethod @default(LAST_VALUE)
+  indicatorType KpiIndicatorType? @map("indicator_type")
 
   baselineValue Float? @map("baseline_value")
   targetValue   Float? @map("target_value")
+  minValue      Float? @map("min_value")
+  maxValue      Float? @map("max_value")
   weight        Float?
 
   formula String?
@@ -441,6 +459,30 @@ model EntityVariableValue {
   @@index([entityValueId])
   @@index([entityVariableId])
   @@map("entity_variable_values")
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  orgId     String   @map("org_id")
+  org       Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  type      NotificationType
+  entityId  String?  @map("entity_id")
+  entityValueId String? @map("entity_value_id")
+
+  message   String
+  messageAr String?  @map("message_ar")
+
+  readAt    DateTime? @map("read_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  @@index([userId, readAt])
+  @@index([orgId])
+  @@map("notifications")
 }
 
 model UserEntityAssignment {

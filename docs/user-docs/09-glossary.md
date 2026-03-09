@@ -116,6 +116,12 @@ The lifecycle status of an entity value entry: `DRAFT`, `SUBMITTED`, `APPROVED`,
 
 ## L
 
+**Lagging Indicator**
+A KPI that measures outcomes after events have occurred (e.g., annual revenue, defect rate). Identified by setting `indicatorType = LAGGING`. Contrast with *Leading Indicator*.
+
+**Leading Indicator**
+A KPI that predicts future performance or drives change (e.g., number of sales calls, training hours). Identified by setting `indicatorType = LEADING`. Contrast with *Lagging Indicator*.
+
 **Locale**
 The language/regional setting for the UI. Supported: `en` (English, LTR) and `ar` (Arabic, RTL). Controlled by the URL prefix.
 
@@ -132,12 +138,24 @@ A user role that can enter and submit KPI values for their assigned entities. Ma
 **MANUAL** (Source Type)
 An entity where a user directly types in a numeric value each period.
 
+**Max Value**
+An optional upper bound configured on an entity. Any submitted value exceeding this limit is rejected by the system with a `valueAboveMaximum` error. See also *Min Value*.
+
+**Min Value**
+An optional lower bound configured on an entity. Any submitted value below this limit is rejected by the system with a `valueBelowMinimum` error. See also *Max Value*.
+
 ---
 
 ## N
 
 **Needs Attention**
 A section on the Overview page listing KPIs that have not been updated recently, ranked by staleness. Used to identify data entry gaps.
+
+**Notification**
+An in-app alert delivered to a user when a KPI value is submitted, approved, or rejected. Displayed as a badge count on the bell icon (🔔) in the header. Types:
+- `APPROVAL_PENDING` — sent to eligible approvers when a value is submitted
+- `VALUE_APPROVED` — sent to the submitter when their value is approved
+- `VALUE_REJECTED` — sent to the submitter when their value is rejected
 
 ---
 
@@ -166,10 +184,18 @@ A value or change request that has been submitted but not yet approved or reject
 ## R
 
 **RAG**
-Red / Amber / Green — a color-coded health status system. See **Health**.
+Red / Amber / Green — a color-coded health status system. See **Health** and **RAG Thresholds**.
+
+**RAG Thresholds**
+Organization-level settings that define the achievement % boundaries for Green and Amber status:
+- `ragGreenMin` — achievement at or above this value is **Green** (default: 75%)
+- `ragAmberMin` — achievement at or above this (but below Green) is **Amber** (default: 50%)
+- Below `ragAmberMin` is **Red**
+
+Configured by an Admin in Organization Settings.
 
 **Role**
-A system attribute assigned to each user that controls their access level. Available roles: `SUPER_ADMIN`, `ADMIN`, `EXECUTIVE`, `MANAGER`.
+A system attribute assigned to each user that controls their access level. Available roles: `SUPER_ADMIN`, `ADMIN`, `EXECUTIVE`, `MANAGER`. Role rank determines notification eligibility for approvals.
 
 ---
 

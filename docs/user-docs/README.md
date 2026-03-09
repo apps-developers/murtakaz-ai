@@ -27,6 +27,7 @@ Welcome to the user guide for **Rafed KPI**, a Strategy Execution & Performance 
 3. Navigate using the **left sidebar**: Overview → Entities (KPIs) → Approvals → Dashboards.
 4. Your access level is determined by your **role** (Admin, Executive, Manager, or Employee).
 5. KPI data flows through a **Draft → Submit → Approve** lifecycle before it counts.
+6. The **bell icon** (🔔) in the header shows pending approval notifications in real time.
 
 ---
 
@@ -36,13 +37,19 @@ Welcome to the user guide for **Rafed KPI**, a Strategy Execution & Performance 
 Organization
  └── Entity Types  (e.g. Strategy, Objective, KPI)
       └── Entities  (individual records)
+           │   ├── Direction (INCREASE_IS_GOOD / DECREASE_IS_GOOD)
+           │   ├── Indicator Type (LEADING / LAGGING)
+           │   └── Value Range (Min Value / Max Value)
            └── Entity Values  (periodic measurements)
                 └── Approval Workflow  (Draft → Submitted → Approved/Locked)
+                     └── Notifications  (bell icon, auto-dispatched)
 ```
 
 - **Entities** are the configurable building blocks — each organization defines its own types (e.g., Strategic Pillar, Initiative, KPI).
 - **Entity Values** are the actual data points (numeric measurements) entered against an entity over time.
 - **Approvals** control which values become official — based on the organization's configured approval level.
+- **Notifications** are automatically dispatched to eligible approvers on submission, and to submitters on approve/reject.
+- **RAG thresholds** (Green ≥ 75%, Amber ≥ 50% by default) are configurable per organization in Organization Settings.
 
 ---
 

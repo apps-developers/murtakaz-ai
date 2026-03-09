@@ -72,10 +72,13 @@ The detail page is organized into tabs:
 | **Source Type** | How the value is produced (see below) |
 | **Period Type** | Measurement frequency: `MONTHLY`, `QUARTERLY`, or `YEARLY` |
 | **Unit** | Display unit (e.g., %, SAR, Count) |
-| **Direction** | `INCREASE_IS_GOOD` or `DECREASE_IS_GOOD` — affects health calculation |
-| **Aggregation** | How multiple values are combined: `LAST_VALUE`, `SUM`, `AVERAGE`, `MIN`, `MAX` |
+| **Direction** | `INCREASE_IS_GOOD` or `DECREASE_IS_GOOD` — affects achievement and health calculation |
+| **Indicator Type** | `LEADING` (predicts future performance) or `LAGGING` (measures past outcomes). Optional classification. |
+| **Aggregation** | How multiple value entries are combined: `LAST_VALUE`, `SUM`, `AVERAGE`, `MIN`, `MAX` |
 | **Baseline Value** | Starting reference value |
 | **Target Value** | The goal value to reach |
+| **Min Value** | Optional lower bound — the system rejects any submitted value below this limit |
+| **Max Value** | Optional upper bound — the system rejects any submitted value above this limit |
 | **Weight** | Optional weighting used in parent score calculations |
 | **Formula** | Expression used for CALCULATED/DERIVED/SCORE source types |
 
@@ -102,6 +105,9 @@ The detail page is organized into tabs:
    - **Target Value** (required for KPI tracking)
    - **Period Type** (required)
    - **Source Type** (required)
+   - **Direction** (defaults to `INCREASE_IS_GOOD`)
+   - **Indicator Type** (optional — `LEADING` or `LAGGING`)
+   - **Min Value** / **Max Value** (optional — enforces an acceptable range on every value entry)
 4. Click **Save**.
 
 The new entity is immediately visible in the list.
