@@ -17,43 +17,43 @@ html[lang="ar"] {
 @layer base {
   :root {
 
-    --background: 215 30% 97%;
+    --background: 215 30% 96%;
 
     --foreground: 215 25% 8%;
 
-    --card: 0 0% 100% / 0.80;
+    --card: 0 0% 100%;
 
     --card-foreground: 215 25% 8%;
 
-    --popover: 0 0% 100% / 0.95;
+    --popover: 0 0% 100%;
 
     --popover-foreground: 215 25% 8%;
 
-    --primary: 215 62% 24%;
+    --primary: 215 62% 30%;
 
     --primary-foreground: 0 0% 98%;
 
-    --secondary: 215 30% 93%;
+    --secondary: 215 30% 92%;
 
     --secondary-foreground: 215 62% 24%;
 
-    --muted: 215 25% 93%;
+    --muted: 215 25% 92%;
 
-    --muted-foreground: 215 16% 40%;
+    --muted-foreground: 215 16% 42%;
 
-    --accent: 215 35% 91%;
+    --accent: 215 35% 90%;
 
     --accent-foreground: 215 62% 24%;
 
-    --destructive: 0 84.2% 56%;
+    --destructive: 0 84.2% 50%;
 
     --destructive-foreground: 0 0% 98%;
 
-    --border: 215 20% 84%;
+    --border: 215 20% 82%;
 
-    --input: 215 20% 84%;
+    --input: 215 20% 88%;
 
-    --ring: 215 62% 24%;
+    --ring: 215 62% 30%;
 
     --chart-1: 12 76% 61%;
 
@@ -73,11 +73,11 @@ html[lang="ar"] {
 
     --foreground: 0 0% 98%;
 
-    --card: 215 30% 8% / 0.7;
+    --card: 215 30% 9%;
 
     --card-foreground: 0 0% 98%;
 
-    --popover: 215 30% 8% / 0.7;
+    --popover: 215 30% 9%;
 
     --popover-foreground: 0 0% 98%;
 

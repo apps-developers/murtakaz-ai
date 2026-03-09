@@ -241,7 +241,7 @@ export default function ResponsibilitiesPage() {
   if (sessionLoading || loading) {
     return (
       <div className="space-y-6">
-        <PageHeader title={tr("Responsibilities", "المسؤوليات")} subtitle={tr("Manage entity assignments", "إدارة تعيينات الكيانات")} />
+        <PageHeader title={tr("Responsibilities", "المسؤوليات")} subtitle={tr("Manage entity assignments", "إدارة تعيينات الكيانات")} breadcrumbs={[{ label: tr("Responsibilities", "المسؤوليات") }]} />
         <Card>
           <CardContent className="p-8">
             <div className="text-sm text-muted-foreground">{t("loading")}</div>
@@ -255,7 +255,7 @@ export default function ResponsibilitiesPage() {
   if (!canAdmin && users.length === 0 && !loading) {
     return (
       <div className="space-y-6">
-        <PageHeader title={tr("Responsibilities", "المسؤوليات")} subtitle={tr("View your team's assignments", "عرض تعيينات فريقك")} />
+        <PageHeader title={tr("Responsibilities", "المسؤوليات")} subtitle={tr("View your team's assignments", "عرض تعيينات فريقك")} breadcrumbs={[{ label: tr("Responsibilities", "المسؤوليات") }]} />
         <Card>
           <CardContent className="p-8">
             <div className="text-sm text-muted-foreground">{tr("No subordinates found. You can view entities assigned to your team members here.", "لم يتم العثور على مرؤوسين. يمكنك عرض الكيانات المخصصة لأعضاء فريقك هنا.")}</div>
@@ -270,6 +270,7 @@ export default function ResponsibilitiesPage() {
       <PageHeader
         title={tr("Responsibilities", "المسؤوليات")}
         subtitle={canAdmin ? tr("Assign entities to executives and managers", "تعيين الكيانات للتنفيذيين والمديرين") : tr("View your team's assignments", "عرض تعيينات فريقك")}
+        breadcrumbs={[{ label: tr("Responsibilities", "المسؤوليات") }]}
       />
 
       {error ? (
@@ -352,14 +353,21 @@ export default function ResponsibilitiesPage() {
                                 ) : null}
                               </div>
                               <CardDescription>
-                                {df(entity.orgEntityType.name, entity.orgEntityType.nameAr)}
-                                {entity.key ? ` • ${entity.key}` : ""}
+                                <span dir="auto">
+                                  {df(entity.orgEntityType.name, entity.orgEntityType.nameAr)}
+                                  {entity.key ? (
+                                    <>
+                                      {" "}·{" "}
+                                      <span dir="ltr" className="inline-block">{entity.key}</span>
+                                    </>
+                                  ) : ""}
+                                </span>
                               </CardDescription>
                             </div>
                             {canAdmin && (
                               <Button size="sm" onClick={() => openAssignDialog(entity)}>
-                                <UserPlus className="h-4 w-4 me-2" />
-                                {tr("Assign", "تعيين")}
+                                <UserPlus className="h-4 w-4" />
+                                <span className="ms-2">{tr("Assign", "تعيين")}</span>
                               </Button>
                             )}
                           </div>
@@ -447,14 +455,14 @@ export default function ResponsibilitiesPage() {
                               </div>
                             </div>
                             <div className="flex items-center gap-2">
-                              <div className="text-sm text-muted-foreground">
-                                <CheckCircle2 className="h-4 w-4 inline me-1" />
-                                {userEntities.length} {tr("assigned", "معين")}
+                              <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                                <CheckCircle2 className="h-4 w-4 shrink-0" />
+                                <span>{userEntities.length} {tr("assigned", "معين")}</span>
                               </div>
                               {canAdmin && (
                                 <Button size="sm" onClick={() => openEntityAssignDialog(user)}>
-                                  <UserPlus className="h-4 w-4 me-2" />
-                                  {tr("Assign Entities", "تعيين كيانات")}
+                                  <UserPlus className="h-4 w-4" />
+                                  <span className="ms-2">{tr("Assign Entities", "تعيين كيانات")}</span>
                                 </Button>
                               )}
                             </div>
@@ -504,7 +512,7 @@ export default function ResponsibilitiesPage() {
             return (
               <>
                 {availableUsers.length > 0 && (
-                  <div className="flex items-center justify-between pb-3 border-b">
+                  <div className="flex items-center justify-between pb-3 border-b border-border">
                     <span className="text-sm text-muted-foreground">
                       {selectedUserIds.length} {tr("selected", "محدد")}
                     </span>
@@ -596,7 +604,7 @@ export default function ResponsibilitiesPage() {
             return (
               <>
                 {availableEntities.length > 0 && (
-                  <div className="flex items-center justify-between pb-3 border-b">
+                  <div className="flex items-center justify-between pb-3 border-b border-border">
                     <span className="text-sm text-muted-foreground">
                       {selectedEntityIds.length} {tr("selected", "محدد")}
                     </span>
@@ -641,8 +649,15 @@ export default function ResponsibilitiesPage() {
                         <div className="flex-1">
                           <div className="font-medium">{df(entity.title, entity.titleAr)}</div>
                           <div className="text-xs text-muted-foreground">
-                            {df(entity.orgEntityType.name, entity.orgEntityType.nameAr)}
-                            {entity.key ? ` • ${entity.key}` : ""}
+                            <span dir="auto">
+                              {df(entity.orgEntityType.name, entity.orgEntityType.nameAr)}
+                              {entity.key ? (
+                                <>
+                                  {" "}·{" "}
+                                  <span dir="ltr" className="inline-block">{entity.key}</span>
+                                </>
+                              ) : ""}
+                            </span>
                           </div>
                         </div>
                         {String(entity.orgEntityType.code ?? "").toUpperCase() === "KPI" ? (

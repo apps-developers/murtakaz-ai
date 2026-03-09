@@ -63,6 +63,10 @@ export default function ApprovalDetailPage() {
           request.createdAt ? new Date(request.createdAt).toLocaleDateString() : `${request.ageDays}${t("daysShort")}`
         }`}
         icon={<Icon name="tabler:gavel" className="h-5 w-5" />}
+        breadcrumbs={[
+          { label: t("approvals"), href: `/${locale}/approvals` },
+          { label: `${request.entityType}: ${request.entityName}` },
+        ]}
         actions={<ApprovalBadge status={request.status} />}
       />
 

@@ -31,6 +31,9 @@ export default function ProjectsPage() {
         title={t("projects")}
         subtitle={t("projectsSubtitle")}
         icon={<Icon name="tabler:timeline" className="h-5 w-5" />}
+        breadcrumbs={[
+          { label: t("projects") },
+        ]}
       />
 
       <Card className="border-border bg-card/50 shadow-sm">

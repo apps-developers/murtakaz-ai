@@ -36,6 +36,10 @@ export default function KPIPerformanceDashboardPage() {
         title={t("kpiPerformanceDashboardTitle")}
         subtitle={t("kpiPerformanceDashboardSubtitle")}
         icon={<Icon name="tabler:chart-bar" className="h-5 w-5" />}
+        breadcrumbs={[
+          { label: t("dashboards"), href: `/${locale}/dashboards` },
+          { label: t("kpiPerformanceDashboard") },
+        ]}
       />
 
       <section className="grid gap-6 lg:grid-cols-3">

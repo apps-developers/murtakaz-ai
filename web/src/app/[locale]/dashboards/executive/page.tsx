@@ -69,6 +69,10 @@ export default function ExecutiveDashboardPage() {
         title={t("ceoExecutiveDashboard")}
         subtitle={t("ceoExecutiveDashboardSubtitle")}
         icon={<Icon name="tabler:layout-dashboard" className="h-5 w-5" />}
+        breadcrumbs={[
+          { label: t("dashboards"), href: `/${locale}/dashboards` },
+          { label: t("executiveDashboard") },
+        ]}
       />
 
       {error ? (

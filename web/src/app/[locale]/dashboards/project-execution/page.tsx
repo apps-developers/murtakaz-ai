@@ -39,6 +39,10 @@ export default function ProjectExecutionDashboardPage() {
         title={t("projectExecutionDashboardTitle")}
         subtitle={t("projectExecutionDashboardSubtitle")}
         icon={<Icon name="tabler:timeline" className="h-5 w-5" />}
+        breadcrumbs={[
+          { label: t("dashboards"), href: `/${locale}/dashboards` },
+          { label: t("projectExecutionDashboardTitle") },
+        ]}
       />
 
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

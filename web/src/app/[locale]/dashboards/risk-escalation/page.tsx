@@ -34,6 +34,10 @@ export default function RiskEscalationDashboardPage() {
         title={t("riskEscalationDashboardTitle")}
         subtitle={t("riskEscalationDashboardSubtitle")}
         icon={<Icon name="tabler:shield-exclamation" className="h-5 w-5" />}
+        breadcrumbs={[
+          { label: t("dashboards"), href: `/${locale}/dashboards` },
+          { label: t("riskEscalationDashboardTitle") },
+        ]}
       />
 
       <section className="grid gap-4 sm:grid-cols-3">

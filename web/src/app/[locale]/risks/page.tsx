@@ -31,6 +31,9 @@ export default function RisksPage() {
         title={t("risks")}
         subtitle={t("risksSubtitle")}
         icon={<Icon name="tabler:shield-exclamation" className="h-5 w-5" />}
+        breadcrumbs={[
+          { label: t("risks") },
+        ]}
       />
 
       <Card className="border-border bg-card/50 shadow-sm">

@@ -288,6 +288,10 @@ export default function NewEntityPage() {
       <PageHeader
         title={t("createItemTitle", { type: typeLabel })}
         subtitle={loadingType ? t("loading") : tr("Create a new item.", "إنشاء عنصر جديد.")}
+        breadcrumbs={[
+          { label: typeLabel, href: `/${locale}/entities/${entityTypeCode}` },
+          { label: t("create") },
+        ]}
         actions={
           <Button asChild variant="ghost">
             <Link href={`/${locale}/entities/${entityTypeCode}`}>{t("back")}</Link>

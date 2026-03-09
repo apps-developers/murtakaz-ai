@@ -304,7 +304,11 @@ export default function EntitiesByTypePage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between gap-3">
-        <PageHeader title={title} subtitle={t("exploreWithLowerTypeDesc", { type: title, lowerType: title.toLowerCase() })} />
+        <PageHeader
+          title={title}
+          subtitle={t("exploreWithLowerTypeDesc", { type: title, lowerType: title.toLowerCase() })}
+          breadcrumbs={[{ label: title, href: undefined }]}
+        />
 
         {canAdmin ? (
           <Button asChild>

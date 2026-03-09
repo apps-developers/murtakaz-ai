@@ -33,6 +33,10 @@ export default function GovernanceDashboardPage() {
         title={t("strategyChangeDashboardTitle")}
         subtitle={t("strategyChangeDashboardSubtitle")}
         icon={<Icon name="tabler:gavel" className="h-5 w-5" />}
+        breadcrumbs={[
+          { label: t("dashboards"), href: `/${locale}/dashboards` },
+          { label: t("governanceDashboard") },
+        ]}
       />
 
       <section className="grid gap-4 sm:grid-cols-3">

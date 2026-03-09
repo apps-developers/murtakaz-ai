@@ -79,6 +79,9 @@ export default function DashboardsPage() {
         title={t("performanceDashboard")}
         subtitle={t("performanceDashboardSubtitle")}
         icon={<Icon name="tabler:chart-line" className="h-5 w-5" />}
+        breadcrumbs={[
+          { label: t("dashboards") },
+        ]}
         actions={
           <div className="flex gap-2">
             {aiEnabled ? <AiGenerateSummaryModal /> : null}
@@ -282,37 +285,37 @@ export default function DashboardsPage() {
           </CardHeader>
           <CardContent>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-              <Button asChild variant="outline" className="h-auto flex-col items-start gap-2 p-4">
+              <Button asChild variant="outline" className="h-auto w-full flex-col items-start gap-2 p-4">
                 <Link href={`/${locale}/entities/kpi`}>
                   <Icon name="tabler:target" className="h-5 w-5 text-blue-500" />
-                  <div className="text-left">
+                  <div className="w-full text-start">
                     <div className="font-semibold">{t("kpiManagement")}</div>
                     <div className="text-xs text-muted-foreground">{t("viewAndManageKpis")}</div>
                   </div>
                 </Link>
               </Button>
-              <Button asChild variant="outline" className="h-auto flex-col items-start gap-2 p-4">
+              <Button asChild variant="outline" className="h-auto w-full flex-col items-start gap-2 p-4">
                 <Link href={`/${locale}/entities/objective`}>
                   <Icon name="tabler:flag-3" className="h-5 w-5 text-emerald-500" />
-                  <div className="text-left">
+                  <div className="w-full text-start">
                     <div className="font-semibold">{t("objectives")}</div>
                     <div className="text-xs text-muted-foreground">{t("trackStrategicGoals")}</div>
                   </div>
                 </Link>
               </Button>
-              <Button asChild variant="outline" className="h-auto flex-col items-start gap-2 p-4">
+              <Button asChild variant="outline" className="h-auto w-full flex-col items-start gap-2 p-4">
                 <Link href={`/${locale}/responsibilities`}>
                   <Icon name="tabler:user-check" className="h-5 w-5 text-violet-500" />
-                  <div className="text-left">
+                  <div className="w-full text-start">
                     <div className="font-semibold">{t("responsibilities")}</div>
                     <div className="text-xs text-muted-foreground">{t("manageAssignments")}</div>
                   </div>
                 </Link>
               </Button>
-              <Button asChild variant="outline" className="h-auto flex-col items-start gap-2 p-4">
+              <Button asChild variant="outline" className="h-auto w-full flex-col items-start gap-2 p-4">
                 <Link href={`/${locale}/organization`}>
                   <Icon name="tabler:building" className="h-5 w-5 text-amber-500" />
-                  <div className="text-left">
+                  <div className="w-full text-start">
                     <div className="font-semibold">{t("organization")}</div>
                     <div className="text-xs text-muted-foreground">{t("viewOrgStructure")}</div>
                   </div>
@@ -332,10 +335,10 @@ export default function DashboardsPage() {
           <CardContent>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
               {dashboards.map((d) => (
-                <Button key={d.slug} asChild variant="outline" className="h-auto flex-col items-start gap-2 p-4">
+                <Button key={d.slug} asChild variant="outline" className="h-auto w-full flex-col items-start gap-2 p-4">
                   <Link href={`/${locale}/dashboards/${d.slug}`}>
                     <Icon name={d.icon} className="h-5 w-5 text-primary" />
-                    <div className="text-left">
+                    <div className="w-full text-start">
                       <div className="font-semibold">{df(d.title, d.titleAr)}</div>
                       <div className="text-xs text-muted-foreground line-clamp-2">{df(d.description, d.descriptionAr)}</div>
                     </div>

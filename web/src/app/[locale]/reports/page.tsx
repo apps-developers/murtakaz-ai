@@ -328,6 +328,7 @@ export default function ReportsPage() {
       <div className="flex flex-wrap items-start justify-between gap-3">
         <PageHeader
           title={tr("Tabular Report", "التقرير الجدولي")}
+          breadcrumbs={[{ label: tr("Tabular Report", "التقرير الجدولي") }]}
           subtitle={tr(
             "Cross-entity KPI performance view with filters and CSV export.",
             "عرض أداء مؤشرات الأداء الرئيسية عبر جميع العناصر مع التصفية وتصدير CSV."

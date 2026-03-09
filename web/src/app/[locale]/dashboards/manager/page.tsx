@@ -40,6 +40,10 @@ export default function ManagerDashboardPage() {
         title={t("managerDashboardTitle")}
         subtitle={t("managerDashboardSubtitle")}
         icon={<Icon name="tabler:users-group" className="h-5 w-5" />}
+        breadcrumbs={[
+          { label: t("dashboards"), href: `/${locale}/dashboards` },
+          { label: t("managerDashboardTitle") },
+        ]}
       />
 
       <section className="grid gap-4 sm:grid-cols-2">

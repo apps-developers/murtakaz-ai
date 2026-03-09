@@ -56,6 +56,9 @@ export default function ApprovalsPage() {
         title={t("approvals")}
         subtitle={t("approvalsSubtitle")}
         icon={<Icon name="tabler:gavel" className="h-5 w-5" />}
+        breadcrumbs={[
+          { label: t("approvals") },
+        ]}
       />
 
       <Card className="border-border bg-card/50 shadow-sm">

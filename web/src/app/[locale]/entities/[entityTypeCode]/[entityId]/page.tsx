@@ -671,6 +671,10 @@ export default function EntityDetailPage() {
       <PageHeader
         title={pageTitle}
         subtitle={df(entity.orgEntityType.name, entity.orgEntityType.nameAr)}
+        breadcrumbs={[
+          { label: df(entity.orgEntityType.name, entity.orgEntityType.nameAr), href: `/${locale}/entities/${entityTypeCode}` },
+          { label: pageTitle },
+        ]}
         actions={
           <div className="flex items-center gap-2">
             <Button asChild variant="ghost">

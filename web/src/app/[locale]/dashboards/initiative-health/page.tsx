@@ -40,6 +40,10 @@ export default function InitiativeHealthDashboardPage() {
         title={t("initiativeHealthDashboard")}
         subtitle={t("initiativeHealthDashboardSubtitle")}
         icon={<Icon name="tabler:activity-heartbeat" className="h-5 w-5" />}
+        breadcrumbs={[
+          { label: t("dashboards"), href: `/${locale}/dashboards` },
+          { label: t("initiativeHealthDashboard") },
+        ]}
       />
 
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

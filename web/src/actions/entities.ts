@@ -414,9 +414,9 @@ export async function getOrgEntitiesByTypeCode(input: z.infer<typeof getOrgEntit
   }
 
   const userRole = (session.user as { role?: string }).role;
-  const isAdmin = userRole === "ADMIN";
+  const isAdmin = userRole === "ADMIN" || userRole === "EXECUTIVE" || userRole === "MANAGER";
 
-  // Get readable entity IDs for non-admin users
+  // Get readable entity IDs for users without a named role
   let readableEntityIds: string[] | undefined;
   if (!isAdmin) {
     readableEntityIds = await getUserReadableEntityIds(session.user.id, session.user.orgId);
@@ -1567,7 +1567,7 @@ export async function getAllOrgEntities() {
   const session = await requireOrgMember();
 
   const userRole = (session.user as { role?: string }).role;
-  const isAdmin = userRole === "ADMIN";
+  const isAdmin = userRole === "ADMIN" || userRole === "EXECUTIVE" || userRole === "MANAGER";
 
   let readableEntityIds: string[] | undefined;
   if (!isAdmin) {

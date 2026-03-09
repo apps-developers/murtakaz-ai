@@ -84,6 +84,9 @@ export default function OverviewPage() {
         title={t("executiveOverview")}
         subtitle={t("executiveOverviewSubtitle")}
         icon={<Icon name="tabler:layout-dashboard" className="h-5 w-5" />}
+        breadcrumbs={[
+          { label: t("overview") },
+        ]}
         actions={
           <div className="flex gap-2">
             {aiEnabled ? <AiGenerateSummaryModal /> : null}

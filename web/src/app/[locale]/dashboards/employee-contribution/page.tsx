@@ -27,6 +27,10 @@ export default function EmployeeContributionDashboardPage() {
         title={t("employeeContributionDashboard")}
         subtitle={t("employeeContributionSubtitle")}
         icon={<Icon name="tabler:bolt" className="h-5 w-5" />}
+        breadcrumbs={[
+          { label: t("dashboards"), href: `/${locale}/dashboards` },
+          { label: t("employeeContributionDashboard") },
+        ]}
       />
 
       <section className="grid gap-6 lg:grid-cols-3">
