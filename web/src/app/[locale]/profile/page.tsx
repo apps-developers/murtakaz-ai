@@ -83,7 +83,7 @@ export default function ProfilePage() {
         title={t("profile")}
         subtitle={t("profileSubtitle")}
         actions={
-          <Button variant="destructive" onClick={() => void signOut()}>
+          <Button variant="outline" onClick={() => void signOut()}>
             {t("logout")}
           </Button>
         }
@@ -120,7 +120,7 @@ export default function ProfilePage() {
             </div>
             <div className="rounded-xl border border-border bg-muted/30 px-4 py-3">
               <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t("role")}</p>
-              <p className="mt-1 text-foreground">{pUser?.role ?? "—"}</p>
+              <p className="mt-1 text-foreground">{pUser?.role === "ADMIN" ? t("roleAdmin") : pUser?.role === "EXECUTIVE" ? t("roleExecutive") : pUser?.role === "MANAGER" ? t("roleManager") : pUser?.role ?? "—"}</p>
             </div>
             <div className="rounded-xl border border-border bg-muted/30 px-4 py-3">
               <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t("title")}</p>
@@ -128,7 +128,7 @@ export default function ProfilePage() {
             </div>
             <div className="rounded-xl border border-border bg-muted/30 px-4 py-3">
               <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t("department")}</p>
-              <p className="mt-1 text-foreground">—</p>
+              <p className="mt-1 text-foreground">{(pUser as unknown as { department?: string })?.department ?? "—"}</p>
             </div>
           </CardContent>
         </Card>

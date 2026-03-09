@@ -2,14 +2,17 @@
 
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { Pencil, Plus, Trash2 } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Activity, AlignJustify, ArrowDownAZ, ArrowUpAZ, ChevronDown, Filter, Gauge, Pencil, Plus, Trash2, X } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { KpiGauge } from "@/components/charts/kpi-gauge";
+import { KpiRingCard } from "@/components/charts/kpi-ring-card";
+import { KpiLineCard } from "@/components/charts/kpi-line-card";
 import { useAuth } from "@/providers/auth-provider";
 import { useLocale } from "@/providers/locale-provider";
 import { deleteOrgEntity, getOrgEntitiesByTypeCode } from "@/actions/entities";
@@ -32,7 +35,7 @@ export default function EntitiesByTypePage() {
   const params = useParams<{ entityTypeCode: string }>();
   const router = useRouter();
   const { user, loading } = useAuth();
-  const { locale, t, df, formatNumber, te } = useLocale();
+  const { locale, t, tr, df, formatNumber, te, kpiValueStatusLabel } = useLocale();
   const [mounted, setMounted] = useState(false);
   const userRole =
     typeof (user as unknown as { role?: unknown })?.role === "string"
@@ -51,17 +54,36 @@ export default function EntitiesByTypePage() {
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
   const [selected, setSelected] = useState<EntityRow | null>(null);
+  const [viewMode, setViewMode] = useState<"gauge" | "ring" | "line">("ring");
+
+  // Filter / sort / group state
+  const [filterStatus, setFilterStatus] = useState<string>("ALL");
+  const [filterPeriod, setFilterPeriod] = useState<string>("ALL");
+  const [filterValueStatus, setFilterValueStatus] = useState<string>("ALL");
+  const [sortBy, setSortBy] = useState<"name" | "value" | "status" | "updated">("name");
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
+  const [groupBy, setGroupBy] = useState<"none" | "period" | "status" | "valueStatus">("none");
+  const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set());
+
+  function toggleGroup(key: string) {
+    setCollapsedGroups((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  }
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  const loadData = useCallback(async () => {
+  const loadData = useCallback(async (searchQ: string) => {
     setLoadingData(true);
     try {
       const data = await getOrgEntitiesByTypeCode({
         entityTypeCode,
-        q: q.trim() ? q.trim() : undefined,
+        q: searchQ.trim() ? searchQ.trim() : undefined,
         page: 1,
         pageSize: 250,
       });
@@ -72,19 +94,134 @@ export default function EntitiesByTypePage() {
     } finally {
       setLoadingData(false);
     }
-  }, [entityTypeCode, q]);
+  }, [entityTypeCode]);
+
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (loading) return;
     if (!user) return;
     if (userRole === "SUPER_ADMIN") return;
-    void loadData();
-  }, [loadData, loading, user, userRole]);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      void loadData(q);
+    }, 300);
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+  }, [loadData, loading, user, userRole, q]);
 
   const entityType = result.entityType;
   const title = entityType ? df(entityType.name, entityType.nameAr) : entityTypeCode;
 
   const rows = useMemo(() => result.items ?? [], [result.items]);
+
+  // Derive unique period/status values for filter chips
+  const availablePeriods = useMemo(() => {
+    const set = new Set(rows.map((r) => String(r.periodType ?? "")).filter(Boolean));
+    return Array.from(set).sort();
+  }, [rows]);
+
+  const availableStatuses = useMemo(() => {
+    const set = new Set(rows.map((r) => String(r.status ?? "")).filter(Boolean));
+    return Array.from(set).sort();
+  }, [rows]);
+
+  const availableValueStatuses = useMemo(() => {
+    const set = new Set(rows.map((r) => String(r.values?.[0]?.status ?? "")).filter(Boolean));
+    return Array.from(set).sort();
+  }, [rows]);
+
+  // Active filter count
+  const activeFilterCount = [
+    filterStatus !== "ALL",
+    filterPeriod !== "ALL",
+    filterValueStatus !== "ALL",
+  ].filter(Boolean).length;
+
+  function clearFilters() {
+    setFilterStatus("ALL");
+    setFilterPeriod("ALL");
+    setFilterValueStatus("ALL");
+  }
+
+  // Filtered + sorted rows
+  const processedRows = useMemo(() => {
+    let filtered = rows;
+
+    if (filterStatus !== "ALL") {
+      filtered = filtered.filter((r) => String(r.status ?? "") === filterStatus);
+    }
+    if (filterPeriod !== "ALL") {
+      filtered = filtered.filter((r) => String(r.periodType ?? "") === filterPeriod);
+    }
+    if (filterValueStatus !== "ALL") {
+      if (filterValueStatus === "NO_DATA") {
+        filtered = filtered.filter((r) => !r.values?.[0]);
+      } else {
+        filtered = filtered.filter((r) => String(r.values?.[0]?.status ?? "") === filterValueStatus);
+      }
+    }
+
+    return [...filtered].sort((a, b) => {
+      let cmp = 0;
+      if (sortBy === "name") {
+        cmp = df(a.title, a.titleAr).localeCompare(df(b.title, b.titleAr));
+      } else if (sortBy === "value") {
+        const av = latestEntityValue(a) ?? -Infinity;
+        const bv = latestEntityValue(b) ?? -Infinity;
+        cmp = av - bv;
+      } else if (sortBy === "status") {
+        cmp = String(a.status ?? "").localeCompare(String(b.status ?? ""));
+      } else if (sortBy === "updated") {
+        cmp = new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime();
+      }
+      return sortDir === "asc" ? cmp : -cmp;
+    });
+  }, [rows, filterStatus, filterPeriod, filterValueStatus, sortBy, sortDir, df]);
+
+  // Grouped rows
+  type GroupEntry = { key: string; label: string; items: EntityRow[] };
+  const groupedRows = useMemo((): GroupEntry[] => {
+    if (groupBy === "none") {
+      return [{ key: "__all__", label: "", items: processedRows }];
+    }
+    const map = new Map<string, EntityRow[]>();
+    for (const r of processedRows) {
+      let key = "__none__";
+      if (groupBy === "period") key = String(r.periodType ?? "__none__");
+      else if (groupBy === "status") key = String(r.status ?? "__none__");
+      else if (groupBy === "valueStatus") key = String(r.values?.[0]?.status ?? "NO_DATA");
+      if (!map.has(key)) map.set(key, []);
+      map.get(key)!.push(r);
+    }
+    return Array.from(map.entries()).map(([key, items]) => ({ key, label: key, items }));
+  }, [processedRows, groupBy]);
+
+  function periodLabel(code: string) {
+    if (code === "MONTHLY") return t("periodMonthly");
+    if (code === "QUARTERLY") return t("periodQuarterly");
+    if (code === "YEARLY") return t("periodYearly");
+    return code;
+  }
+
+  function entityStatusLabel(code: string) {
+    if (code === "PLANNED") return t("statusPlanned");
+    if (code === "ACTIVE") return t("statusActive");
+    if (code === "AT_RISK") return t("statusAtRisk");
+    if (code === "COMPLETED") return t("statusCompleted");
+    return code;
+  }
+
+  function groupLabelText(groupKey: string) {
+    if (groupBy === "period") return periodLabel(groupKey);
+    if (groupBy === "status") return entityStatusLabel(groupKey);
+    if (groupBy === "valueStatus") {
+      if (groupKey === "NO_DATA") return t("noData");
+      return kpiValueStatusLabel(groupKey);
+    }
+    return groupKey;
+  }
 
   async function handleDelete() {
     if (!canAdmin) return;
@@ -102,7 +239,7 @@ export default function EntitiesByTypePage() {
 
       setDeleteOpen(false);
       setSelected(null);
-      await loadData();
+      await loadData(q);
       router.refresh();
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : t("failedToDelete");
@@ -148,8 +285,23 @@ export default function EntitiesByTypePage() {
     );
   }
 
+  // Status color helpers
+  function entityStatusColor(code: string) {
+    if (code === "ACTIVE") return "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/25";
+    if (code === "AT_RISK") return "bg-amber-500/15 text-amber-700 dark:text-amber-400 border-amber-500/25";
+    if (code === "COMPLETED") return "bg-blue-500/15 text-blue-700 dark:text-blue-400 border-blue-500/25";
+    return "bg-muted/50 text-muted-foreground border-border";
+  }
+
+  function valueStatusColor(code: string) {
+    if (code === "APPROVED") return "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/25";
+    if (code === "SUBMITTED") return "bg-blue-500/15 text-blue-700 dark:text-blue-400 border-blue-500/25";
+    if (code === "DRAFT") return "bg-muted/50 text-muted-foreground border-border";
+    return "bg-muted/30 text-muted-foreground/60 border-border/40";
+  }
+
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <div className="flex items-center justify-between gap-3">
         <PageHeader title={title} subtitle={t("exploreWithLowerTypeDesc", { type: title, lowerType: title.toLowerCase() })} />
 
@@ -164,95 +316,410 @@ export default function EntitiesByTypePage() {
       </div>
 
       <Card className="bg-card/70 backdrop-blur shadow-sm">
-        <CardHeader>
-          <CardTitle className="text-base">{title}</CardTitle>
-          <CardDescription>{t("exploreWithLowerTypeDesc", { type: title, lowerType: title.toLowerCase() })}</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center gap-3">
-            <Input
-              value={q}
-              onChange={(e) => setQ(e.target.value)}
-              placeholder={t("search")}
-              className="max-w-sm bg-background"
-            />
-            <Button type="button" variant="outline" onClick={() => void loadData()}>
-              {t("search")}
-            </Button>
+        <CardContent className="pt-5 space-y-4">
+
+          {/* ── Row 1: Search + View toggle ── */}
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="relative flex-1 min-w-[180px] max-w-sm">
+              <Input
+                value={q}
+                onChange={(e) => setQ(e.target.value)}
+                placeholder={t("search")}
+                className="bg-background pe-8"
+              />
+              {q ? (
+                <button
+                  type="button"
+                  onClick={() => setQ("")}
+                  className="absolute end-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  aria-label={t("clearFilters")}
+                >
+                  <X className="h-3.5 w-3.5" />
+                </button>
+              ) : null}
+            </div>
+
+            <div className="flex items-center rounded-xl border border-border bg-muted/30 p-1 gap-0.5">
+              <button
+                type="button"
+                onClick={() => setViewMode("gauge")}
+                className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
+                  viewMode === "gauge" ? "bg-card shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"
+                }`}
+                aria-label="Gauge view"
+              >
+                <Gauge className="h-3.5 w-3.5" />
+                <span className="hidden sm:inline">{tr("Gauge", "مقياس")}</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setViewMode("ring")}
+                className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
+                  viewMode === "ring" ? "bg-card shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"
+                }`}
+                aria-label="Ring view"
+              >
+                <Activity className="h-3.5 w-3.5" />
+                <span className="hidden sm:inline">{tr("Ring", "حلقة")}</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setViewMode("line")}
+                className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
+                  viewMode === "line" ? "bg-card shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"
+                }`}
+                aria-label="Line view"
+              >
+                <AlignJustify className="h-3.5 w-3.5" />
+                <span className="hidden sm:inline">{tr("Line", "شريط")}</span>
+              </button>
+            </div>
           </div>
 
+          {/* ── Row 2: Filter + Sort + Group controls ── */}
+          <div className="flex flex-wrap items-center gap-2">
+
+            {/* Filter by entity status */}
+            {availableStatuses.length > 0 && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    type="button"
+                    className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors ${
+                      filterStatus !== "ALL"
+                        ? "border-primary/40 bg-primary/10 text-primary"
+                        : "border-border bg-muted/30 text-muted-foreground hover:text-foreground hover:bg-muted/60"
+                    }`}
+                  >
+                    <Filter className="h-3 w-3" />
+                    {t("statusFilter")}
+                    {filterStatus !== "ALL" && <span className="ms-1 font-semibold">· {entityStatusLabel(filterStatus)}</span>}
+                    <ChevronDown className="h-3 w-3 opacity-60" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="min-w-[160px]">
+                  <DropdownMenuLabel className="text-xs">{t("statusFilter")}</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => setFilterStatus("ALL")} className={filterStatus === "ALL" ? "font-semibold" : ""}>
+                    {t("allStatuses")}
+                  </DropdownMenuItem>
+                  {availableStatuses.map((s) => (
+                    <DropdownMenuItem key={s} onClick={() => setFilterStatus(s)} className={filterStatus === s ? "font-semibold" : ""}>
+                      {entityStatusLabel(s)}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+
+            {/* Filter by period type */}
+            {availablePeriods.length > 1 && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    type="button"
+                    className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors ${
+                      filterPeriod !== "ALL"
+                        ? "border-primary/40 bg-primary/10 text-primary"
+                        : "border-border bg-muted/30 text-muted-foreground hover:text-foreground hover:bg-muted/60"
+                    }`}
+                  >
+                    <Filter className="h-3 w-3" />
+                    {t("periodFilter")}
+                    {filterPeriod !== "ALL" && <span className="ms-1 font-semibold">· {periodLabel(filterPeriod)}</span>}
+                    <ChevronDown className="h-3 w-3 opacity-60" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="min-w-[160px]">
+                  <DropdownMenuLabel className="text-xs">{t("periodFilter")}</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => setFilterPeriod("ALL")} className={filterPeriod === "ALL" ? "font-semibold" : ""}>
+                    {t("allPeriodTypes")}
+                  </DropdownMenuItem>
+                  {availablePeriods.map((p) => (
+                    <DropdownMenuItem key={p} onClick={() => setFilterPeriod(p)} className={filterPeriod === p ? "font-semibold" : ""}>
+                      {periodLabel(p)}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+
+            {/* Filter by value status */}
+            {availableValueStatuses.length > 0 && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    type="button"
+                    className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors ${
+                      filterValueStatus !== "ALL"
+                        ? "border-primary/40 bg-primary/10 text-primary"
+                        : "border-border bg-muted/30 text-muted-foreground hover:text-foreground hover:bg-muted/60"
+                    }`}
+                  >
+                    <Filter className="h-3 w-3" />
+                    {tr("Value Status", "حالة القيمة")}
+                    {filterValueStatus !== "ALL" && (
+                      <span className="ms-1 font-semibold">
+                        · {filterValueStatus === "NO_DATA" ? t("noData") : kpiValueStatusLabel(filterValueStatus)}
+                      </span>
+                    )}
+                    <ChevronDown className="h-3 w-3 opacity-60" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="min-w-[160px]">
+                  <DropdownMenuLabel className="text-xs">{tr("Value Status", "حالة القيمة")}</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => setFilterValueStatus("ALL")} className={filterValueStatus === "ALL" ? "font-semibold" : ""}>
+                    {t("allStatuses")}
+                  </DropdownMenuItem>
+                  {availableValueStatuses.map((s) => (
+                    <DropdownMenuItem key={s} onClick={() => setFilterValueStatus(s)} className={filterValueStatus === s ? "font-semibold" : ""}>
+                      {kpiValueStatusLabel(s)}
+                    </DropdownMenuItem>
+                  ))}
+                  <DropdownMenuItem onClick={() => setFilterValueStatus("NO_DATA")} className={filterValueStatus === "NO_DATA" ? "font-semibold" : ""}>
+                    {t("noData")}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+
+            {/* Divider */}
+            <div className="h-5 w-px bg-border/60 mx-0.5 hidden sm:block" />
+
+            {/* Sort */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  type="button"
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-muted/30 px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground hover:bg-muted/60"
+                >
+                  {sortDir === "asc" ? <ArrowDownAZ className="h-3.5 w-3.5" /> : <ArrowUpAZ className="h-3.5 w-3.5" />}
+                  <span className="hidden sm:inline">{t("sortBy")}</span>
+                  <ChevronDown className="h-3 w-3 opacity-60" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="min-w-[170px]">
+                <DropdownMenuLabel className="text-xs">{t("sortBy")}</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {(["name", "value", "status", "updated"] as const).map((s) => (
+                  <DropdownMenuItem
+                    key={s}
+                    onClick={() => {
+                      if (sortBy === s) {
+                        setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+                      } else {
+                        setSortBy(s);
+                        setSortDir("asc");
+                      }
+                    }}
+                    className={sortBy === s ? "font-semibold" : ""}
+                  >
+                    {s === "name" ? t("sortByName") : s === "value" ? t("sortByValue") : s === "status" ? t("sortByStatus") : t("sortByUpdated")}
+                    {sortBy === s && <span className="ms-auto text-[10px] opacity-60">{sortDir === "asc" ? "↑" : "↓"}</span>}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            {/* Group by */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  type="button"
+                  className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors ${
+                    groupBy !== "none"
+                      ? "border-primary/40 bg-primary/10 text-primary"
+                      : "border-border bg-muted/30 text-muted-foreground hover:text-foreground hover:bg-muted/60"
+                  }`}
+                >
+                  {t("groupBy")}
+                  {groupBy !== "none" && (
+                    <span className="ms-1 font-semibold">
+                      · {groupBy === "period" ? t("groupByPeriod") : groupBy === "status" ? t("groupByStatus") : t("groupByValueStatus")}
+                    </span>
+                  )}
+                  <ChevronDown className="h-3 w-3 opacity-60" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="min-w-[160px]">
+                <DropdownMenuLabel className="text-xs">{t("groupBy")}</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {(["none", "period", "status", "valueStatus"] as const).map((g) => (
+                  <DropdownMenuItem key={g} onClick={() => setGroupBy(g)} className={groupBy === g ? "font-semibold" : ""}>
+                    {g === "none" ? t("groupByNone") : g === "period" ? t("groupByPeriod") : g === "status" ? t("groupByStatus") : t("groupByValueStatus")}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            {/* Active filter count + clear */}
+            {activeFilterCount > 0 && (
+              <button
+                type="button"
+                onClick={clearFilters}
+                className="inline-flex items-center gap-1.5 rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-1.5 text-xs font-medium text-destructive transition-colors hover:bg-destructive/20"
+              >
+                <X className="h-3 w-3" />
+                {t("clearFilters")}
+                <span className="ms-0.5 inline-flex h-4 w-4 items-center justify-center rounded-full bg-destructive/20 text-[10px] font-bold leading-none">
+                  {activeFilterCount}
+                </span>
+              </button>
+            )}
+
+            {/* Result count */}
+            <span className="ms-auto text-xs text-muted-foreground tabular-nums">
+              {processedRows.length} / {rows.length}
+            </span>
+          </div>
+
+          {/* ── Content ── */}
           {loadingData ? (
             <div className="rounded-xl border border-border bg-muted/10 p-8 text-center text-sm text-muted-foreground">{t("loading")}</div>
           ) : rows.length === 0 ? (
             <div className="rounded-xl border border-border bg-muted/10 p-8 text-center text-sm text-muted-foreground">{t("noItemsYet")}</div>
+          ) : processedRows.length === 0 ? (
+            <div className="rounded-xl border border-border bg-muted/10 p-8 text-center text-sm text-muted-foreground">
+              {t("noResultsForFilters")}
+              <button
+                type="button"
+                onClick={clearFilters}
+                className="ms-2 font-medium text-primary underline underline-offset-4"
+              >
+                {t("clearFilters")}
+              </button>
+            </div>
           ) : (
-            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-              {rows.map((e) => {
-                const latest = latestEntityValue(e);
-                const unit = df(e.unit, e.unitAr) || undefined;
-                const gaugeTarget = typeof e.targetValue === "number" ? e.targetValue : null;
-                const typeLabel = entityType ? df(entityType.name, entityType.nameAr) : entityTypeCode;
+            <div className="space-y-6">
+              {groupedRows.map((group) => (
+                <div key={group.key}>
+                  {/* Group header */}
+                  {groupBy !== "none" && (
+                    <button
+                      type="button"
+                      onClick={() => toggleGroup(group.key)}
+                      className="mb-3 flex w-full items-center gap-2 text-start group/ghdr"
+                    >
+                      <ChevronDown
+                        className={`h-3.5 w-3.5 shrink-0 text-muted-foreground transition-transform duration-150 ${
+                          collapsedGroups.has(group.key) ? "-rotate-90" : ""
+                        }`}
+                      />
+                      <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground group-hover/ghdr:text-foreground transition-colors">
+                        {groupLabelText(group.label)}
+                      </span>
+                      <span className="inline-flex h-4 min-w-[1.25rem] items-center justify-center rounded-full bg-muted/60 px-1.5 text-[10px] font-semibold text-muted-foreground">
+                        {group.items.length}
+                      </span>
+                      <div className="h-px flex-1 bg-border/50" />
+                    </button>
+                  )}
 
-                return (
-                  <Card key={e.id} className="bg-card/50 backdrop-blur shadow-sm overflow-hidden">
-                    <Link href={`/${locale}/entities/${entityTypeCode}/${e.id}`} className="block">
-                      <CardHeader className="space-y-2">
-                        <div className="flex items-start justify-between gap-3">
-                          <div className="min-w-0 flex-1">
-                            <CardTitle className="truncate text-base hover:underline underline-offset-4 decoration-primary/40 hover:decoration-primary/70">
-                              {df(e.title, e.titleAr)}
-                            </CardTitle>
-                            <CardDescription className="truncate">
-                              {typeLabel}
-                              {e.key ? ` • ${String(e.key)}` : ""}
-                            </CardDescription>
-                          </div>
+                  {/* Cards grid */}
+                  {!collapsedGroups.has(group.key) && (
+                  <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                    {group.items.map((e) => {
+                      const latest = latestEntityValue(e);
+                      const unit = df(e.unit, e.unitAr) || undefined;
+                      const gaugeTarget = typeof e.targetValue === "number" ? e.targetValue : null;
+                      const typeLabel = entityType ? df(entityType.name, entityType.nameAr) : entityTypeCode;
+                      const valStatus = String(e.values?.[0]?.status ?? "");
+                      const entStatus = String(e.status ?? "");
+                      const period = String(e.periodType ?? "");
 
-                          {canAdmin ? (
-                            <div className="flex items-center gap-2" onClick={(ev) => ev.stopPropagation()}>
-                              <Button
-                                size="icon"
-                                variant="ghost"
-                                className="h-9 w-9"
-                                onClick={(ev) => {
-                                  ev.preventDefault();
-                                  router.push(`/${locale}/entities/${entityTypeCode}/${e.id}/edit`);
-                                }}
-                                aria-label={t("edit")}
-                              >
-                                <Pencil className="h-4 w-4" />
-                              </Button>
-                              <Button
-                                size="icon"
-                                variant="ghost"
-                                className="h-9 w-9 text-destructive hover:text-destructive"
-                                onClick={(ev) => {
-                                  ev.preventDefault();
-                                  setSelected(e);
-                                  setDeleteError(null);
-                                  setDeleteOpen(true);
-                                }}
-                                aria-label={t("delete")}
-                              >
-                                <Trash2 className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          ) : null}
-                        </div>
-                      </CardHeader>
+                      return (
+                        <Card key={e.id} className="bg-card/50 backdrop-blur shadow-sm overflow-hidden transition-all hover:shadow-md hover:border-border/80">
+                          <Link href={`/${locale}/entities/${entityTypeCode}/${e.id}`} className="block">
+                            <CardHeader className="space-y-1.5 pb-2">
+                              <div className="flex items-start justify-between gap-3">
+                                <div className="min-w-0 flex-1">
+                                  <CardTitle className="line-clamp-2 text-sm leading-snug font-semibold hover:underline underline-offset-4 decoration-primary/40 hover:decoration-primary/70">
+                                    {df(e.title, e.titleAr)}
+                                  </CardTitle>
+                                  <div className="mt-1.5 flex flex-wrap items-center gap-1">
+                                    <span className="truncate text-xs text-muted-foreground">{typeLabel}</span>
+                                    {period && (
+                                      <span className="inline-flex items-center rounded-md border border-border/60 bg-muted/40 px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
+                                        {periodLabel(period)}
+                                      </span>
+                                    )}
+                                    {entStatus && (
+                                      <span className={`inline-flex items-center rounded-md border px-1.5 py-0.5 text-[10px] font-medium ${entityStatusColor(entStatus)}`}>
+                                        {entityStatusLabel(entStatus)}
+                                      </span>
+                                    )}
+                                    {valStatus && (
+                                      <span className={`inline-flex items-center rounded-md border px-1.5 py-0.5 text-[10px] font-medium ${valueStatusColor(valStatus)}`}>
+                                        {kpiValueStatusLabel(valStatus)}
+                                      </span>
+                                    )}
+                                    {!valStatus && (
+                                      <span className="inline-flex items-center rounded-md border border-border/40 bg-muted/20 px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground/60">
+                                        {t("noData")}
+                                      </span>
+                                    )}
+                                  </div>
+                                </div>
 
-                      <CardContent className="space-y-3">
-                      <KpiGauge value={latest} target={gaugeTarget} unit={unit} height={160} withCard={false} />
+                                {canAdmin ? (
+                                  <div className="flex items-center gap-1" onClick={(ev) => ev.stopPropagation()}>
+                                    <Button
+                                      size="icon"
+                                      variant="ghost"
+                                      className="h-8 w-8"
+                                      onClick={(ev) => {
+                                        ev.preventDefault();
+                                        router.push(`/${locale}/entities/${entityTypeCode}/${e.id}/edit`);
+                                      }}
+                                      aria-label={t("edit")}
+                                    >
+                                      <Pencil className="h-3.5 w-3.5" />
+                                    </Button>
+                                    <Button
+                                      size="icon"
+                                      variant="ghost"
+                                      className="h-8 w-8 text-destructive hover:text-destructive"
+                                      onClick={(ev) => {
+                                        ev.preventDefault();
+                                        setSelected(e);
+                                        setDeleteError(null);
+                                        setDeleteOpen(true);
+                                      }}
+                                      aria-label={t("delete")}
+                                    >
+                                      <Trash2 className="h-3.5 w-3.5" />
+                                    </Button>
+                                  </div>
+                                ) : null}
+                              </div>
+                            </CardHeader>
 
-                      <div className="flex items-center justify-between text-xs text-muted-foreground">
-                        <span>{t("status")}: {String(e.status ?? "—")}</span>
-                        <span dir="ltr">{latest === null ? "—" : formatNumber(latest)}{unit ? ` ${unit}` : ""}</span>
-                      </div>
-                      </CardContent>
-                    </Link>
-                  </Card>
-                );
-              })}
+                            <CardContent className="pt-0 space-y-2">
+                              {viewMode === "gauge" ? (
+                                <KpiGauge value={latest} target={gaugeTarget} unit={unit} height={160} withCard={false} />
+                              ) : viewMode === "ring" ? (
+                                <KpiRingCard value={latest} target={gaugeTarget} unit={unit} size={112} />
+                              ) : (
+                                <KpiLineCard value={latest} target={gaugeTarget} unit={unit} />
+                              )}
+
+                              <div className="flex items-center justify-between border-t border-border/50 pt-2 text-xs text-muted-foreground">
+                                <span className="truncate">{t("target")}: {gaugeTarget !== null ? formatNumber(gaugeTarget) : "—"}</span>
+                                <span dir="ltr" className="shrink-0 ms-2 font-medium tabular-nums">
+                                  {latest === null ? "—" : formatNumber(Math.round(latest * 10) / 10)}{unit ? ` ${unit}` : ""}
+                                </span>
+                              </div>
+                            </CardContent>
+                          </Link>
+                        </Card>
+                      );
+                    })}
+                  </div>
+                  )}
+                </div>
+              ))}
             </div>
           )}
         </CardContent>
@@ -268,8 +735,8 @@ export default function EntitiesByTypePage() {
       >
         <DialogContent className="border-border bg-card text-foreground">
           <DialogHeader>
-            <DialogTitle>{t("delete")}</DialogTitle>
-            <DialogDescription className="text-muted-foreground">{t("delete")}</DialogDescription>
+            <DialogTitle>{t("delete")} {selected ? `"${df(selected.title, selected.titleAr)}"` : ""}</DialogTitle>
+            <DialogDescription className="text-muted-foreground">{t("deleteConfirmDesc")}</DialogDescription>
           </DialogHeader>
 
           {deleteError ? (

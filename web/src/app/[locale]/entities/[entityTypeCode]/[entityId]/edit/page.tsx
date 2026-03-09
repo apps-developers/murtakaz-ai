@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { useEffect, useMemo, useState } from "react";
 import { Plus, Trash2, Code2 } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
 import { PageHeader } from "@/components/page-header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -17,6 +18,9 @@ import { useLocale } from "@/providers/locale-provider";
 import { useTheme } from "@/providers/theme-provider";
 import { getOrgEntityDetail, updateOrgEntity, getOrgOwnerOptions, testOrgEntityFormula } from "@/actions/entities";
 import { EntitySelectorModal } from "@/components/entity-selector-modal";
+import { AiFormulaBuilder } from "@/components/ai/ai-formula-builder";
+import { AiTranslateButton } from "@/components/ai/ai-translate-button";
+import { useAiEnabled } from "@/lib/ai-features";
 
 type EntityDetail = Awaited<ReturnType<typeof getOrgEntityDetail>>;
 type OwnerOption = Awaited<ReturnType<typeof getOrgOwnerOptions>>[number];
@@ -58,7 +62,8 @@ export default function EditEntityPage() {
   const params = useParams<{ entityTypeCode: string; entityId: string }>();
   const router = useRouter();
   const { user, loading } = useAuth();
-  const { locale, t, tr, df, te } = useLocale();
+  const { locale, t, tr, te, df } = useLocale();
+  const aiEnabled = useAiEnabled();
   const { theme } = useTheme();
 
   const userRole =
@@ -344,7 +349,20 @@ export default function EditEntityPage() {
                 <Input id="entity-title" value={title} onChange={(e) => setTitle(e.target.value)} required className="bg-card" />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="entity-title-ar">{t("nameAr")}</Label>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="entity-title-ar">{t("nameAr")}</Label>
+                  {aiEnabled ? (
+                    <AiTranslateButton
+                      fields={{ title, description, unit }}
+                      hasExistingAr={!!titleAr || !!descriptionAr || !!unitAr}
+                      onTranslated={(res) => {
+                        if (res.titleAr) setTitleAr(res.titleAr);
+                        if (res.descriptionAr) setDescriptionAr(res.descriptionAr);
+                        if (res.unitAr) setUnitAr(res.unitAr);
+                      }}
+                    />
+                  ) : null}
+                </div>
                 <Input id="entity-title-ar" value={titleAr} onChange={(e) => setTitleAr(e.target.value)} className="bg-card" />
               </div>
             </div>
@@ -404,6 +422,7 @@ export default function EditEntityPage() {
               </div>
             </div>
 
+            {isKpiType && (
             <div className="rounded-2xl border border-border bg-muted/20 p-4 space-y-4">
               <div className="space-y-1">
                 <p className="text-sm font-semibold">{tr("Measurement", "القياس")}</p>
@@ -571,29 +590,29 @@ export default function EditEntityPage() {
 
                           <div className="md:col-span-2 space-y-2">
                             <div className="flex items-center gap-2 text-sm">
-                              <input
-                                type="checkbox"
+                              <Checkbox
+                                id={`req-${v.tempId}`}
                                 checked={v.isRequired}
-                                onChange={(e) =>
+                                onCheckedChange={(checked) =>
                                   setVariables((prev) =>
-                                    prev.map((row) => (row.tempId === v.tempId ? { ...row, isRequired: e.target.checked } : row)),
+                                    prev.map((row) => (row.tempId === v.tempId ? { ...row, isRequired: !!checked } : row)),
                                   )
                                 }
                               />
-                              <span>{tr("Required", "مطلوب")}</span>
+                              <label htmlFor={`req-${v.tempId}`} className="cursor-pointer select-none">{tr("Required", "مطلوب")}</label>
                             </div>
 
                             <div className="flex items-center gap-2 text-sm">
-                              <input
-                                type="checkbox"
+                              <Checkbox
+                                id={`static-${v.tempId}`}
                                 checked={v.isStatic}
-                                onChange={(e) =>
+                                onCheckedChange={(checked) =>
                                   setVariables((prev) =>
-                                    prev.map((row) => (row.tempId === v.tempId ? { ...row, isStatic: e.target.checked } : row)),
+                                    prev.map((row) => (row.tempId === v.tempId ? { ...row, isStatic: !!checked } : row)),
                                   )
                                 }
                               />
-                              <span>{tr("Static", "ثابت")}</span>
+                              <label htmlFor={`static-${v.tempId}`} className="cursor-pointer select-none">{tr("Static", "ثابت")}</label>
                             </div>
                           </div>
 
@@ -652,7 +671,15 @@ export default function EditEntityPage() {
               </div>
 
               <div className="space-y-2">
-                <Label>{tr("Formula code", "كود المعادلة")}</Label>
+                <div className="flex items-center justify-between">
+                  <Label>{tr("Formula code", "كود المعادلة")}</Label>
+                  {aiEnabled ? (
+                    <AiFormulaBuilder
+                      variables={variables.map((v) => ({ code: v.code, displayName: v.displayName }))}
+                      onInsert={(f) => setFormula((prev) => prev ? prev + "\n" + f : f)}
+                    />
+                  ) : null}
+                </div>
                 <div dir="ltr" className="rounded-xl border border-border overflow-hidden bg-card text-left">
                   <MonacoEditor
                     height="260px"
@@ -682,7 +709,7 @@ export default function EditEntityPage() {
                     onClick={() => setEntitySelectorOpen(true)}
                     className="shrink-0"
                   >
-                    <Code2 className="h-4 w-4 mr-2" />
+                    <Code2 className="h-4 w-4 me-2" />
                     {tr("Insert get()", "إدراج get()")}
                   </Button>
                 </div>
@@ -707,6 +734,7 @@ export default function EditEntityPage() {
                 </div>
               </div>
             </div>
+            )}
 
             <div className="flex items-center justify-between gap-2">
               <Button type="button" variant="ghost" asChild>

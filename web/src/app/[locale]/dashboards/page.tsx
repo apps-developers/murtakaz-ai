@@ -12,13 +12,14 @@ import { Progress } from "@/components/ui/progress";
 import { useLocale } from "@/providers/locale-provider";
 import { getDashboardInsights } from "@/actions/insights";
 import { statusColorForAchievement } from "@/lib/rag";
-
-function clamp(value: number, min: number, max: number) {
-  return Math.max(min, Math.min(max, value));
-}
+import { AiGenerateSummaryModal } from "@/components/ai/ai-generate-summary-modal";
+import { useAiEnabled } from "@/lib/ai-features";
+import { dashboards } from "@/lib/dashboards";
+import { clamp } from "@/lib/utils";
 
 export default function DashboardsPage() {
   const { locale, t, df, formatDate } = useLocale();
+  const aiEnabled = useAiEnabled();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<Awaited<ReturnType<typeof getDashboardInsights>> | null>(null);
@@ -80,6 +81,7 @@ export default function DashboardsPage() {
         icon={<Icon name="tabler:chart-line" className="h-5 w-5" />}
         actions={
           <div className="flex gap-2">
+            {aiEnabled ? <AiGenerateSummaryModal /> : null}
             <Button asChild variant="outline" size="sm">
               <Link href={`/${locale}/overview`}>
                 <Icon name="tabler:layout-grid" className="me-2 h-4 w-4" />
@@ -182,7 +184,7 @@ export default function DashboardsPage() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle className="text-lg">{t("browseByTypeDesc")}</CardTitle>
+                <CardTitle className="text-lg">{t("browseByType")}</CardTitle>
                 <CardDescription className="mt-1">{t("browseByTypeDesc")}</CardDescription>
               </div>
               <Badge variant="outline" className="border-border bg-muted/30">{loading ? "—" : `${(data?.topTypes?.length ?? 0)} ${t("categories")}`}</Badge>
@@ -316,6 +318,30 @@ export default function DashboardsPage() {
                   </div>
                 </Link>
               </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </section>
+
+      <section>
+        <Card className="bg-card/70 backdrop-blur shadow-sm">
+          <CardHeader>
+            <CardTitle className="text-lg">{t("specificDashboards")}</CardTitle>
+            <CardDescription className="mt-1">{t("specificDashboardsSubtitle")}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {dashboards.map((d) => (
+                <Button key={d.slug} asChild variant="outline" className="h-auto flex-col items-start gap-2 p-4">
+                  <Link href={`/${locale}/dashboards/${d.slug}`}>
+                    <Icon name={d.icon} className="h-5 w-5 text-primary" />
+                    <div className="text-left">
+                      <div className="font-semibold">{df(d.title, d.titleAr)}</div>
+                      <div className="text-xs text-muted-foreground line-clamp-2">{df(d.description, d.descriptionAr)}</div>
+                    </div>
+                  </Link>
+                </Button>
+              ))}
             </div>
           </CardContent>
         </Card>

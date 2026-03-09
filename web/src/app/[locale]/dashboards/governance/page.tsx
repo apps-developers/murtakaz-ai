@@ -1,17 +1,31 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { PageHeader } from "@/components/page-header";
 import { Icon } from "@/components/icon";
 import { Bar } from "@/components/charts/dashboard-charts";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { approvalsAging } from "@/lib/dashboard-metrics";
-import { changeRequests } from "@/lib/mock-data";
+import { getGovernanceInsights } from "@/actions/insights";
 import { useLocale } from "@/providers/locale-provider";
 
 export default function GovernanceDashboardPage() {
   const { t, locale } = useLocale();
-  const pending = changeRequests.filter((cr) => cr.status === "PENDING");
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState<Awaited<ReturnType<typeof getGovernanceInsights>> | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+    void (async () => {
+      const res = await getGovernanceInsights();
+      if (mounted) { setData(res); setLoading(false); }
+    })();
+    return () => { mounted = false; };
+  }, []);
+
+  const pendingList = data?.pendingList ?? [];
+  const summary = data?.summary;
 
   return (
     <div className="space-y-8">
@@ -20,6 +34,27 @@ export default function GovernanceDashboardPage() {
         subtitle={t("strategyChangeDashboardSubtitle")}
         icon={<Icon name="tabler:gavel" className="h-5 w-5" />}
       />
+
+      <section className="grid gap-4 sm:grid-cols-3">
+        <Card className="border-border bg-card/50 shadow-sm">
+          <CardHeader className="pb-2">
+            <CardDescription>{t("changeRequestsPending")}</CardDescription>
+            <CardTitle className="text-3xl font-bold text-amber-600 dark:text-amber-400">{loading ? "—" : (summary?.pending ?? 0)}</CardTitle>
+          </CardHeader>
+        </Card>
+        <Card className="border-border bg-card/50 shadow-sm">
+          <CardHeader className="pb-2">
+            <CardDescription>{t("changeRequestsApproved")}</CardDescription>
+            <CardTitle className="text-3xl font-bold text-emerald-600 dark:text-emerald-400">{loading ? "—" : (summary?.approved ?? 0)}</CardTitle>
+          </CardHeader>
+        </Card>
+        <Card className="border-border bg-card/50 shadow-sm">
+          <CardHeader className="pb-2">
+            <CardDescription>{t("changeRequestsRejected")}</CardDescription>
+            <CardTitle className="text-3xl font-bold text-rose-600 dark:text-rose-400">{loading ? "—" : (summary?.rejected ?? 0)}</CardTitle>
+          </CardHeader>
+        </Card>
+      </section>
 
       <section className="grid gap-6 lg:grid-cols-3">
         <Card className="border-border bg-card/50 shadow-sm lg:col-span-2">
@@ -31,7 +66,15 @@ export default function GovernanceDashboardPage() {
             <CardDescription className="text-muted-foreground">{t("agingDistributionDesc")}</CardDescription>
           </CardHeader>
           <CardContent>
-            <Bar categories={approvalsAging.categories} values={approvalsAging.values} color="#173763" />
+            {loading ? (
+              <div className="rounded-xl border border-border bg-muted/10 p-8 text-center text-sm text-muted-foreground">{t("loading")}</div>
+            ) : (
+              <Bar
+                categories={data?.approvalsAging.categories ?? []}
+                values={data?.approvalsAging.values ?? []}
+                color="#173763"
+              />
+            )}
           </CardContent>
         </Card>
 
@@ -44,7 +87,7 @@ export default function GovernanceDashboardPage() {
             <div className="rounded-xl border border-border bg-muted/30 px-4 py-3">
               <p className="font-semibold text-foreground">{t("pendingChanges")}</p>
               <p className="mt-1 text-xs text-muted-foreground">
-                {pending.length} {t("itemsAwaitingApprovalDesc")}
+                {loading ? "—" : summary?.pending} {t("itemsAwaitingApprovalDesc")}
               </p>
             </div>
             <div className="rounded-xl border border-border bg-muted/30 px-4 py-3">
@@ -70,20 +113,31 @@ export default function GovernanceDashboardPage() {
             </Link>
           </CardHeader>
           <CardContent className="space-y-3">
-            {pending.map((cr) => (
-              <Link
-                key={cr.id}
-                href={`/${locale}/approvals/${cr.id}`}
-                className="block rounded-xl border border-border bg-muted/30 px-4 py-3 transition hover:bg-card/50"
-              >
-                <p className="text-sm font-semibold text-foreground">
-                  {cr.entityType}: {cr.entityName}
-                </p>
-                <p className="mt-1 text-xs text-muted-foreground">
-                  {t("requestedBy")} {cr.requestedBy} • {cr.ageDays}{t("daysShort")}
-                </p>
-              </Link>
-            ))}
+            {loading ? (
+              <div className="rounded-xl border border-border bg-muted/10 p-8 text-center text-sm text-muted-foreground">{t("loading")}</div>
+            ) : pendingList.length === 0 ? (
+              <div className="rounded-xl border border-border bg-muted/10 p-8 text-center text-sm text-muted-foreground">{t("noItemsYet")}</div>
+            ) : (
+              pendingList.map((cr) => (
+                <Link
+                  key={cr.id}
+                  href={`/${locale}/approvals`}
+                  className="block rounded-xl border border-border bg-muted/30 px-4 py-3 transition hover:bg-card/50"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="space-y-1">
+                      <p className="text-sm font-semibold text-foreground">{cr.entityType}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {t("requestedBy")} {cr.requestedBy} • {cr.ageDays}{t("daysShort")}
+                      </p>
+                    </div>
+                    <Badge variant="outline" className="bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/20">
+                      {t("pending")}
+                    </Badge>
+                  </div>
+                </Link>
+              ))
+            )}
           </CardContent>
         </Card>
       </section>

@@ -1,0 +1,13 @@
+# AI Feature Flags
+# Copy relevant lines to your .env.local file
+
+# Master switch — set to "true" to enable all AI UI features
+NEXT_PUBLIC_AI_ENABLED=true
+
+# AI backend settings (server-side only, never exposed to the browser)
+AI_API_KEY=sk-...your-openai-api-key...
+AI_API_URL=https://api.openai.com/v1/chat/completions
+AI_MODEL=gpt-4o
+
+# To DISABLE all AI UI: set NEXT_PUBLIC_AI_ENABLED=false (or remove it entirely)
+# When disabled, no AI buttons, panels, or modals will be rendered anywhere in the app.

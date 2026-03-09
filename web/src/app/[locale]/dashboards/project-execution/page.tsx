@@ -1,22 +1,37 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { PageHeader } from "@/components/page-header";
 import { Icon } from "@/components/icon";
-import { Bar } from "@/components/charts/dashboard-charts";
-import { RagBadge, StatusBadge } from "@/components/rag-badge";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { pillars } from "@/lib/mock-data";
+import { getProjectExecutionInsights } from "@/actions/insights";
 import { useLocale } from "@/providers/locale-provider";
 
-export default function ProjectExecutionDashboardPage() {
-  const { t, locale, isArabic } = useLocale();
-  const initiatives = pillars.flatMap((pillar) => pillar.initiatives);
-  const projects = initiatives.flatMap((initiative) => initiative.projects);
+const statusColor: Record<string, string> = {
+  ACTIVE: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20",
+  AT_RISK: "bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/20",
+  PLANNED: "bg-slate-500/10 text-slate-700 dark:text-slate-400 border-slate-500/20",
+  COMPLETED: "bg-blue-500/10 text-blue-700 dark:text-blue-400 border-blue-500/20",
+};
 
-  const completion = projects.map((project) =>
-    project.milestonesTotal === 0 ? 0 : Math.round((project.milestonesComplete / project.milestonesTotal) * 100),
-  );
+export default function ProjectExecutionDashboardPage() {
+  const { t, locale, df } = useLocale();
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState<Awaited<ReturnType<typeof getProjectExecutionInsights>> | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+    void (async () => {
+      const res = await getProjectExecutionInsights();
+      if (mounted) { setData(res); setLoading(false); }
+    })();
+    return () => { mounted = false; };
+  }, []);
+
+  const rows = data?.rows ?? [];
+  const statusCounts = data?.statusCounts;
 
   return (
     <div className="space-y-8">
@@ -26,45 +41,20 @@ export default function ProjectExecutionDashboardPage() {
         icon={<Icon name="tabler:timeline" className="h-5 w-5" />}
       />
 
-      <section className="grid gap-6 lg:grid-cols-3">
-        <Card className="border-border bg-card/50 shadow-sm lg:col-span-2">
-          <CardHeader className="space-y-1">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-base">{t("milestoneCompletion")}</CardTitle>
-              <Icon name="tabler:timeline" className="text-muted-foreground" />
-            </div>
-            <CardDescription className="text-muted-foreground">{t("completionByProjectDesc")}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Bar
-              categories={projects.map((p) => p.title.split(" ")[0])}
-              values={completion}
-              color="#60a5fa"
-              formatter={(value) => `${value}%`}
-            />
-          </CardContent>
-        </Card>
-
-        <Card className="border-border bg-card/50 shadow-sm">
-          <CardHeader className="space-y-1">
-            <CardTitle className="text-base">{t("dependencyWatch")}</CardTitle>
-            <CardDescription className="text-muted-foreground">{t("projectsWithDependenciesDesc")}</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {projects
-              .filter((project) => (project.dependencies ?? []).length > 0)
-              .map((project) => (
-                <Link
-                  key={project.id}
-                  href={`/${locale}/projects/${project.id}`}
-                  className="block rounded-xl border border-border bg-muted/30 px-4 py-3 transition hover:bg-card/50"
-                >
-                  <p className="text-sm font-semibold text-foreground">{isArabic ? project.titleAr ?? project.title : project.title}</p>
-                  <p className="mt-1 text-xs text-muted-foreground">{project.dependencies?.join(" • ")}</p>
-                </Link>
-              ))}
-          </CardContent>
-        </Card>
+      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {[
+          { label: t("active"), value: statusCounts?.ACTIVE, color: "text-emerald-600 dark:text-emerald-400" },
+          { label: t("atRisk"), value: statusCounts?.AT_RISK, color: "text-amber-600 dark:text-amber-400" },
+          { label: t("planned"), value: statusCounts?.PLANNED, color: "text-slate-600 dark:text-slate-400" },
+          { label: t("completed"), value: statusCounts?.COMPLETED, color: "text-blue-600 dark:text-blue-400" },
+        ].map(({ label, value, color }) => (
+          <Card key={label} className="border-border bg-card/50 shadow-sm">
+            <CardHeader className="pb-2">
+              <CardDescription>{label}</CardDescription>
+              <CardTitle className={`text-3xl font-bold ${color}`}>{loading ? "—" : (value ?? 0)}</CardTitle>
+            </CardHeader>
+          </Card>
+        ))}
       </section>
 
       <section>
@@ -73,28 +63,30 @@ export default function ProjectExecutionDashboardPage() {
             <CardTitle className="text-base">{t("projectPortfolio")}</CardTitle>
             <CardDescription className="text-muted-foreground">{t("healthStatusDrilldownDesc")}</CardDescription>
           </CardHeader>
-          <CardContent className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
-            {projects.map((project) => (
-              <Link
-                key={project.id}
-                href={`/${locale}/projects/${project.id}`}
-                className="block rounded-xl border border-border bg-muted/30 px-4 py-3 transition hover:bg-card/50"
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div className="space-y-1">
-                    <p className="text-sm font-semibold text-foreground">{isArabic ? project.titleAr ?? project.title : project.title}</p>
-                    <p className="text-xs text-muted-foreground">{project.owner}</p>
-                    <div className="flex items-center gap-2 pt-1">
-                      <StatusBadge status={project.status} />
-                      <p className="text-xs text-muted-foreground">
-                        {project.milestonesComplete}/{project.milestonesTotal}
-                      </p>
+          <CardContent>
+            {loading ? (
+              <div className="rounded-xl border border-border bg-muted/10 p-8 text-center text-sm text-muted-foreground">{t("loading")}</div>
+            ) : rows.length === 0 ? (
+              <div className="rounded-xl border border-border bg-muted/10 p-8 text-center text-sm text-muted-foreground">{t("noItemsYet")}</div>
+            ) : (
+              <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+                {rows.map((project) => (
+                  <Link
+                    key={project.id}
+                    href={`/${locale}/entities/project/${project.id}`}
+                    className="block rounded-xl border border-border bg-muted/30 px-4 py-3 transition hover:bg-card/50"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="space-y-1">
+                        <p className="text-sm font-semibold text-foreground">{df(project.title, project.titleAr)}</p>
+                        <p className="text-xs text-muted-foreground">{project.owner}</p>
+                      </div>
+                      <Badge variant="outline" className={statusColor[project.status] ?? ""}>{project.status}</Badge>
                     </div>
-                  </div>
-                  <RagBadge health={project.health} />
-                </div>
-              </Link>
-            ))}
+                  </Link>
+                ))}
+              </div>
+            )}
           </CardContent>
         </Card>
       </section>

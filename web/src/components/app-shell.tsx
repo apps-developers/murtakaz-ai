@@ -13,6 +13,8 @@ import { useAuth } from "@/providers/auth-provider";
 import { type TranslationKey, useLocale } from "@/providers/locale-provider";
 import { Icon } from "@/components/icon";
 import { cn } from "@/lib/utils";
+import { AiChatPanel } from "@/components/ai/ai-chat-panel";
+import { useAiEnabled } from "@/lib/ai-features";
 
 const marketingRouteSet = new Set(["/", "/pricing", "/faq", "/about", "/contact", "/careers", "/privacy", "/terms"]);
 
@@ -60,6 +62,12 @@ type DynamicNavItem = {
   key: string;
   icon: string;
   label: string;
+};
+
+type NavSection = {
+  sectionKey: string;
+  labelKey?: TranslationKey;
+  items: NavItem[];
 };
 
 type NavItem = StaticNavItem | DynamicNavItem;
@@ -126,14 +134,20 @@ function NavItemLink({
       <Link
         href={href}
         className={cn(
-          "group flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition",
-          isActive ? "bg-accent text-foreground" : "text-muted-foreground hover:bg-accent hover:text-foreground",
+          "group relative flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition-colors",
+          isActive
+            ? "bg-primary/10 text-primary"
+            : "text-muted-foreground hover:bg-accent hover:text-foreground",
         )}
         aria-current={isActive ? "page" : undefined}
       >
-        <span className="flex h-9 w-9 items-center justify-center rounded-xl border border-border bg-background/50">
-          <Icon name={item.icon} className="h-4 w-4" />
-        </span>
+        {isActive && (
+          <span className="absolute inset-y-1.5 start-0 w-0.5 rounded-full bg-primary" />
+        )}
+        <Icon
+          name={item.icon}
+          className={cn("h-4 w-4 shrink-0 transition-colors", isActive ? "text-primary" : "text-muted-foreground group-hover:text-foreground")}
+        />
         <span
           className={cn(
             "whitespace-nowrap transition-all duration-200",
@@ -150,16 +164,22 @@ function NavItemLink({
     <Link
       href={href}
       className={cn(
-        "group flex items-center rounded-xl py-2 text-sm font-medium transition-colors",
+        "group relative flex items-center rounded-xl py-2 text-sm font-medium transition-colors",
         sidebarExpanded ? "gap-3 px-3" : "justify-center px-2",
-        isActive ? "bg-accent text-foreground" : "text-muted-foreground hover:bg-accent hover:text-foreground",
+        isActive
+          ? "bg-primary/10 text-primary"
+          : "text-muted-foreground hover:bg-accent hover:text-foreground",
       )}
       aria-current={isActive ? "page" : undefined}
       title={!sidebarExpanded ? label : undefined}
     >
-      <span className="flex h-9 w-9 items-center justify-center rounded-xl border border-border bg-background/50">
-        <Icon name={item.icon} className="h-4 w-4" />
-      </span>
+      {isActive && sidebarExpanded && (
+        <span className="absolute inset-y-1.5 start-0 w-0.5 rounded-full bg-primary" />
+      )}
+      <Icon
+        name={item.icon}
+        className={cn("h-4 w-4 shrink-0 transition-colors", isActive ? "text-primary" : "text-muted-foreground group-hover:text-foreground")}
+      />
       <span
         className={cn(
           "overflow-hidden whitespace-nowrap transition-all duration-300 motion-reduce:transition-none",
@@ -193,6 +213,7 @@ export function AppShell({ children, showLogo = true }: { children: React.ReactN
   const pathname = usePathname();
   const { t, locale } = useLocale();
   const { user, loading } = useAuth();
+  const aiEnabled = useAiEnabled();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const userRole = (user as any)?.role;
   const profileHref = userRole === "SUPER_ADMIN" ? withLocale(locale, "/super-admin/profile") : withLocale(locale, "/profile");
@@ -255,7 +276,7 @@ export function AppShell({ children, showLogo = true }: { children: React.ReactN
   const activeKey = useMemo(() => {
     if (canonicalPath.startsWith("/entities/")) {
       const slug = canonicalPath.split("/").filter(Boolean)[1];
-      return slug ? `entities-${slug}` : "entities";
+      return slug ? `entities-${slug.toLowerCase()}` : "entities";
     }
     const matches = navItems.filter((item) => {
       if (item.href === "/overview") return canonicalPath === "/overview";
@@ -305,57 +326,56 @@ export function AppShell({ children, showLogo = true }: { children: React.ReactN
     })();
   }, [showAppNav, user, userRole]);
 
-  const regularNavItems = useMemo<NavItem[]>(() => {
-    const baseItems = navItems
-      .filter((item) => !item.href.startsWith("/super-admin"))
-      .filter((item) => !["/pillars", "/objectives", "/departments"].includes(item.href))
-      .filter((item) => {
-        // Hide admin-only pages for non-admin users
-        const isAdminOnlyPage = ["/organization", "/users"].includes(item.href);
-        if (isAdminOnlyPage && userRole !== "ADMIN") {
-          return false;
-        }
-        return true;
-      });
+  const entityTypeItems = useMemo<DynamicNavItem[]>(() => orgEntityTypes
+    .slice()
+    .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0))
+    .map((et) => {
+      const code = String(et.code).trim();
+      const lower = code.toLowerCase();
+      const icon = entityTypeIconMap[lower] ?? "tabler:layers-subtract";
+      const labelFromDb = locale === "ar" ? et.nameAr ?? et.name : et.name;
+      const labelKey = entityTypeLabelMap[lower];
+      return {
+        href: `/entities/${code}`,
+        key: `entities-${code}`,
+        icon,
+        label: labelKey ? t(labelKey) : labelFromDb,
+      };
+    }), [locale, orgEntityTypes, t]);
 
-    const entityTypeItems: DynamicNavItem[] = orgEntityTypes
-      .slice()
-      .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0))
-      .map((et) => {
-        const code = String(et.code).trim();
-        const hrefSlug = code;
-        const keySlug = code;
-
-        const lower = code.toLowerCase();
-        const icon = entityTypeIconMap[lower] ?? "tabler:layers-subtract";
-
-        const labelFromDb = locale === "ar" ? et.nameAr ?? et.name : et.name;
-        const labelKey = entityTypeLabelMap[lower];
-
-        return {
-          href: `/entities/${hrefSlug}`,
-          key: `entities-${keySlug}`,
-          icon,
-          label: labelKey ? t(labelKey) : labelFromDb,
-        };
-      });
-
-    const overview = baseItems.find((item) => item.href === "/overview");
-    const rest = baseItems.filter((item) => item.href !== "/overview");
-    return overview ? [overview, ...entityTypeItems, ...rest] : [...entityTypeItems, ...baseItems];
-  }, [locale, orgEntityTypes, t, userRole]);
-
-  const visibleNavItems = useMemo(() => {
+  const visibleNavSections = useMemo((): NavSection[] => {
     if (userRole === "SUPER_ADMIN") {
-      return navItems.filter((item) => item.href.startsWith("/super-admin"));
+      return [{
+        sectionKey: "super-admin",
+        items: navItems.filter((item) => item.href.startsWith("/super-admin")) as NavItem[],
+      }];
     }
 
-    return regularNavItems;
-  }, [regularNavItems, userRole]);
+    const overviewItem = navItems.find((item) => item.href === "/overview");
+    const workflowItems = navItems.filter((item) =>
+      ["/dashboards", "/responsibilities", "/approvals"].includes(item.href),
+    ) as NavItem[];
+    const adminItems = navItems.filter((item) =>
+      ["/organization", "/users"].includes(item.href) && userRole === "ADMIN",
+    ) as NavItem[];
+
+    return [
+      ...(overviewItem ? [{ sectionKey: "main", items: [overviewItem as NavItem] }] : []),
+      ...(entityTypeItems.length > 0 ? [{ sectionKey: "entities", labelKey: "kpiCatalog" as TranslationKey, items: entityTypeItems }] : []),
+      ...(workflowItems.length > 0 ? [{ sectionKey: "workflow", labelKey: "approvals" as TranslationKey, items: workflowItems }] : []),
+      ...(adminItems.length > 0 ? [{ sectionKey: "admin", labelKey: "admin" as TranslationKey, items: adminItems }] : []),
+    ];
+  }, [entityTypeItems, userRole]);
+
+  // flat list for mobile (keeps same order)
+  const visibleNavItems = useMemo(
+    () => visibleNavSections.flatMap((s) => s.items),
+    [visibleNavSections],
+  );
 
   return (
     <div className="relative min-h-screen bg-background text-foreground">
-      <div className="absolute inset-0 pointer-events-none dark:bg-[radial-gradient(circle_at_top,_rgba(23,55,99,0.18),transparent_40%),radial-gradient(circle_at_20%_40%,_rgba(23,55,99,0.10),transparent_30%)]" />
+      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_top,_rgba(59,130,246,0.05),transparent_40%),radial-gradient(circle_at_20%_40%,_rgba(99,102,241,0.04),transparent_30%)] dark:bg-[radial-gradient(circle_at_top,_rgba(23,55,99,0.18),transparent_40%),radial-gradient(circle_at_20%_40%,_rgba(23,55,99,0.10),transparent_30%)]" />
 
       <div className={cn("relative flex min-h-screen")}>
         {mounted && showAppNav ? (
@@ -429,7 +449,7 @@ export function AppShell({ children, showLogo = true }: { children: React.ReactN
                   </div>
                   <div className="min-w-0">
                     <p className="truncate text-sm font-semibold text-foreground">{user?.name}</p>
-                    <p className="truncate text-xs text-muted-foreground">{userRole}</p>
+                    <p className="truncate text-xs text-muted-foreground">{userRole === "ADMIN" ? t("roleAdmin") : userRole === "EXECUTIVE" ? t("roleExecutive") : userRole === "MANAGER" ? t("roleManager") : userRole ?? ""}</p>
                   </div>
                 </Link>
                 <div className="mt-3 flex items-center justify-between">
@@ -494,62 +514,95 @@ export function AppShell({ children, showLogo = true }: { children: React.ReactN
             </div>
 
             <nav className="flex-1 px-3 pb-3 overflow-y-auto">
-              <div className="space-y-1">
-                {visibleNavItems.map((item) => {
-                    const isActive = activeKey === item.key;
-                    return (
-                      <NavItemLink
-                        key={item.href}
-                        item={item}
-                        href={withLocale(locale, item.href)}
-                        isActive={isActive}
-                        isMobile={false}
-                        mobileContentVisible={mobileContentVisible}
-                        sidebarExpanded={sidebarExpanded}
-                        sidebarContentVisible={sidebarContentVisible}
-                        t={t}
-                      />
-                    );
-                })}
+              <div className="space-y-4">
+                {visibleNavSections.map((section, si) => (
+                  <div key={section.sectionKey}>
+                    {/* Section label — only shown when expanded and not the first "main" section */}
+                    {section.labelKey && sidebarExpanded && (
+                      <div
+                        className={cn(
+                          "mb-1 px-3 transition-all duration-300 motion-reduce:transition-none",
+                          sidebarContentVisible ? "opacity-100" : "opacity-0",
+                        )}
+                      >
+                        <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60">
+                          {t(section.labelKey)}
+                        </p>
+                      </div>
+                    )}
+                    {/* Divider between sections when collapsed */}
+                    {si > 0 && !sidebarExpanded && (
+                      <div className="mx-3 my-1 h-px bg-border/50" />
+                    )}
+                    <div className="space-y-0.5">
+                      {section.items.map((item) => {
+                        const isActive = activeKey === item.key;
+                        return (
+                          <NavItemLink
+                            key={item.href}
+                            item={item}
+                            href={withLocale(locale, item.href)}
+                            isActive={isActive}
+                            isMobile={false}
+                            mobileContentVisible={mobileContentVisible}
+                            sidebarExpanded={sidebarExpanded}
+                            sidebarContentVisible={sidebarContentVisible}
+                            t={t}
+                          />
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
               </div>
             </nav>
 
-            <div className="mt-auto border-t border-border p-4">
+            <div className="mt-auto border-t border-border px-3 py-3">
               <Link
                 href={profileHref}
                 className={cn(
-                  "flex items-center rounded-xl transition hover:bg-accent",
+                  "flex items-center rounded-xl transition-colors hover:bg-accent",
                   sidebarExpanded ? "gap-3 px-2 py-2" : "justify-center p-2",
                 )}
               >
-                <div className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background/50 text-xs font-semibold text-foreground">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/15 text-[11px] font-bold text-primary">
                   {userInitials}
                 </div>
                 <div
                   className={cn(
-                    "min-w-0 overflow-hidden transition-all duration-300 motion-reduce:transition-none",
-                    sidebarExpanded ? "max-w-[240px] mx-2" : "max-w-0",
+                    "min-w-0 flex-1 overflow-hidden transition-all duration-300 motion-reduce:transition-none",
+                    sidebarExpanded ? "max-w-[200px]" : "max-w-0",
                     sidebarFooterVisible ? "opacity-100 translate-x-0" : "opacity-0 ltr:-translate-x-2 rtl:translate-x-2",
                   )}
                 >
-                  <p className="truncate text-sm font-semibold text-foreground">{user?.name}</p>
-                  <p className="truncate text-xs text-muted-foreground">{userRole}</p>
+                  <p className="truncate text-sm font-semibold text-foreground leading-tight">{user?.name}</p>
+                  <p className="truncate text-xs text-muted-foreground">
+                    {userRole === "ADMIN" ? t("roleAdmin") : userRole === "EXECUTIVE" ? t("roleExecutive") : userRole === "MANAGER" ? t("roleManager") : userRole ?? ""}
+                  </p>
                 </div>
               </Link>
+
+              {/* Theme + Language toggles row */}
               <div
                 className={cn(
-                  " overflow-hidden transition-all duration-300 motion-reduce:transition-none",
-                  sidebarExpanded ? "max-h-24 mt-3" : "max-h-0",
+                  "overflow-hidden transition-all duration-300 motion-reduce:transition-none",
+                  sidebarExpanded ? "max-h-12 mt-2" : "max-h-0",
                   sidebarFooterVisible ? "opacity-100" : "opacity-0",
                 )}
               >
-                <div className="flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-1">
-                    <ThemeToggle />
-                    <LanguageToggle />
-                  </div>
+                <div className="flex items-center gap-1 px-2">
+                  <ThemeToggle />
+                  <LanguageToggle />
                 </div>
               </div>
+
+              {/* Collapsed: show theme + lang as icon-only row */}
+              {!sidebarExpanded && (
+                <div className="mt-2 flex flex-col items-center gap-1">
+                  <ThemeToggle />
+                  <LanguageToggle />
+                </div>
+              )}
             </div>
           </aside>
         ) : null}
@@ -601,11 +654,11 @@ export function AppShell({ children, showLogo = true }: { children: React.ReactN
                   <Button
                     variant="ghost"
                     className="relative h-9 w-9 px-0 text-muted-foreground hover:bg-accent hover:text-foreground"
-                    aria-label="Notifications"
+                    aria-label={t("notifications")}
                     onClick={() => {
                       void markNotificationsRead().catch(() => {});
                       setUnreadCount(0);
-                      window.location.href = `/${locale}/approvals`;
+                      router.push(`/${locale}/approvals`);
                     }}
                   >
                     <Icon name="tabler:bell" className="h-5 w-5" />
@@ -658,6 +711,8 @@ export function AppShell({ children, showLogo = true }: { children: React.ReactN
             {children}
           </main>
         </div>
+
+        {showAppNav && aiEnabled ? <AiChatPanel /> : null}
       </div>
     </div>
   );

@@ -12,6 +12,8 @@ import { Progress } from "@/components/ui/progress";
 import { useLocale } from "@/providers/locale-provider";
 import { getOverviewInsights } from "@/actions/insights";
 import { getFirstEntityTypeCode } from "@/actions/navigation";
+import { AiGenerateSummaryModal } from "@/components/ai/ai-generate-summary-modal";
+import { useAiEnabled } from "@/lib/ai-features";
 
 function activityBadge(status: string) {
   const up = String(status ?? "").toUpperCase();
@@ -23,6 +25,7 @@ function activityBadge(status: string) {
 
 export default function OverviewPage() {
   const { locale, t, df, formatDate, kpiValueStatusLabel } = useLocale();
+  const aiEnabled = useAiEnabled();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<Awaited<ReturnType<typeof getOverviewInsights>> | null>(null);
@@ -58,8 +61,8 @@ export default function OverviewPage() {
   const topTypeBar = useMemo(() => {
     const types = data?.topTypes ?? [];
     return {
-      categories: types.map((x: any) => df(x.name, x.nameAr)),
-      values: types.map((x: any) => x.count),
+      categories: types.map((x) => df(x.name, x.nameAr)),
+      values: types.map((x) => x.count),
     };
   }, [data?.topTypes, df]);
 
@@ -83,6 +86,7 @@ export default function OverviewPage() {
         icon={<Icon name="tabler:layout-dashboard" className="h-5 w-5" />}
         actions={
           <div className="flex gap-2">
+            {aiEnabled ? <AiGenerateSummaryModal /> : null}
             <Button asChild variant="outline" size="sm">
               <Link href={`/${locale}/dashboards`}>
                 <Icon name="tabler:chart-line" className="me-2 h-4 w-4" />
@@ -194,71 +198,83 @@ export default function OverviewPage() {
       </section>
 
       <section className="grid gap-4 md:grid-cols-2 lg:grid-cols-6">
-        <Card className="bg-gradient-to-br from-violet-500/10 to-card backdrop-blur border-violet-500/20">
-          <CardHeader className="pb-3">
-            <CardDescription className="flex items-center gap-2 text-violet-600 dark:text-violet-400">
-              <Icon name="tabler:target-arrow" className="h-4 w-4" />
-              {t("strategies")}
-            </CardDescription>
-            <CardTitle className="text-3xl font-bold">{loading ? "—" : (data?.summary.totalStrategies ?? 0)}</CardTitle>
-          </CardHeader>
-          <CardContent><p className="text-xs text-muted-foreground">{t("activeStrategicInitiatives")}</p></CardContent>
-        </Card>
+        <Link href={`/${locale}/entities/initiative`} className="group">
+          <Card className="h-full bg-gradient-to-br from-violet-500/10 to-card backdrop-blur border-violet-500/20 transition-all group-hover:border-violet-500/50 group-hover:shadow-md cursor-pointer">
+            <CardHeader className="pb-3">
+              <CardDescription className="flex items-center gap-2 text-violet-600 dark:text-violet-400">
+                <Icon name="tabler:target-arrow" className="h-4 w-4" />
+                {t("strategies")}
+              </CardDescription>
+              <CardTitle className="text-3xl font-bold">{loading ? "—" : (data?.summary.totalStrategies ?? 0)}</CardTitle>
+            </CardHeader>
+            <CardContent><p className="text-xs text-muted-foreground">{t("activeStrategicInitiatives")}</p></CardContent>
+          </Card>
+        </Link>
 
-        <Card className="bg-gradient-to-br from-blue-500/10 to-card backdrop-blur border-blue-500/20">
-          <CardHeader className="pb-3">
-            <CardDescription className="flex items-center gap-2 text-blue-600 dark:text-blue-400">
-              <Icon name="tabler:flag-3" className="h-4 w-4" />
-              {t("objectives")}
-            </CardDescription>
-            <CardTitle className="text-3xl font-bold">{loading ? "—" : (data?.summary.totalObjectives ?? 0)}</CardTitle>
-          </CardHeader>
-          <CardContent><p className="text-xs text-muted-foreground">{t("organizationalObjectives")}</p></CardContent>
-        </Card>
+        <Link href={`/${locale}/entities/objective`} className="group">
+          <Card className="h-full bg-gradient-to-br from-blue-500/10 to-card backdrop-blur border-blue-500/20 transition-all group-hover:border-blue-500/50 group-hover:shadow-md cursor-pointer">
+            <CardHeader className="pb-3">
+              <CardDescription className="flex items-center gap-2 text-blue-600 dark:text-blue-400">
+                <Icon name="tabler:flag-3" className="h-4 w-4" />
+                {t("objectives")}
+              </CardDescription>
+              <CardTitle className="text-3xl font-bold">{loading ? "—" : (data?.summary.totalObjectives ?? 0)}</CardTitle>
+            </CardHeader>
+            <CardContent><p className="text-xs text-muted-foreground">{t("organizationalObjectives")}</p></CardContent>
+          </Card>
+        </Link>
 
-        <Card className="bg-gradient-to-br from-emerald-500/10 to-card backdrop-blur border-emerald-500/20">
-          <CardHeader className="pb-3">
-            <CardDescription className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400">
-              <Icon name="tabler:chart-bar" className="h-4 w-4" />
-              {t("kpis")}
-            </CardDescription>
-            <CardTitle className="text-3xl font-bold">{loading ? "—" : (data?.summary.totalKpis ?? 0)}</CardTitle>
-          </CardHeader>
-          <CardContent><p className="text-xs text-muted-foreground">{t("keyPerformanceIndicators")}</p></CardContent>
-        </Card>
+        <Link href={`/${locale}/entities/kpi`} className="group">
+          <Card className="h-full bg-gradient-to-br from-emerald-500/10 to-card backdrop-blur border-emerald-500/20 transition-all group-hover:border-emerald-500/50 group-hover:shadow-md cursor-pointer">
+            <CardHeader className="pb-3">
+              <CardDescription className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400">
+                <Icon name="tabler:chart-bar" className="h-4 w-4" />
+                {t("kpis")}
+              </CardDescription>
+              <CardTitle className="text-3xl font-bold">{loading ? "—" : (data?.summary.totalKpis ?? 0)}</CardTitle>
+            </CardHeader>
+            <CardContent><p className="text-xs text-muted-foreground">{t("keyPerformanceIndicators")}</p></CardContent>
+          </Card>
+        </Link>
 
-        <Card className="bg-gradient-to-br from-cyan-500/10 to-card backdrop-blur border-cyan-500/20">
-          <CardHeader className="pb-3">
-            <CardDescription className="flex items-center gap-2 text-cyan-600 dark:text-cyan-400">
-              <Icon name="tabler:activity" className="h-4 w-4" />
-              {t("health")}
-            </CardDescription>
-            <CardTitle className="text-3xl font-bold">{loading ? "—" : `${data?.summary.overallHealth ?? 0}%`}</CardTitle>
-          </CardHeader>
-          <CardContent><Progress value={data?.summary.overallHealth ?? 0} className="h-1.5" /></CardContent>
-        </Card>
+        <Link href={`/${locale}/dashboards`} className="group">
+          <Card className="h-full bg-gradient-to-br from-cyan-500/10 to-card backdrop-blur border-cyan-500/20 transition-all group-hover:border-cyan-500/50 group-hover:shadow-md cursor-pointer">
+            <CardHeader className="pb-3">
+              <CardDescription className="flex items-center gap-2 text-cyan-600 dark:text-cyan-400">
+                <Icon name="tabler:activity" className="h-4 w-4" />
+                {t("health")}
+              </CardDescription>
+              <CardTitle className="text-3xl font-bold">{loading ? "—" : `${data?.summary.overallHealth ?? 0}%`}</CardTitle>
+            </CardHeader>
+            <CardContent><Progress value={data?.summary.overallHealth ?? 0} className="h-1.5" /></CardContent>
+          </Card>
+        </Link>
 
-        <Card className="bg-gradient-to-br from-amber-500/10 to-card backdrop-blur border-amber-500/20">
-          <CardHeader className="pb-3">
-            <CardDescription className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
-              <Icon name="tabler:alert-triangle" className="h-4 w-4" />
-              {t("approvals")}
-            </CardDescription>
-            <CardTitle className="text-3xl font-bold">{loading ? "—" : (data?.summary.pendingApprovals ?? 0)}</CardTitle>
-          </CardHeader>
-          <CardContent><p className="text-xs text-muted-foreground">{t("approvalQueueAgingDesc")}</p></CardContent>
-        </Card>
+        <Link href={`/${locale}/approvals`} className="group">
+          <Card className="h-full bg-gradient-to-br from-amber-500/10 to-card backdrop-blur border-amber-500/20 transition-all group-hover:border-amber-500/50 group-hover:shadow-md cursor-pointer">
+            <CardHeader className="pb-3">
+              <CardDescription className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
+                <Icon name="tabler:alert-triangle" className="h-4 w-4" />
+                {t("approvals")}
+              </CardDescription>
+              <CardTitle className="text-3xl font-bold">{loading ? "—" : (data?.summary.pendingApprovals ?? 0)}</CardTitle>
+            </CardHeader>
+            <CardContent><p className="text-xs text-muted-foreground">{t("approvalQueueAgingDesc")}</p></CardContent>
+          </Card>
+        </Link>
 
-        <Card className="bg-gradient-to-br from-rose-500/10 to-card backdrop-blur border-rose-500/20">
-          <CardHeader className="pb-3">
-            <CardDescription className="flex items-center gap-2 text-rose-600 dark:text-rose-400">
-              <Icon name="tabler:calendar-due" className="h-4 w-4" />
-              {t("users")}
-            </CardDescription>
-            <CardTitle className="text-3xl font-bold">{loading ? "—" : (data?.summary.users ?? 0)}</CardTitle>
-          </CardHeader>
-          <CardContent><p className="text-xs text-muted-foreground">{t("totalUsers")}</p></CardContent>
-        </Card>
+        <Link href={`/${locale}/users`} className="group">
+          <Card className="h-full bg-gradient-to-br from-rose-500/10 to-card backdrop-blur border-rose-500/20 transition-all group-hover:border-rose-500/50 group-hover:shadow-md cursor-pointer">
+            <CardHeader className="pb-3">
+              <CardDescription className="flex items-center gap-2 text-rose-600 dark:text-rose-400">
+                <Icon name="tabler:calendar-due" className="h-4 w-4" />
+                {t("users")}
+              </CardDescription>
+              <CardTitle className="text-3xl font-bold">{loading ? "—" : (data?.summary.users ?? 0)}</CardTitle>
+            </CardHeader>
+            <CardContent><p className="text-xs text-muted-foreground">{t("totalUsers")}</p></CardContent>
+          </Card>
+        </Link>
       </section>
 
       <section className="grid gap-6 lg:grid-cols-3">
@@ -266,7 +282,7 @@ export default function OverviewPage() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle className="text-lg">{t("browseByTypeDesc")}</CardTitle>
+                <CardTitle className="text-lg">{t("browseByType")}</CardTitle>
                 <CardDescription className="mt-1">{t("browseByTypeDesc")}</CardDescription>
               </div>
               <Badge variant="outline" className="border-border bg-muted/30">{loading ? "—" : `${(data?.topTypes?.length ?? 0)} ${t("categories")}`}</Badge>
@@ -312,7 +328,7 @@ export default function OverviewPage() {
             ) : (data?.recentActivities?.length ?? 0) === 0 ? (
               <div className="rounded-xl border border-border bg-muted/10 p-8 text-center text-sm text-muted-foreground">{t("noItemsYet")}</div>
             ) : (
-              data?.recentActivities?.map((activity: any) => {
+              data?.recentActivities?.map((activity) => {
                 const iconData = activityBadge(activity.status);
                 const when = formatDate(activity.createdAt, { dateStyle: "medium", timeStyle: "short" });
               return (
@@ -389,7 +405,7 @@ export default function OverviewPage() {
                       {kpi.daysSinceLastUpdate === null ? "—" : `${kpi.daysSinceLastUpdate}${t("daysShort")}`}
                     </Badge>
                   </div>
-                  <Progress value={Math.max(0, 100 - (kpi.daysSinceLastUpdate ?? 100))} className="h-2" />
+                  <Progress value={Math.min(100, ((kpi.daysSinceLastUpdate ?? 0) / 90) * 100)} className="h-2 [&>div]:bg-amber-500" />
                 </div>
               )) ?? null
             )}
@@ -411,7 +427,7 @@ export default function OverviewPage() {
                 <div key={owner.userId} className="flex items-center justify-between rounded-lg border border-border bg-background/50 p-3">
                   <div className="space-y-1">
                     <p className="font-medium">{owner.name}</p>
-                    <p className="text-xs text-muted-foreground">{t("assignedToYou")}</p>
+                    <p className="text-xs text-muted-foreground">{t("kpiOwners")}</p>
                   </div>
                   <Badge variant="outline" className="border-border bg-muted/30">{owner.count}</Badge>
                 </div>

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import type { EChartsOption } from "echarts";
 import { useEffect, useMemo, useState } from "react";
-import { ExternalLink, FileText, Link2, Loader2, Pencil, Trash2, Upload, File, X, Plus, Calendar } from "lucide-react";
+import { ExternalLink, FileText, Link2, Loader2, Pencil, Trash2, Upload, File, X, Plus, Calendar, Gauge, Activity, AlignJustify } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,10 +15,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { EChart } from "@/components/charts/echart";
 import { KpiGauge } from "@/components/charts/kpi-gauge";
+import { KpiRingCard } from "@/components/charts/kpi-ring-card";
+import { KpiLineCard } from "@/components/charts/kpi-line-card";
 import { EntityAssignments } from "@/components/entity-assignments";
 import { EntityDependencyDiagram } from "@/components/entity-dependency-diagram";
 import { useAuth } from "@/providers/auth-provider";
 import { useLocale } from "@/providers/locale-provider";
+import { useTheme } from "@/providers/theme-provider";
+import { Toaster, useToast } from "@/components/ui/toast";
 import { ActionValidationIssue } from "@/types/actions";
 import {
   deleteOrgEntity,
@@ -144,6 +148,8 @@ export default function EntityDetailPage() {
   const [addingUrl, setAddingUrl] = useState(false);
   const [urlError, setUrlError] = useState<string | null>(null);
   const [deletingAttachmentId, setDeletingAttachmentId] = useState<string | null>(null);
+  const [depViewMode, setDepViewMode] = useState<"gauge" | "ring" | "line">("ring");
+  const { toasts, toast, dismiss } = useToast();
 
   async function reload() {
     setLoading(true);
@@ -364,24 +370,34 @@ export default function EntityDetailPage() {
 
   const unitLabel = entity ? df(entity.unit, entity.unitAr) : "";
 
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
+
   const trendOption = useMemo<EChartsOption>(() => {
     const points = (entity?.values ?? []).slice().reverse();
     const labels = points.map((p) => p.createdAt.toISOString().slice(0, 10));
     const values = points.map((p) => periodValue(p) ?? 0);
+    const axisLabelColor = isDark ? "rgba(226,232,240,0.75)" : "rgba(15,23,42,0.65)";
+    const splitLineColor = isDark ? "rgba(148,163,184,0.12)" : "rgba(15,23,42,0.08)";
+    const tooltipBg = isDark ? "rgba(2,6,23,0.92)" : "rgba(255,255,255,0.95)";
+    const tooltipBorder = isDark ? "rgba(255,255,255,0.12)" : "rgba(2,6,23,0.10)";
+    const markLabelColor = isDark ? "rgba(226,232,240,0.75)" : "rgba(15,23,42,0.65)";
 
     return {
       grid: { left: 24, right: 16, top: 18, bottom: 28, containLabel: true },
       tooltip: {
         trigger: "axis",
         confine: true,
-        backgroundColor: "rgba(2,6,23,0.9)",
-        borderColor: "rgba(255,255,255,0.12)",
+        backgroundColor: tooltipBg,
+        borderColor: tooltipBorder,
+        textStyle: { color: isDark ? "rgba(226,232,240,0.92)" : "rgba(15,23,42,0.92)", fontSize: 12 },
+        extraCssText: "border-radius: 10px; box-shadow: 0 8px 32px rgba(0,0,0,0.18);",
       },
-      xAxis: { type: "category", data: labels, axisLabel: { color: "rgba(226,232,240,0.75)" } },
+      xAxis: { type: "category", data: labels, axisLabel: { color: axisLabelColor }, axisLine: { lineStyle: { color: splitLineColor } }, axisTick: { show: false } },
       yAxis: {
         type: "value",
-        axisLabel: { color: "rgba(226,232,240,0.75)" },
-        splitLine: { lineStyle: { color: "rgba(148,163,184,0.12)" } },
+        axisLabel: { color: axisLabelColor },
+        splitLine: { lineStyle: { color: splitLineColor } },
       },
       series: [
         {
@@ -391,18 +407,18 @@ export default function EntityDetailPage() {
           symbol: "circle",
           symbolSize: 6,
           lineStyle: { width: 3, color: "#60a5fa" },
-          itemStyle: { color: "#60a5fa" },
-          areaStyle: { color: "rgba(96,165,250,0.18)" },
+          itemStyle: { color: "#60a5fa", borderColor: isDark ? "rgba(2,6,23,0.6)" : "rgba(255,255,255,0.9)", borderWidth: 2 },
+          areaStyle: { color: isDark ? "rgba(96,165,250,0.18)" : "rgba(59,130,246,0.12)" },
           markLine: {
             symbol: "none",
             lineStyle: { color: "rgba(52,211,153,0.55)", type: "dashed" },
-            label: { color: "rgba(226,232,240,0.75)" },
+            label: { color: markLabelColor },
             data: [{ yAxis: entity?.targetValue ?? 0, name: t("target") }],
           },
         },
       ],
     };
-  }, [entity?.targetValue, entity?.values, t]);
+  }, [entity?.targetValue, entity?.values, t, isDark]);
 
   async function handleCalculate() {
     if (!entity) return;
@@ -466,6 +482,7 @@ export default function EntityDetailPage() {
         return;
       }
 
+      toast(t("savedSuccessfully"));
       await reload();
       router.refresh();
     } catch (error: unknown) {
@@ -520,6 +537,7 @@ export default function EntityDetailPage() {
       if (res.autoApproved) {
         setApprovalError(null);
       }
+      toast(t("submittedForApproval"));
       await reload();
       router.refresh();
     } catch (error: unknown) {
@@ -546,6 +564,7 @@ export default function EntityDetailPage() {
         return;
       }
 
+      toast(t("approvedSuccess"));
       await reload();
       router.refresh();
     } catch (error: unknown) {
@@ -572,6 +591,7 @@ export default function EntityDetailPage() {
         return;
       }
 
+      toast(t("rejectedSuccess"));
       await reload();
       router.refresh();
     } catch (error: unknown) {
@@ -692,7 +712,7 @@ export default function EntityDetailPage() {
             <CardDescription>{tr("Current value and target.", "القيمة الحالية والهدف.")}</CardDescription>
           </CardHeader>
           <CardContent>
-            <KpiGauge value={currentValue} target={entity.targetValue} unit={unitLabel || undefined} />
+            <KpiRingCard value={currentValue} target={entity.targetValue ?? null} unit={unitLabel || undefined} size={128} />
             {isKpiEntity && (
               <div className="mt-3 text-xs text-muted-foreground">
                 {tr("Status", "الحالة")}: {kpiValueStatusLabel(String(data?.currentPeriod?.status ?? data?.latest?.status ?? "DRAFT"))}
@@ -1214,10 +1234,49 @@ export default function EntityDetailPage() {
       {entity.formula && referencedEntities.length > 0 && (
         <Card className="bg-card/70 backdrop-blur shadow-sm">
           <CardHeader>
-            <CardTitle className="text-base">{tr("Formula Dependencies", "اعتماديات الصيغة")}</CardTitle>
-            <CardDescription>
-              {tr("Click on any entity below to view its details.", "انقر على أي كيان أدناه لعرض تفاصيله.")}
-            </CardDescription>
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <CardTitle className="text-base">{tr("Formula Dependencies", "اعتماديات الصيغة")}</CardTitle>
+                <CardDescription>
+                  {tr("Click on any entity below to view its details.", "انقر على أي كيان أدناه لعرض تفاصيله.")}
+                </CardDescription>
+              </div>
+              <div className="flex items-center rounded-xl border border-border bg-muted/30 p-1 gap-0.5 shrink-0">
+                <button
+                  type="button"
+                  onClick={() => setDepViewMode("gauge")}
+                  className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
+                    depViewMode === "gauge" ? "bg-card shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"
+                  }`}
+                  aria-label="Gauge view"
+                >
+                  <Gauge className="h-3.5 w-3.5" />
+                  <span className="hidden sm:inline">{tr("Gauge", "مقياس")}</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setDepViewMode("ring")}
+                  className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
+                    depViewMode === "ring" ? "bg-card shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"
+                  }`}
+                  aria-label="Ring view"
+                >
+                  <Activity className="h-3.5 w-3.5" />
+                  <span className="hidden sm:inline">{tr("Ring", "حلقة")}</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setDepViewMode("line")}
+                  className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
+                    depViewMode === "line" ? "bg-card shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"
+                  }`}
+                  aria-label="Line view"
+                >
+                  <AlignJustify className="h-3.5 w-3.5" />
+                  <span className="hidden sm:inline">{tr("Line", "شريط")}</span>
+                </button>
+              </div>
+            </div>
           </CardHeader>
           <CardContent>
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -1240,9 +1299,6 @@ export default function EntityDetailPage() {
                             <div className="mt-1 text-sm font-semibold text-foreground truncate group-hover:underline underline-offset-4 decoration-primary/40 transition-colors">
                               {df(ref.title, ref.titleAr)}
                             </div>
-                            <div className="mt-1 text-xs text-muted-foreground font-mono">
-                              {ref.key}
-                            </div>
                           </div>
                           <div className="shrink-0">
                             <svg 
@@ -1257,13 +1313,19 @@ export default function EntityDetailPage() {
                         </div>
                       </CardHeader>
                       <CardContent className="pt-0">
-                        <KpiGauge 
-                          value={refValue} 
-                          target={ref.targetValue} 
-                          unit={refUnit || undefined}
-                          height={160}
-                          withCard={false}
-                        />
+                        {depViewMode === "gauge" ? (
+                          <KpiGauge
+                            value={refValue}
+                            target={ref.targetValue}
+                            unit={refUnit || undefined}
+                            height={160}
+                            withCard={false}
+                          />
+                        ) : depViewMode === "ring" ? (
+                          <KpiRingCard value={refValue} target={ref.targetValue} unit={refUnit || undefined} size={112} />
+                        ) : (
+                          <KpiLineCard value={refValue} target={ref.targetValue} unit={refUnit || undefined} />
+                        )}
                       </CardContent>
                     </Card>
                   </Link>
@@ -1310,6 +1372,8 @@ export default function EntityDetailPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <Toaster toasts={toasts} onDismiss={dismiss} />
     </div>
   );
 }

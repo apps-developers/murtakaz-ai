@@ -2,11 +2,8 @@
 
 import { prisma } from "@/lib/prisma";
 import { requireOrgMember } from "@/lib/server-action-auth";
-import { KpiValueStatus, Status } from "@/generated/prisma-client";
-
-function clamp(value: number, min: number, max: number) {
-  return Math.max(min, Math.min(max, value));
-}
+import { ApprovalStatus, KpiValueStatus, Status } from "@/generated/prisma-client";
+import { clamp } from "@/lib/utils";
 
 function computeAchievement(input: {
   achievementValue?: number | null;
@@ -162,8 +159,8 @@ export async function getOverviewInsights() {
 
   const [org, strategies, objectives, totalKpis, users, pendingApprovals, topTypes] = await Promise.all([
     prisma.organization.findFirst({ where: { id: orgId, deletedAt: null }, select: { id: true, name: true, nameAr: true } }),
-    countEntitiesByTypeCode(orgId, "STRATEGY"),
-    countEntitiesByTypeCode(orgId, "OBJECTIVE"),
+    countEntitiesByTypeCode(orgId, "initiative"),
+    countEntitiesByTypeCode(orgId, "objective"),
     countEntitiesByTypeCode(orgId, "KPI"),
     prisma.user.count({ where: { orgId, deletedAt: null } }),
     prisma.entityValue.count({ where: { status: KpiValueStatus.SUBMITTED, entity: { orgId, deletedAt: null } } }),
@@ -318,7 +315,7 @@ export async function getDashboardInsights() {
         orgId,
         deletedAt: null,
         status: Status.ACTIVE,
-        orgEntityType: { code: { equals: "PROJECT", mode: "insensitive" } },
+        orgEntityType: { code: { equals: "initiative", mode: "insensitive" } },
       },
     }),
     prisma.user.count({ where: { orgId, deletedAt: null } }),
@@ -534,7 +531,7 @@ export async function getExecutiveDashboardInsights() {
         unit: k.unit ? String(k.unit) : null,
         unitAr: k.unitAr ? String(k.unitAr) : null,
         current: typeof achievement === "number" ? Math.round(achievement) : null,
-        target: 100,
+        target: typeof k.targetValue === "number" ? Number(k.targetValue) : null,
       };
     })
     .filter((k) => typeof k.current === "number")
@@ -544,7 +541,7 @@ export async function getExecutiveDashboardInsights() {
   return {
     confidenceTrend,
     pillarsActive: pillarsCount,
-    atRiskInitiatives: initiativesAtRisk.map((i: any) => ({
+    atRiskInitiatives: initiativesAtRisk.map((i) => ({
       id: String(i.id),
       title: String(i.title),
       titleAr: i.titleAr ? String(i.titleAr) : null,
@@ -558,4 +555,372 @@ export async function getExecutiveDashboardInsights() {
     },
     topKpis,
   };
+}
+
+export async function getKpiPerformanceInsights() {
+  const session = await requireOrgMember();
+  const orgId = session.user.orgId;
+
+  const kpis = await getKpisWithLatestValue(orgId, 500);
+  const now = new Date();
+
+  const rows = kpis.map((k) => {
+    const v = k.values?.[0] ?? null;
+    const achievement = computeAchievement({
+      achievementValue: v?.achievementValue,
+      finalValue: v?.finalValue,
+      calculatedValue: v?.calculatedValue,
+      actualValue: v?.actualValue,
+      targetValue: k.targetValue,
+      direction: k.direction,
+    });
+    const days = v?.createdAt ? Math.floor((now.getTime() - new Date(v.createdAt).getTime()) / 86400000) : null;
+    return {
+      id: String(k.id),
+      title: String(k.title),
+      titleAr: k.titleAr ? String(k.titleAr) : null,
+      unit: k.unit ? String(k.unit) : null,
+      unitAr: k.unitAr ? String(k.unitAr) : null,
+      current: typeof achievement === "number" ? Math.round(achievement) : null,
+      target: typeof k.targetValue === "number" ? Number(k.targetValue) : null,
+      variance:
+        typeof achievement === "number" && typeof k.targetValue === "number" && k.targetValue > 0
+          ? Math.round(achievement - 100)
+          : null,
+      freshnessDays: days,
+      owner: k.ownerUser?.name ? String(k.ownerUser.name) : null,
+      status: v?.status ? String(v.status) : "NO_DATA",
+    };
+  });
+
+  const withVariance = rows.filter((r) => r.variance !== null);
+  const varianceTop = withVariance
+    .sort((a, b) => (a.variance ?? 0) - (b.variance ?? 0))
+    .slice(0, 8);
+
+  const freshnessSorted = rows
+    .filter((r) => r.freshnessDays !== null)
+    .sort((a, b) => (b.freshnessDays ?? 0) - (a.freshnessDays ?? 0))
+    .slice(0, 5);
+
+  return { rows, varianceTop, freshnessSorted };
+}
+
+export async function getInitiativeHealthInsights() {
+  const session = await requireOrgMember();
+  const orgId = session.user.orgId;
+
+  const initiatives = await prisma.entity.findMany({
+    where: {
+      orgId,
+      deletedAt: null,
+      orgEntityType: { code: { equals: "initiative", mode: "insensitive" } },
+    },
+    orderBy: [{ updatedAt: "desc" }],
+    take: 100,
+    select: {
+      id: true,
+      title: true,
+      titleAr: true,
+      status: true,
+      ownerUser: { select: { id: true, name: true } },
+    },
+  });
+
+  const kpis = await getKpisWithLatestValue(orgId, 500);
+  const initiativeKpiCounts = kpis.length;
+
+  const atRisk = initiatives.filter((i) => i.status === Status.AT_RISK);
+  const onTrack = initiatives.filter((i) => i.status === Status.ACTIVE);
+  const planned = initiatives.filter((i) => i.status === Status.PLANNED);
+  const completed = initiatives.filter((i) => i.status === Status.COMPLETED);
+
+  return {
+    summary: {
+      total: initiatives.length,
+      atRisk: atRisk.length,
+      onTrack: onTrack.length,
+      planned: planned.length,
+      completed: completed.length,
+      kpis: initiativeKpiCounts,
+    },
+    atRiskList: atRisk.map((i) => ({
+      id: String(i.id),
+      title: String(i.title),
+      titleAr: i.titleAr ? String(i.titleAr) : null,
+      owner: i.ownerUser?.name ? String(i.ownerUser.name) : "—",
+      status: String(i.status),
+    })),
+    allInitiatives: initiatives.map((i) => ({
+      id: String(i.id),
+      title: String(i.title),
+      titleAr: i.titleAr ? String(i.titleAr) : null,
+      owner: i.ownerUser?.name ? String(i.ownerUser.name) : "—",
+      status: String(i.status),
+    })),
+  };
+}
+
+export async function getProjectExecutionInsights() {
+  const session = await requireOrgMember();
+  const orgId = session.user.orgId;
+
+  const projects = await prisma.entity.findMany({
+    where: {
+      orgId,
+      deletedAt: null,
+      orgEntityType: { code: { equals: "project", mode: "insensitive" } },
+    },
+    orderBy: [{ updatedAt: "desc" }],
+    take: 100,
+    select: {
+      id: true,
+      title: true,
+      titleAr: true,
+      status: true,
+      ownerUser: { select: { id: true, name: true } },
+      values: {
+        orderBy: [{ createdAt: "desc" }],
+        take: 1,
+        select: { achievementValue: true, finalValue: true, actualValue: true },
+      },
+    },
+  });
+
+  const rows = projects.map((p) => ({
+    id: String(p.id),
+    title: String(p.title),
+    titleAr: p.titleAr ? String(p.titleAr) : null,
+    owner: p.ownerUser?.name ? String(p.ownerUser.name) : "—",
+    status: String(p.status),
+  }));
+
+  const statusCounts = {
+    PLANNED: projects.filter((p) => p.status === Status.PLANNED).length,
+    ACTIVE: projects.filter((p) => p.status === Status.ACTIVE).length,
+    AT_RISK: projects.filter((p) => p.status === Status.AT_RISK).length,
+    COMPLETED: projects.filter((p) => p.status === Status.COMPLETED).length,
+  };
+
+  return { rows, statusCounts };
+}
+
+export async function getManagerDashboardInsights() {
+  const session = await requireOrgMember();
+  const orgId = session.user.orgId;
+  const userId = session.user.id;
+
+  const [ownedEntities, pendingApprovals, assignedEntities] = await Promise.all([
+    prisma.entity.findMany({
+      where: { orgId, deletedAt: null, ownerUserId: userId },
+      orderBy: [{ updatedAt: "desc" }],
+      take: 20,
+      select: {
+        id: true,
+        title: true,
+        titleAr: true,
+        status: true,
+        orgEntityType: { select: { name: true, nameAr: true, code: true } },
+        values: {
+          orderBy: [{ createdAt: "desc" }],
+          take: 1,
+          select: { achievementValue: true, status: true },
+        },
+      },
+    }),
+    prisma.entityValue.count({
+      where: {
+        status: KpiValueStatus.SUBMITTED,
+        entity: { orgId, deletedAt: null, ownerUserId: userId },
+      },
+    }),
+    prisma.userEntityAssignment.findMany({
+      where: { userId, entity: { orgId, deletedAt: null } },
+      take: 20,
+      select: {
+        entity: {
+          select: {
+            id: true,
+            title: true,
+            titleAr: true,
+            status: true,
+            orgEntityType: { select: { name: true, nameAr: true, code: true } },
+          },
+        },
+      },
+    }),
+  ]);
+
+  const atRisk = ownedEntities.filter((e) => e.status === Status.AT_RISK);
+
+  return {
+    pendingApprovals,
+    atRiskCount: atRisk.length,
+    ownedEntities: ownedEntities.map((e) => ({
+      id: String(e.id),
+      title: String(e.title),
+      titleAr: e.titleAr ? String(e.titleAr) : null,
+      status: String(e.status),
+      typeCode: e.orgEntityType?.code ? String(e.orgEntityType.code) : "entity",
+      typeName: e.orgEntityType?.name ? String(e.orgEntityType.name) : "",
+      typeNameAr: e.orgEntityType?.nameAr ? String(e.orgEntityType.nameAr) : null,
+      achievement:
+        typeof e.values?.[0]?.achievementValue === "number"
+          ? Math.round(clamp(Number(e.values[0].achievementValue), 0, 100))
+          : null,
+      valueStatus: e.values?.[0]?.status ? String(e.values[0].status) : null,
+    })),
+    assignedEntities: assignedEntities.map((a) => ({
+      id: String(a.entity.id),
+      title: String(a.entity.title),
+      titleAr: a.entity.titleAr ? String(a.entity.titleAr) : null,
+      status: String(a.entity.status),
+      typeCode: a.entity.orgEntityType?.code ? String(a.entity.orgEntityType.code) : "entity",
+      typeName: a.entity.orgEntityType?.name ? String(a.entity.orgEntityType.name) : "",
+    })),
+  };
+}
+
+export async function getRiskEscalationInsights() {
+  const session = await requireOrgMember();
+  const orgId = session.user.orgId;
+
+  const risks = await prisma.entity.findMany({
+    where: {
+      orgId,
+      deletedAt: null,
+      orgEntityType: { code: { equals: "risk", mode: "insensitive" } },
+    },
+    orderBy: [{ updatedAt: "desc" }],
+    take: 100,
+    select: {
+      id: true,
+      title: true,
+      titleAr: true,
+      status: true,
+      ownerUser: { select: { id: true, name: true } },
+      values: {
+        orderBy: [{ createdAt: "desc" }],
+        take: 1,
+        select: { achievementValue: true, status: true },
+      },
+    },
+  });
+
+  const statusCounts = {
+    PLANNED: risks.filter((r) => r.status === Status.PLANNED).length,
+    ACTIVE: risks.filter((r) => r.status === Status.ACTIVE).length,
+    AT_RISK: risks.filter((r) => r.status === Status.AT_RISK).length,
+    COMPLETED: risks.filter((r) => r.status === Status.COMPLETED).length,
+  };
+
+  const escalated = risks.filter((r) => r.status === Status.AT_RISK);
+
+  return {
+    summary: {
+      total: risks.length,
+      escalated: escalated.length,
+      ...statusCounts,
+    },
+    severityDonut: [
+      { name: "AT_RISK", value: statusCounts.AT_RISK, color: "#fb7185" },
+      { name: "ACTIVE", value: statusCounts.ACTIVE, color: "#f59e0b" },
+      { name: "PLANNED", value: statusCounts.PLANNED, color: "#60a5fa" },
+      { name: "COMPLETED", value: statusCounts.COMPLETED, color: "#34d399" },
+    ].filter((x) => x.value > 0),
+    escalatedList: escalated.map((r) => ({
+      id: String(r.id),
+      title: String(r.title),
+      titleAr: r.titleAr ? String(r.titleAr) : null,
+      owner: r.ownerUser?.name ? String(r.ownerUser.name) : "—",
+      status: String(r.status),
+    })),
+    allRisks: risks.map((r) => ({
+      id: String(r.id),
+      title: String(r.title),
+      titleAr: r.titleAr ? String(r.titleAr) : null,
+      owner: r.ownerUser?.name ? String(r.ownerUser.name) : "—",
+      status: String(r.status),
+    })),
+  };
+}
+
+export async function getGovernanceInsights() {
+  const session = await requireOrgMember();
+  const orgId = session.user.orgId;
+
+  const now = new Date();
+  const day2 = new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000);
+  const day5 = new Date(now.getTime() - 5 * 24 * 60 * 60 * 1000);
+  const day10 = new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000);
+
+  const [pending, approved, rejected, aging0to2, aging3to5, aging6to10, aging10plus] =
+    await Promise.all([
+      prisma.changeRequest.findMany({
+        where: { orgId, deletedAt: null, status: ApprovalStatus.PENDING },
+        orderBy: [{ createdAt: "asc" }],
+        take: 20,
+        select: {
+          id: true,
+          entityType: true,
+          entityId: true,
+          status: true,
+          createdAt: true,
+          requester: { select: { id: true, name: true } },
+        },
+      }),
+      prisma.changeRequest.count({ where: { orgId, deletedAt: null, status: ApprovalStatus.APPROVED } }),
+      prisma.changeRequest.count({ where: { orgId, deletedAt: null, status: ApprovalStatus.REJECTED } }),
+      prisma.changeRequest.count({ where: { orgId, deletedAt: null, status: ApprovalStatus.PENDING, createdAt: { gte: day2 } } }),
+      prisma.changeRequest.count({ where: { orgId, deletedAt: null, status: ApprovalStatus.PENDING, createdAt: { gte: day5, lt: day2 } } }),
+      prisma.changeRequest.count({ where: { orgId, deletedAt: null, status: ApprovalStatus.PENDING, createdAt: { gte: day10, lt: day5 } } }),
+      prisma.changeRequest.count({ where: { orgId, deletedAt: null, status: ApprovalStatus.PENDING, createdAt: { lt: day10 } } }),
+    ]);
+
+  return {
+    summary: {
+      pending: pending.length,
+      approved,
+      rejected,
+    },
+    approvalsAging: {
+      categories: ["0–2d", "3–5d", "6–10d", "10d+"],
+      values: [aging0to2, aging3to5, aging6to10, aging10plus],
+    },
+    pendingList: pending.map((cr) => ({
+      id: String(cr.id),
+      entityType: String(cr.entityType),
+      entityId: String(cr.entityId),
+      status: String(cr.status),
+      requestedBy: cr.requester?.name ? String(cr.requester.name) : "—",
+      createdAt: cr.createdAt.toISOString(),
+      ageDays: Math.floor((now.getTime() - cr.createdAt.getTime()) / 86400000),
+    })),
+  };
+}
+
+export async function getKpiContextForAiReport(orgId: string, take = 20) {
+  const kpis = await getKpisWithLatestValue(orgId, take);
+  return kpis
+    .map((k) => {
+      const v = k.values?.[0] ?? null;
+      const achievement = computeAchievement({
+        achievementValue: v?.achievementValue,
+        finalValue: v?.finalValue,
+        calculatedValue: v?.calculatedValue,
+        actualValue: v?.actualValue,
+        targetValue: k.targetValue,
+        direction: k.direction,
+      });
+      return {
+        title: String(k.title),
+        unit: k.unit ? String(k.unit) : null,
+        target: typeof k.targetValue === "number" ? Number(k.targetValue) : null,
+        achievement: typeof achievement === "number" ? Math.round(achievement) : null,
+        status: v?.status ? String(v.status) : "NO_DATA",
+        direction: k.direction ? String(k.direction) : null,
+      };
+    })
+    .filter((k) => k.achievement !== null)
+    .sort((a, b) => (a.achievement ?? 0) - (b.achievement ?? 0));
 }

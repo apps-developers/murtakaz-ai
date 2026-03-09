@@ -10,6 +10,7 @@
     "db:snapshot": "ts-node prisma/export-org-snapshot.ts",
     "db:restore-snapshot": "ts-node prisma/restore-org-snapshot.ts",
     "db:seed-merged": "ts-node prisma/seed-merged.ts",
+    "db:seed-demo": "ts-node prisma/seed-demo.ts",
     "db:seed-mosa": "ts-node prisma/seed-mosa-raw-data.ts",
     "create-super-admin": "ts-node prisma/create-super-admin.ts",
     "db:create-super-admin": "ts-node prisma/create-super-admin.ts"

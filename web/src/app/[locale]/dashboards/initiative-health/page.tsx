@@ -1,19 +1,38 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { PageHeader } from "@/components/page-header";
 import { Icon } from "@/components/icon";
-import { RagBadge } from "@/components/rag-badge";
-import { Bar } from "@/components/charts/dashboard-charts";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { kpiVarianceTop } from "@/lib/dashboard-metrics";
-import { pillars } from "@/lib/mock-data";
+import { getInitiativeHealthInsights } from "@/actions/insights";
 import { useLocale } from "@/providers/locale-provider";
 
+const statusColor: Record<string, string> = {
+  ACTIVE: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20",
+  AT_RISK: "bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/20",
+  PLANNED: "bg-slate-500/10 text-slate-700 dark:text-slate-400 border-slate-500/20",
+  COMPLETED: "bg-blue-500/10 text-blue-700 dark:text-blue-400 border-blue-500/20",
+};
+
 export default function InitiativeHealthDashboardPage() {
-  const { locale, t, isArabic } = useLocale();
-  const initiatives = pillars.flatMap((pillar) => pillar.initiatives);
-  const atRisk = initiatives.filter((initiative) => initiative.health !== "GREEN");
+  const { locale, df, t } = useLocale();
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState<Awaited<ReturnType<typeof getInitiativeHealthInsights>> | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+    void (async () => {
+      const res = await getInitiativeHealthInsights();
+      if (mounted) { setData(res); setLoading(false); }
+    })();
+    return () => { mounted = false; };
+  }, []);
+
+  const atRiskList = data?.atRiskList ?? [];
+  const allInitiatives = data?.allInitiatives ?? [];
+  const summary = data?.summary;
 
   return (
     <div className="space-y-8">
@@ -23,62 +42,78 @@ export default function InitiativeHealthDashboardPage() {
         icon={<Icon name="tabler:activity-heartbeat" className="h-5 w-5" />}
       />
 
-      <section className="grid gap-6 lg:grid-cols-3">
-        <Card className="border-border bg-card/50 shadow-sm lg:col-span-2">
-          <CardHeader className="space-y-1">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-base">{t("healthDrivers")}</CardTitle>
-              <Icon name="tabler:activity-heartbeat" className="text-muted-foreground" />
-            </div>
-            <CardDescription className="text-muted-foreground">{t("illustrativeDriverWeightsDesc")}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Bar categories={[t("kpis"), t("milestones"), t("risks"), t("updates")]} values={[45, 25, 20, 10]} color="#60a5fa" />
-          </CardContent>
-        </Card>
-
-        <Card className="border-border bg-card/50 shadow-sm">
-          <CardHeader className="space-y-1">
-            <CardTitle className="text-base">{t("kpiVarianceSignals")}</CardTitle>
-            <CardDescription className="text-muted-foreground">{t("topNegativeDeltasDesc")}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Bar
-              categories={kpiVarianceTop.categories}
-              values={kpiVarianceTop.values.map((v) => Math.min(v, 0))}
-              color="#fb7185"
-              formatter={(value) => `${value > 0 ? "+" : ""}${value}`}
-              height={240}
-            />
-          </CardContent>
-        </Card>
+      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {[
+          { label: t("total"), value: summary?.total, color: "text-foreground" },
+          { label: t("atRisk"), value: summary?.atRisk, color: "text-amber-600 dark:text-amber-400" },
+          { label: t("active"), value: summary?.onTrack, color: "text-emerald-600 dark:text-emerald-400" },
+          { label: t("completed"), value: summary?.completed, color: "text-blue-600 dark:text-blue-400" },
+        ].map(({ label, value, color }) => (
+          <Card key={label} className="border-border bg-card/50 shadow-sm">
+            <CardHeader className="pb-2">
+              <CardDescription>{label}</CardDescription>
+              <CardTitle className={`text-3xl font-bold ${color}`}>{loading ? "—" : (value ?? 0)}</CardTitle>
+            </CardHeader>
+          </Card>
+        ))}
       </section>
 
-      <section>
+      <section className="grid gap-6 lg:grid-cols-2">
         <Card className="border-border bg-card/50 shadow-sm">
           <CardHeader className="space-y-1">
             <CardTitle className="text-base">{t("initiativesRequiringAttention")}</CardTitle>
             <CardDescription className="text-muted-foreground">{t("investigateHealthDriversDesc")}</CardDescription>
           </CardHeader>
-          <CardContent className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
-            {atRisk.map((initiative) => (
-              <Link
-                key={initiative.id}
-                href={`/${locale}/entities/initiative/${initiative.id}`}
-                className="block rounded-xl border border-border bg-muted/30 px-4 py-3 transition hover:bg-card/50"
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div className="space-y-1">
-                    <p className="text-sm font-semibold text-foreground">{isArabic ? initiative.titleAr ?? initiative.title : initiative.title}</p>
-                    <p className="text-xs text-muted-foreground">{initiative.owner}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {initiative.projects.length} {t("projects")} • {initiative.kpis.length} {t("kpis")} • {initiative.risks.length} {t("risks")}
-                    </p>
+          <CardContent className="space-y-3">
+            {loading ? (
+              <div className="rounded-xl border border-border bg-muted/10 p-8 text-center text-sm text-muted-foreground">{t("loading")}</div>
+            ) : atRiskList.length === 0 ? (
+              <div className="rounded-xl border border-border bg-muted/10 p-8 text-center text-sm text-muted-foreground">{t("noItemsYet")}</div>
+            ) : (
+              atRiskList.map((initiative) => (
+                <Link
+                  key={initiative.id}
+                  href={`/${locale}/entities/initiative/${initiative.id}`}
+                  className="block rounded-xl border border-border bg-muted/30 px-4 py-3 transition hover:bg-card/50"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="space-y-1">
+                      <p className="text-sm font-semibold text-foreground">{df(initiative.title, initiative.titleAr)}</p>
+                      <p className="text-xs text-muted-foreground">{initiative.owner}</p>
+                    </div>
+                    <Badge variant="outline" className={statusColor[initiative.status] ?? ""}>{initiative.status}</Badge>
                   </div>
-                  <RagBadge health={initiative.health} />
-                </div>
-              </Link>
-            ))}
+                </Link>
+              ))
+            )}
+          </CardContent>
+        </Card>
+
+        <Card className="border-border bg-card/50 shadow-sm">
+          <CardHeader className="space-y-1">
+            <CardTitle className="text-base">{t("allInitiatives")}</CardTitle>
+            <CardDescription className="text-muted-foreground">{t("activeStrategicInitiatives")}</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {loading ? (
+              <div className="rounded-xl border border-border bg-muted/10 p-8 text-center text-sm text-muted-foreground">{t("loading")}</div>
+            ) : allInitiatives.length === 0 ? (
+              <div className="rounded-xl border border-border bg-muted/10 p-8 text-center text-sm text-muted-foreground">{t("noItemsYet")}</div>
+            ) : (
+              allInitiatives.map((initiative) => (
+                <Link
+                  key={initiative.id}
+                  href={`/${locale}/entities/initiative/${initiative.id}`}
+                  className="block rounded-xl border border-border bg-muted/30 px-4 py-3 transition hover:bg-card/50"
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <p className="text-sm font-semibold text-foreground">{df(initiative.title, initiative.titleAr)}</p>
+                    <Badge variant="outline" className={statusColor[initiative.status] ?? ""}>{initiative.status}</Badge>
+                  </div>
+                  <p className="mt-1 text-xs text-muted-foreground">{initiative.owner}</p>
+                </Link>
+              ))
+            )}
           </CardContent>
         </Card>
       </section>

@@ -46,8 +46,8 @@ export function SparkLine({
         lineStyle: { width: 2, color },
         areaStyle: {
           color: new graphic.LinearGradient(0, 0, 0, 1, [
-            { offset: 0, color: isDark ? "rgba(96,165,250,0.26)" : "rgba(59,130,246,0.18)" },
-            { offset: 1, color: "rgba(0,0,0,0)" },
+            { offset: 0, color: `${color}44` },
+            { offset: 1, color: `${color}00` },
           ]),
         },
       },
@@ -110,7 +110,7 @@ export function Bar({
   ]);
   const option: EChartsOption = {
     grid: { left: 10, right: 10, top: 18, bottom: 28, containLabel: true },
-    xAxis: { type: "category", data: categories, ...base, axisLabel: { ...base.axisLabel, interval: 0 } },
+    xAxis: { type: "category", data: categories, ...base, axisLabel: { ...base.axisLabel, interval: "auto", rotate: categories.length > 5 ? 30 : 0 } },
     yAxis: { type: "value", ...base },
     series: [
       {
@@ -159,7 +159,7 @@ export function AreaLine({
       type: "category",
       data: categories,
       ...base,
-      axisLabel: { ...base.axisLabel, interval: 0 },
+      axisLabel: { ...base.axisLabel, interval: "auto", rotate: categories.length > 6 ? 30 : 0 },
     },
     yAxis: { type: "value", ...base },
     series: [

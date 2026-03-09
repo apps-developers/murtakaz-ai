@@ -1,18 +1,32 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { PageHeader } from "@/components/page-header";
 import { Icon } from "@/components/icon";
+import { Badge } from "@/components/ui/badge";
 import { Donut } from "@/components/charts/dashboard-charts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { riskSeverityBreakdown } from "@/lib/dashboard-metrics";
-import { pillars } from "@/lib/mock-data";
+import { getRiskEscalationInsights } from "@/actions/insights";
 import { useLocale } from "@/providers/locale-provider";
 
 export default function RiskEscalationDashboardPage() {
-  const { t, locale, isArabic } = useLocale();
-  const risks = pillars.flatMap((pillar) => pillar.initiatives.flatMap((initiative) => initiative.risks));
-  const escalated = risks.filter((risk) => risk.escalated);
+  const { t, locale, df } = useLocale();
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState<Awaited<ReturnType<typeof getRiskEscalationInsights>> | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+    void (async () => {
+      const res = await getRiskEscalationInsights();
+      if (mounted) { setData(res); setLoading(false); }
+    })();
+    return () => { mounted = false; };
+  }, []);
+
+  const escalatedList = data?.escalatedList ?? [];
+  const severityDonut = data?.severityDonut ?? [];
+  const summary = data?.summary;
 
   return (
     <div className="space-y-8">
@@ -21,6 +35,27 @@ export default function RiskEscalationDashboardPage() {
         subtitle={t("riskEscalationDashboardSubtitle")}
         icon={<Icon name="tabler:shield-exclamation" className="h-5 w-5" />}
       />
+
+      <section className="grid gap-4 sm:grid-cols-3">
+        <Card className="border-border bg-card/50 shadow-sm">
+          <CardHeader className="pb-2">
+            <CardDescription>{t("totalRisks")}</CardDescription>
+            <CardTitle className="text-3xl font-bold">{loading ? "—" : (summary?.total ?? 0)}</CardTitle>
+          </CardHeader>
+        </Card>
+        <Card className="border-border bg-card/50 shadow-sm">
+          <CardHeader className="pb-2">
+            <CardDescription>{t("escalatedRisksCount")}</CardDescription>
+            <CardTitle className="text-3xl font-bold text-rose-600 dark:text-rose-400">{loading ? "—" : (summary?.escalated ?? 0)}</CardTitle>
+          </CardHeader>
+        </Card>
+        <Card className="border-border bg-card/50 shadow-sm">
+          <CardHeader className="pb-2">
+            <CardDescription>{t("active")}</CardDescription>
+            <CardTitle className="text-3xl font-bold text-amber-600 dark:text-amber-400">{loading ? "—" : (summary?.ACTIVE ?? 0)}</CardTitle>
+          </CardHeader>
+        </Card>
+      </section>
 
       <section className="grid gap-6 lg:grid-cols-3">
         <Card className="border-border bg-card/50 shadow-sm">
@@ -32,7 +67,13 @@ export default function RiskEscalationDashboardPage() {
             <CardDescription className="text-muted-foreground">{t("acrossOpenRisksDesc")}</CardDescription>
           </CardHeader>
           <CardContent>
-            <Donut items={riskSeverityBreakdown} />
+            {loading ? (
+              <div className="rounded-xl border border-border bg-muted/10 p-8 text-center text-sm text-muted-foreground">{t("loading")}</div>
+            ) : severityDonut.length === 0 ? (
+              <div className="rounded-xl border border-border bg-muted/10 p-8 text-center text-sm text-muted-foreground">{t("noItemsYet")}</div>
+            ) : (
+              <Donut items={severityDonut} />
+            )}
           </CardContent>
         </Card>
 
@@ -42,22 +83,29 @@ export default function RiskEscalationDashboardPage() {
             <CardDescription className="text-muted-foreground">{t("executiveVisibilityDesc")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
-            {escalated.map((risk) => (
-              <Link
-                key={risk.id}
-                href={`/${locale}/risks/${risk.id}`}
-                className="block rounded-xl border border-border bg-muted/30 px-4 py-3 transition hover:bg-card/50"
-              >
-                <p className="text-sm font-semibold text-foreground">{isArabic ? risk.titleAr ?? risk.title : risk.title}</p>
-                <p className="mt-1 text-xs text-muted-foreground">
-                  {risk.severity} • {risk.owner} •{" "}
-                  {(isArabic ? risk.context.projectAr : risk.context.project) ??
-                    (isArabic ? risk.context.initiativeAr : risk.context.initiative) ??
-                    (isArabic ? risk.context.pillarAr : risk.context.pillar) ??
-                    "—"}
-                </p>
-              </Link>
-            ))}
+            {loading ? (
+              <div className="rounded-xl border border-border bg-muted/10 p-8 text-center text-sm text-muted-foreground">{t("loading")}</div>
+            ) : escalatedList.length === 0 ? (
+              <div className="rounded-xl border border-border bg-muted/10 p-8 text-center text-sm text-muted-foreground">{t("noItemsYet")}</div>
+            ) : (
+              escalatedList.map((risk) => (
+                <Link
+                  key={risk.id}
+                  href={`/${locale}/entities/risk/${risk.id}`}
+                  className="block rounded-xl border border-border bg-muted/30 px-4 py-3 transition hover:bg-card/50"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="space-y-1">
+                      <p className="text-sm font-semibold text-foreground">{df(risk.title, risk.titleAr)}</p>
+                      <p className="text-xs text-muted-foreground">{risk.owner}</p>
+                    </div>
+                    <Badge variant="outline" className="bg-rose-500/10 text-rose-700 dark:text-rose-400 border-rose-500/20">
+                      {t("atRisk")}
+                    </Badge>
+                  </div>
+                </Link>
+              ))
+            )}
           </CardContent>
         </Card>
       </section>

@@ -17,41 +17,41 @@ html[lang="ar"] {
 @layer base {
   :root {
 
-    --background: 0 0% 100%;
+    --background: 215 30% 97%;
 
-    --foreground: 0 0% 3.9%;
+    --foreground: 215 25% 8%;
 
-    --card: 0 0% 100% / 0.7;
+    --card: 0 0% 100% / 0.80;
 
-    --card-foreground: 0 0% 3.9%;
+    --card-foreground: 215 25% 8%;
 
-    --popover: 0 0% 100% / 0.7;
+    --popover: 0 0% 100% / 0.95;
 
-    --popover-foreground: 0 0% 3.9%;
+    --popover-foreground: 215 25% 8%;
 
     --primary: 215 62% 24%;
 
     --primary-foreground: 0 0% 98%;
 
-    --secondary: 215 30% 95%;
+    --secondary: 215 30% 93%;
 
     --secondary-foreground: 215 62% 24%;
 
-    --muted: 215 20% 96%;
+    --muted: 215 25% 93%;
 
-    --muted-foreground: 215 14% 42%;
+    --muted-foreground: 215 16% 40%;
 
-    --accent: 215 35% 94%;
+    --accent: 215 35% 91%;
 
     --accent-foreground: 215 62% 24%;
 
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 84.2% 56%;
 
     --destructive-foreground: 0 0% 98%;
 
-    --border: 215 18% 88%;
+    --border: 215 20% 84%;
 
-    --input: 215 18% 88%;
+    --input: 215 20% 84%;
 
     --ring: 215 62% 24%;
 
