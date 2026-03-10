@@ -1,5 +1,7 @@
 export { AiMarkdown } from "./ai-markdown";
 export { AiChatPanel } from "./ai-chat-panel";
+export { ChatCardRenderer } from "./ai-chat-cards";
+export type { ChatCard } from "./ai-chat-cards";
 export { AiGenerateSummaryModal } from "./ai-generate-summary-modal";
 export { AiFormulaBuilder } from "./ai-formula-builder";
 export { AiTranslateButton } from "./ai-translate-button";
