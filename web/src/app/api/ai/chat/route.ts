@@ -51,9 +51,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Message is required." }, { status: 400 });
   }
 
-  const apiKey = process.env.AI_API_KEY;
-  const apiUrl = process.env.AI_API_URL ?? "https://api.openai.com/v1/chat/completions";
-  const model = process.env.AI_MODEL ?? "gpt-4o";
+  const apiKey = process.env.OPENAI_API_KEY;
+  const apiUrl = "https://api.openai.com/v1/chat/completions";
+  const model = process.env.AI_MODEL_SMART ?? "gpt-4o";
 
   if (!apiKey) {
     const mockReply = getMockChatReply(message, locale);
