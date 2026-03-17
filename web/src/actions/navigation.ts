@@ -3,29 +3,14 @@
 import { prisma } from "@/lib/prisma";
 import { requireSession } from "@/lib/server-action-auth";
 
-const prismaOrgEntityType = (prisma as unknown as { orgEntityType?: unknown }).orgEntityType as
-  | {
-      findMany: <T>(args: unknown) => Promise<T[]>;
-    }
-  | undefined;
-
 export async function getMyOrganizationEntityTypes() {
   const session = await requireSession({ unauthorizedError: "Unauthorized" });
 
   if (!session.user.orgId) {
     return [];
   }
-  if (!prismaOrgEntityType?.findMany) {
-    return [];
-  }
 
-  const rows = await prismaOrgEntityType.findMany<{
-    id: string;
-    code: string;
-    name: string;
-    nameAr: string | null;
-    sortOrder: number;
-  }>({
+  const rows = await prisma.orgEntityType.findMany({
     where: {
       orgId: session.user.orgId,
     },
@@ -54,13 +39,8 @@ export async function getFirstEntityTypeCode() {
   if (!session.user.orgId) {
     return null;
   }
-  if (!prismaOrgEntityType?.findMany) {
-    return null;
-  }
 
-  const rows = await prismaOrgEntityType.findMany<{
-    code: string;
-  }>({
+  const rows = await prisma.orgEntityType.findMany({
     where: {
       orgId: session.user.orgId,
     },
