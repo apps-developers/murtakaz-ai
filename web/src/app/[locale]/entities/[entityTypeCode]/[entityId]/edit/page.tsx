@@ -362,7 +362,7 @@ export default function EditEntityPage() {
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <Label htmlFor="entity-title">{t("name")}</Label>
-                  {aiEnabled && titleAr?.trim() && (
+                  {aiEnabled && (
                     <AiTranslateButton
                       fields={{ title, titleAr, description, descriptionAr, unit, unitAr }}
                       direction="ar_to_en"
@@ -380,7 +380,7 @@ export default function EditEntityPage() {
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <Label htmlFor="entity-title-ar">{t("nameAr")}</Label>
-                  {aiEnabled && title?.trim() && (
+                  {aiEnabled && (
                     <AiTranslateButton
                       fields={{ title, titleAr, description, descriptionAr, unit, unitAr }}
                       direction="en_to_ar"
