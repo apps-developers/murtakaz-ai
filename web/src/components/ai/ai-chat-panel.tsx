@@ -1,579 +1,998 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useChat } from "@ai-sdk/react";
+import {
+  AssistantRuntimeProvider,
+  AuiIf,
+  ComposerPrimitive,
+  ErrorPrimitive,
+  MessagePrimitive,
+  ThreadPrimitive,
+  useMessagePartReasoning,
+  useMessagePartText,
+  type ToolCallMessagePartProps,
+} from "@assistant-ui/react";
+import {
+  AssistantChatTransport,
+  useAISDKRuntime,
+} from "@assistant-ui/react-ai-sdk";
+import { useRouter } from "next/navigation";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import { Icon } from "@/components/icon";
 import { useLocale } from "@/providers/locale-provider";
 import { cn } from "@/lib/utils";
 import { AiMarkdown } from "./ai-markdown";
-import { ChatCardRenderer, type ChatCard } from "./ai-chat-cards";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
-type Message = {
-  id: string;
-  role: "user" | "assistant";
-  content: string;
-  cards?: ChatCard[];
-  timestamp: Date;
-};
-
-type QuickAction = {
+type QuickSuggestion = {
   id: string;
   icon: string;
   label: string;
   labelAr: string;
-  description: string;
-  descriptionAr: string;
-  category: "overview" | "approvals" | "analytics" | "monitoring";
-  mockResponse: {
-    content: string;
-    contentAr: string;
-    cards: ChatCard[];
-  };
+  prompt: string;
+  promptAr: string;
 };
 
-// ── Mock quick-action data ────────────────────────────────────────────────────
+type ToolState =
+  | "running"
+  | "complete"
+  | "incomplete"
+  | "requires-action"
+  | undefined;
 
-const QUICK_ACTIONS: QuickAction[] = [
+type ToolDisplay = {
+  icon: string;
+  label: string;
+  detail: string;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AnyPart = any;
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
+function isToolPart(part: AnyPart): boolean {
+  return typeof part?.type === "string" && part.type.startsWith("tool-");
+}
+
+function getToolNameFromPart(part: AnyPart): string {
+  return String(part?.type ?? "").replace(/^tool-/, "");
+}
+
+function getToolOutputFromPart(part: AnyPart): unknown {
+  return part?.output;
+}
+
+function getToolStatusType(status: unknown): ToolState {
+  if (!status || typeof status !== "object" || !("type" in status)) return undefined;
+  return (status as { type?: ToolState }).type;
+}
+
+function getToolDisplay(
+  toolName: string,
+  args: Record<string, unknown>,
+  isRunning: boolean,
+  tr: (en: string, ar: string) => string,
+): ToolDisplay {
+  switch (toolName) {
+    case "getOrgOverview":
+      return {
+        icon: "tabler:building-community",
+        label: isRunning ? tr("Analyzing organization", "جاري تحليل الجهة") : tr("Organization summary ready", "ملخص الجهة جاهز"),
+        detail: tr("Health, approvals, stale KPIs", "الصحة والموافقات والمؤشرات المتأخرة"),
+      };
+    case "getKpiList":
+      return {
+        icon: "tabler:list-details",
+        label: isRunning ? tr("Collecting KPI list", "جاري جمع قائمة المؤشرات") : tr("KPI list ready", "قائمة المؤشرات جاهزة"),
+        detail:
+          typeof args.search === "string" && args.search.length > 0
+            ? String(args.search)
+            : typeof args.statusFilter === "string"
+              ? String(args.statusFilter)
+              : tr("Filtered KPI view", "عرض المؤشرات المفلتر"),
+      };
+    case "getKpiDetail":
+      return {
+        icon: "tabler:chart-line",
+        label: isRunning ? tr("Inspecting KPI", "جاري فحص المؤشر") : tr("KPI detail ready", "تفاصيل المؤشر جاهزة"),
+        detail:
+          typeof args.kpiTitle === "string" && args.kpiTitle.length > 0
+            ? String(args.kpiTitle)
+            : tr("Detailed KPI analysis", "تحليل مفصل للمؤشر"),
+      };
+    case "getPendingApprovals":
+      return {
+        icon: "tabler:clock-check",
+        label: isRunning ? tr("Checking approvals", "جاري فحص الموافقات") : tr("Approvals queue ready", "قائمة الموافقات جاهزة"),
+        detail: tr("Submission review queue", "قائمة مراجعة التقديمات"),
+      };
+    case "getStaleKpis":
+      return {
+        icon: "tabler:alert-triangle",
+        label: isRunning ? tr("Checking stale KPIs", "جاري فحص المؤشرات المتأخرة") : tr("Stale KPI list ready", "قائمة المؤشرات المتأخرة جاهزة"),
+        detail: tr("Missing or outdated updates", "التحديثات المفقودة أو القديمة"),
+      };
+    case "comparePeriods":
+      return {
+        icon: "tabler:chart-arrows-vertical",
+        label: isRunning ? tr("Comparing periods", "جاري مقارنة الفترات") : tr("Comparison ready", "المقارنة جاهزة"),
+        detail: tr("Period-over-period movement", "الحركة بين الفترات"),
+      };
+    case "navigateToPage":
+      return {
+        icon: "tabler:external-link",
+        label: isRunning ? tr("Preparing navigation", "جاري تجهيز الانتقال") : tr("Navigation ready", "الانتقال جاهز"),
+        detail: typeof args.page === "string" ? String(args.page) : tr("App navigation", "التنقل داخل التطبيق"),
+      };
+    case "getOrgUsers":
+      return {
+        icon: "tabler:users",
+        label: isRunning ? tr("Loading team", "جاري تحميل الفريق") : tr("Team overview ready", "عرض الفريق جاهز"),
+        detail: tr("Users and ownership", "المستخدمون والملكية"),
+      };
+    case "getEntityHierarchy":
+      return {
+        icon: "tabler:hierarchy-3",
+        label: isRunning ? tr("Loading structure", "جاري تحميل الهيكل") : tr("Structure ready", "الهيكل جاهز"),
+        detail: tr("Organization hierarchy", "الهيكل التنظيمي"),
+      };
+    default:
+      return {
+        icon: "tabler:cpu",
+        label: isRunning ? tr("Running tool", "جاري تشغيل الأداة") : tr("Tool completed", "اكتملت الأداة"),
+        detail: toolName,
+      };
+  }
+}
+
+function formatDuration(ms: number): string {
+  if (ms < 1000) return `${ms}ms`;
+  return `${(ms / 1000).toFixed(1)}s`;
+}
+
+// ── Quick suggestions (real prompts, not mock data) ────────────────────────
+
+const QUICK_SUGGESTIONS: QuickSuggestion[] = [
   {
     id: "health",
     icon: "tabler:chart-pie-2",
     label: "Health overview",
     labelAr: "نظرة عامة على الصحة",
-    description: "Current KPI health score",
-    descriptionAr: "درجة صحة المؤشرات الحالية",
-    category: "overview",
-    mockResponse: {
-      content:
-        "Here's the current KPI health overview for **Q1 2026**. The organization is performing at a **76% health score** across 48 active KPIs.",
-      contentAr:
-        "إليك نظرة عامة على صحة مؤشرات الأداء للربع الأول 2026. تحقق المنظمة **76% درجة صحة** عبر 48 مؤشراً نشطاً.",
-      cards: [
-        {
-          type: "kpi-summary",
-          data: {
-            totalKpis: 48,
-            green: 28,
-            amber: 12,
-            red: 8,
-            noData: 0,
-            healthScore: 76,
-            period: "Q1 2026",
-          },
-        },
-      ],
-    },
+    prompt: "Give me an overview of the organization's KPI health",
+    promptAr: "أعطني نظرة عامة على صحة مؤشرات الأداء",
   },
   {
     id: "red-kpis",
     icon: "tabler:circle-x",
     label: "KPIs behind target",
-    labelAr: "مؤشرات متأخرة عن الهدف",
-    description: "8 KPIs need attention",
-    descriptionAr: "8 مؤشرات تحتاج اهتماماً",
-    category: "monitoring",
-    mockResponse: {
-      content:
-        "There are **8 KPIs** currently behind their targets. Here are the most critical ones requiring immediate attention:",
-      contentAr:
-        "يوجد حالياً **8 مؤشرات** متأخرة عن أهدافها. إليك الأكثر أهمية التي تتطلب اهتماماً فورياً:",
-      cards: [
-        {
-          type: "kpi-red-list",
-          data: {
-            period: "Q1 2026",
-            kpis: [
-              { name: "Customer Satisfaction Score", nameAr: "مؤشر رضا العملاء", value: "72", target: "90", unit: "%", dept: "Operations", isAnomaly: true },
-              { name: "Revenue Growth Rate", nameAr: "معدل نمو الإيرادات", value: "8.2", target: "15", unit: "%", dept: "Finance" },
-              { name: "Project Delivery On-Time", nameAr: "تسليم المشاريع في الوقت", value: "61", target: "85", unit: "%", dept: "PMO" },
-              { name: "Employee Engagement Index", nameAr: "مؤشر مشاركة الموظفين", value: "58", target: "75", unit: "%", dept: "HR" },
-              { name: "Digital Adoption Rate", nameAr: "معدل التبني الرقمي", value: "43", target: "70", unit: "%", dept: "IT" },
-            ],
-          },
-        },
-      ],
-    },
+    labelAr: "مؤشرات متأخرة",
+    prompt: "Show me all KPIs that are behind target (RED status)",
+    promptAr: "أرني جميع المؤشرات المتأخرة عن الهدف (حالة حمراء)",
   },
   {
     id: "approvals",
     icon: "tabler:clock-check",
     label: "Pending approvals",
     labelAr: "الموافقات المعلقة",
-    description: "7 submissions awaiting review",
-    descriptionAr: "7 تقديمات تنتظر المراجعة",
-    category: "approvals",
-    mockResponse: {
-      content:
-        "There are **7 KPI submissions** currently pending your approval. **2 of them** have been flagged as anomalies and need closer review.",
-      contentAr:
-        "يوجد **7 تقديمات مؤشرات** معلقة تنتظر موافقتك. **2 منها** أُبلغ عنهما كشذوذات وتحتاج مراجعة دقيقة.",
-      cards: [
-        {
-          type: "approvals",
-          data: {
-            totalPending: 7,
-            items: [
-              { kpiName: "Customer Satisfaction Score", kpiNameAr: "مؤشر رضا العملاء", submittedBy: "Ahmed Al-Rashidi", value: "72%", target: "90%", isAnomaly: true, dept: "Operations" },
-              { kpiName: "Revenue Growth Rate", kpiNameAr: "معدل نمو الإيرادات", submittedBy: "Sara Al-Mansouri", value: "8.2%", target: "15%", dept: "Finance" },
-              { kpiName: "Training Completion Rate", kpiNameAr: "معدل إتمام التدريب", submittedBy: "Khalid Al-Otaibi", value: "91%", target: "85%", dept: "HR" },
-              { kpiName: "IT Incident Resolution", kpiNameAr: "حل حوادث تقنية المعلومات", submittedBy: "Nora Al-Harbi", value: "4.2h", target: "3h", isAnomaly: true, dept: "IT" },
-            ],
-          },
-        },
-      ],
-    },
+    prompt: "What approvals are pending?",
+    promptAr: "ما هي الموافقات المعلقة؟",
   },
   {
-    id: "departments",
-    icon: "tabler:building",
-    label: "Department performance",
-    labelAr: "أداء الإدارات",
-    description: "Breakdown by department",
-    descriptionAr: "تفصيل حسب الإدارات",
-    category: "analytics",
-    mockResponse: {
-      content:
-        "Here's the performance breakdown across departments. **Finance** leads at 88% health, while **IT** needs attention at 52%.",
-      contentAr:
-        "إليك تفصيل الأداء عبر الإدارات. تتصدر **المالية** بـ 88% صحة، بينما تحتاج **تقنية المعلومات** إلى اهتمام بـ 52%.",
-      cards: [
-        {
-          type: "dept-health",
-          data: {
-            departments: [
-              { name: "Finance", nameAr: "المالية", score: 88, green: 9, amber: 2, red: 1 },
-              { name: "Operations", nameAr: "العمليات", score: 79, green: 7, amber: 4, red: 2 },
-              { name: "Human Resources", nameAr: "الموارد البشرية", score: 74, green: 5, amber: 3, red: 2 },
-              { name: "PMO", nameAr: "مكتب المشاريع", score: 67, green: 4, amber: 3, red: 3 },
-              { name: "Marketing", nameAr: "التسويق", score: 62, green: 3, amber: 4, red: 2 },
-              { name: "IT", nameAr: "تقنية المعلومات", score: 52, green: 3, amber: 2, red: 5 },
-            ],
-          },
-        },
-      ],
-    },
+    id: "stale",
+    icon: "tabler:alert-triangle",
+    label: "Stale KPIs",
+    labelAr: "مؤشرات متأخرة التحديث",
+    prompt: "Which KPIs haven't been updated recently?",
+    promptAr: "أي مؤشرات لم يتم تحديثها مؤخراً؟",
   },
   {
     id: "trend",
     icon: "tabler:trending-up",
-    label: "Q1 vs Q2 trend",
-    labelAr: "اتجاه الربع الأول مقابل الثاني",
-    description: "Quarter-over-quarter changes",
-    descriptionAr: "التغييرات ربع السنوية",
-    category: "analytics",
-    mockResponse: {
-      content:
-        "Comparing **Q1 vs Q2 2026**: 19 KPIs improved while 11 declined. Notable improvement in Finance and HR, but IT showed a downward trend.",
-      contentAr:
-        "مقارنة **الربع الأول مقابل الثاني 2026**: تحسّن 19 مؤشراً بينما تراجع 11. تحسّن ملحوظ في المالية والموارد البشرية، لكن تقنية المعلومات أظهرت اتجاهاً تنازلياً.",
-      cards: [
-        {
-          type: "trend",
-          data: {
-            periodA: "Q1",
-            periodB: "Q2",
-            improved: 19,
-            declined: 11,
-            unchanged: 8,
-            highlights: [
-              { name: "Customer Satisfaction", nameAr: "رضا العملاء", change: 12, direction: "up" },
-              { name: "Revenue Growth", nameAr: "نمو الإيرادات", change: 8, direction: "up" },
-              { name: "IT Incident Resolution", nameAr: "حل حوادث تقنية المعلومات", change: -15, direction: "down" },
-              { name: "Digital Adoption Rate", nameAr: "معدل التبني الرقمي", change: -7, direction: "down" },
-            ],
-          },
-        },
-      ],
-    },
+    label: "Performance trend",
+    labelAr: "اتجاه الأداء",
+    prompt: "Compare our KPI performance over the last 6 months vs last 3 months",
+    promptAr: "قارن أداء مؤشراتنا خلال آخر 6 أشهر مقابل آخر 3 أشهر",
   },
   {
-    id: "anomalies",
-    icon: "tabler:alert-triangle",
-    label: "Anomalies this month",
-    labelAr: "الشذوذات هذا الشهر",
-    description: "Unusual KPI submissions",
-    descriptionAr: "تقديمات مؤشرات غير عادية",
-    category: "monitoring",
-    mockResponse: {
-      content:
-        "**3 anomalous submissions** were detected this month. These values deviate significantly from historical averages and may require investigation before approval.",
-      contentAr:
-        "تم رصد **3 تقديمات شاذة** هذا الشهر. تنحرف هذه القيم بشكل ملحوظ عن المتوسطات التاريخية وقد تستلزم تحقيقاً قبل الموافقة.",
-      cards: [
-        {
-          type: "kpi-red-list",
-          data: {
-            period: "March 2026",
-            kpis: [
-              { name: "Customer Satisfaction Score", nameAr: "مؤشر رضا العملاء", value: "72", target: "90", unit: "%", dept: "Operations", isAnomaly: true },
-              { name: "IT Incident Resolution Time", nameAr: "وقت حل حوادث تقنية المعلومات", value: "4.2h", target: "3h", dept: "IT", isAnomaly: true },
-              { name: "Supply Chain Lead Time", nameAr: "وقت دورة سلسلة التوريد", value: "18d", target: "12d", dept: "Operations", isAnomaly: true },
-            ],
-          },
-        },
-      ],
-    },
+    id: "team",
+    icon: "tabler:users",
+    label: "Team & ownership",
+    labelAr: "الفريق والملكية",
+    prompt: "Show me the team and who owns which KPIs",
+    promptAr: "أرني الفريق ومن يملك أي مؤشرات",
   },
 ];
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
+// ── Tool result renderer ──────────────────────────────────────────────────────
 
-function makeMsgId() {
-  return Math.random().toString(36).slice(2);
+function ToolResultCard({ toolName, result }: { toolName: string; result: unknown }) {
+  const { tr, isArabic } = useLocale();
+  const data = result as Record<string, unknown>;
+
+  if (toolName === "getOrgOverview" && data.totalEntities != null) {
+    const d = data as {
+      totalEntities: number;
+      green: number;
+      amber: number;
+      red: number;
+      overallHealth: number;
+      pendingApprovals: number;
+      staleKpisCount: number;
+    };
+    const total = d.totalEntities;
+    const greenPct = total > 0 ? (d.green / total) * 100 : 0;
+    const amberPct = total > 0 ? (d.amber / total) * 100 : 0;
+    const redPct = total > 0 ? (d.red / total) * 100 : 0;
+    const scoreColor =
+      d.overallHealth >= 80
+        ? "text-emerald-600 dark:text-emerald-400"
+        : d.overallHealth >= 60
+          ? "text-amber-600 dark:text-amber-400"
+          : "text-red-600 dark:text-red-400";
+
+    return (
+      <div className="rounded-2xl border border-border/70 bg-card/70 p-4 shadow-sm">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+              {tr("Organization Health", "صحة الجهة")}
+            </p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {tr("Grounded in approved KPI data", "مبني على بيانات المؤشرات المعتمدة")}
+            </p>
+          </div>
+          <div className="flex flex-col items-end rounded-2xl bg-background/80 px-3 py-2">
+            <span className={cn("text-2xl font-bold", scoreColor)}>{d.overallHealth}%</span>
+            <span className="text-[10px] text-muted-foreground">{tr("Health", "الصحة")}</span>
+          </div>
+        </div>
+        <div className="mt-4 space-y-2">
+          {[
+            { label: tr("On Track", "في المسار"), value: d.green, pct: greenPct, color: "bg-emerald-500" },
+            { label: tr("At Risk", "في خطر"), value: d.amber, pct: amberPct, color: "bg-amber-400" },
+            { label: tr("Behind", "متأخر"), value: d.red, pct: redPct, color: "bg-red-500" },
+          ].map((row) => (
+            <div key={row.label} className="flex items-center gap-3">
+              <span className="w-16 shrink-0 text-xs text-muted-foreground">{row.label}</span>
+              <div className="h-2 flex-1 overflow-hidden rounded-full bg-muted/80">
+                <div className={cn("h-full rounded-full", row.color)} style={{ width: `${row.pct}%` }} />
+              </div>
+              <span className="w-6 text-right text-sm font-semibold text-foreground">{row.value}</span>
+            </div>
+          ))}
+        </div>
+        <div className="mt-4 grid grid-cols-3 gap-2">
+          <MetricPill label={tr("Total", "الإجمالي")} value={String(total)} />
+          <MetricPill label={tr("Pending", "معلقة")} value={String(d.pendingApprovals)} />
+          <MetricPill label={tr("Stale", "متأخرة")} value={String(d.staleKpisCount)} />
+        </div>
+      </div>
+    );
+  }
+
+  if (toolName === "navigateToPage" && data.navigate) {
+    return (
+      <div className="rounded-xl border border-blue-500/20 bg-blue-500/5 px-3 py-2 text-xs text-blue-600 dark:text-blue-400">
+        <div className="flex items-center gap-2">
+          <Icon name="tabler:external-link" className="h-3.5 w-3.5" />
+          <span>{tr("Navigating inside the workspace", "جاري الانتقال داخل مساحة العمل")}</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (toolName === "getKpiList" && Array.isArray(result)) {
+    const kpis = result as Array<{
+      title: string;
+      titleAr?: string;
+      ragStatus: string;
+      achievement: number | null;
+    }>;
+    if (kpis.length === 0) return null;
+
+    return (
+      <div className="rounded-2xl border border-border/70 bg-card/70 p-4 shadow-sm">
+        <div className="mb-3 flex items-center justify-between">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+              {tr("KPI List", "قائمة المؤشرات")}
+            </p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {tr("Ranked KPI snapshot", "لقطة مرتبة للمؤشرات")}
+            </p>
+          </div>
+          <Badge variant="outline" className="rounded-full px-2.5 py-1">
+            {kpis.length}
+          </Badge>
+        </div>
+        <div className="space-y-2">
+          {kpis.slice(0, 8).map((kpi, i) => {
+            const ragColor =
+              kpi.ragStatus === "green"
+                ? "bg-emerald-500"
+                : kpi.ragStatus === "amber"
+                  ? "bg-amber-400"
+                  : kpi.ragStatus === "red"
+                    ? "bg-red-500"
+                    : "bg-muted-foreground/40";
+
+            return (
+              <div key={i} className="flex items-center justify-between gap-3 rounded-xl bg-background/70 px-3 py-2">
+                <div className="flex min-w-0 items-center gap-2">
+                  <span className={cn("h-2.5 w-2.5 shrink-0 rounded-full", ragColor)} />
+                  <span className="truncate text-sm text-foreground">
+                    {isArabic && kpi.titleAr ? kpi.titleAr : kpi.title}
+                  </span>
+                </div>
+                <span className="shrink-0 text-sm font-semibold text-foreground">
+                  {kpi.achievement != null ? `${kpi.achievement}%` : "—"}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
+  if (toolName === "getPendingApprovals" && Array.isArray(data.items)) {
+    const items = data.items as Array<{
+      kpiTitle: string;
+      kpiTitleAr?: string;
+      submittedBy: string;
+      achievement: number | null;
+    }>;
+    if (items.length === 0) return null;
+
+    return (
+      <div className="rounded-2xl border border-amber-500/20 bg-amber-500/5 p-4 shadow-sm">
+        <div className="mb-3 flex items-center justify-between">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-amber-700 dark:text-amber-300">
+              {tr("Pending Approvals", "الموافقات المعلقة")}
+            </p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {tr("Awaiting review", "بانتظار المراجعة")}
+            </p>
+          </div>
+          <Badge className="rounded-full bg-amber-500 px-2.5 py-1 text-white">
+            {String(data.totalPending ?? items.length)}
+          </Badge>
+        </div>
+        <div className="space-y-2">
+          {items.slice(0, 5).map((item, i) => (
+            <div key={i} className="flex items-center justify-between gap-3 rounded-xl bg-background/70 px-3 py-2">
+              <div className="min-w-0">
+                <p className="truncate text-sm text-foreground">
+                  {isArabic && item.kpiTitleAr ? item.kpiTitleAr : item.kpiTitle}
+                </p>
+                <p className="truncate text-xs text-muted-foreground">{item.submittedBy}</p>
+              </div>
+              <span className="shrink-0 text-sm font-semibold text-foreground">
+                {item.achievement != null ? `${item.achievement}%` : "—"}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (toolName === "comparePeriods" && data.highlights) {
+    const highlights = Array.isArray(data.highlights)
+      ? (data.highlights as Array<{ name: string; changepp: number; direction: string }>)
+      : [];
+
+    return (
+      <div className="rounded-2xl border border-border/70 bg-card/70 p-4 shadow-sm">
+        <div className="mb-3 flex items-center justify-between">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+              {tr("Period Comparison", "مقارنة الفترات")}
+            </p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {tr("Movement across periods", "الحركة عبر الفترات")}
+            </p>
+          </div>
+          <div className="flex gap-2 text-xs">
+            <MetricChip tone="emerald" value={`${String(data.improved ?? 0)} ↑`} />
+            <MetricChip tone="red" value={`${String(data.declined ?? 0)} ↓`} />
+          </div>
+        </div>
+        <div className="space-y-2">
+          {highlights.slice(0, 6).map((item, i) => (
+            <div key={i} className="flex items-center justify-between gap-3 rounded-xl bg-background/70 px-3 py-2">
+              <span className="truncate text-sm text-foreground">{item.name}</span>
+              <span
+                className={cn(
+                  "shrink-0 text-sm font-semibold",
+                  item.changepp >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400",
+                )}
+              >
+                {item.changepp > 0 ? "+" : ""}
+                {item.changepp}pp
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (toolName === "getStaleKpis" && Array.isArray(data.kpis)) {
+    const items = data.kpis as Array<{ title: string; titleAr?: string; daysSinceUpdate: number | null; hasNoValues: boolean }>;
+    if (items.length === 0) return null;
+
+    return (
+      <div className="rounded-2xl border border-red-500/15 bg-red-500/5 p-4 shadow-sm">
+        <div className="mb-3">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-700 dark:text-red-300">
+            {tr("Stale KPIs", "المؤشرات المتأخرة")}
+          </p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {tr("Needs data refresh", "بحاجة إلى تحديث البيانات")}
+          </p>
+        </div>
+        <div className="space-y-2">
+          {items.slice(0, 6).map((item, i) => (
+            <div key={i} className="flex items-center justify-between gap-3 rounded-xl bg-background/70 px-3 py-2">
+              <span className="truncate text-sm text-foreground">
+                {isArabic && item.titleAr ? item.titleAr : item.title}
+              </span>
+              <span className="shrink-0 text-xs font-semibold text-red-600 dark:text-red-400">
+                {item.hasNoValues ? tr("No data", "لا توجد بيانات") : `${item.daysSinceUpdate ?? 0}d`}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  return null;
 }
 
-function parseCardsFromContent(content: string): { text: string; cards: ChatCard[] } {
-  const cards: ChatCard[] = [];
-  const text = content
-    .replace(/```card\n([\s\S]*?)\n```/g, (_, json: string) => {
-      try {
-        cards.push(JSON.parse(json) as ChatCard);
-      } catch {}
-      return "";
-    })
-    .trim();
-  return { text, cards };
+function MetricPill({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-2xl bg-background/75 px-3 py-2">
+      <p className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">{label}</p>
+      <p className="mt-1 text-sm font-semibold text-foreground">{value}</p>
+    </div>
+  );
 }
 
-// ── Component ─────────────────────────────────────────────────────────────────
+function MetricChip({ tone, value }: { tone: "emerald" | "red"; value: string }) {
+  return (
+    <span
+      className={cn(
+        "rounded-full px-2.5 py-1 font-semibold",
+        tone === "emerald"
+          ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300"
+          : "bg-red-500/10 text-red-700 dark:text-red-300",
+      )}
+    >
+      {value}
+    </span>
+  );
+}
 
-export function AiChatPanel() {
-  const { t, tr, locale, isArabic } = useLocale();
-  const [open, setOpen] = useState(false);
-  const [input, setInput] = useState("");
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [thinking, setThinking] = useState(false);
-  const inputRef = useRef<HTMLTextAreaElement>(null);
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (open && messages.length === 0) {
-      setMessages([
-        {
-          id: makeMsgId(),
-          role: "assistant",
-          content: t("aiWelcomeMessage"),
-          timestamp: new Date(),
-        },
-      ]);
-    }
-  }, [open, messages.length, t]);
-
-  useEffect(() => {
-    if (open && inputRef.current) {
-      setTimeout(() => inputRef.current?.focus(), 120);
-    }
-  }, [open]);
+function ToolStatusRow({
+  toolName,
+  args,
+  status,
+  result,
+}: ToolCallMessagePartProps) {
+  const { tr } = useLocale();
+  const isRunning = getToolStatusType(status) === "running";
+  const [duration, setDuration] = useState<number | null>(null);
+  const startRef = useRef<number | null>(null);
 
   useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    if (isRunning && startRef.current === null) {
+      startRef.current = Date.now();
     }
-  }, [messages, thinking]);
-
-  function handleQuickAction(action: QuickAction) {
-    if (thinking) return;
-    const userMsg: Message = {
-      id: makeMsgId(),
-      role: "user",
-      content: isArabic ? action.labelAr : action.label,
-      timestamp: new Date(),
-    };
-    const assistantMsg: Message = {
-      id: makeMsgId(),
-      role: "assistant",
-      content: isArabic ? action.mockResponse.contentAr : action.mockResponse.content,
-      cards: action.mockResponse.cards,
-      timestamp: new Date(),
-    };
-    setMessages((prev) => [...prev, userMsg, assistantMsg]);
-  }
-
-  async function handleSend() {
-    const text = input.trim();
-    if (!text || thinking) return;
-
-    const userMsg: Message = {
-      id: makeMsgId(),
-      role: "user",
-      content: text,
-      timestamp: new Date(),
-    };
-    setMessages((prev) => [...prev, userMsg]);
-    setInput("");
-    setThinking(true);
-
-    try {
-      const res = await fetch("/api/ai/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: text, locale }),
-      });
-
-      if (!res.ok) throw new Error("ai_error");
-
-      const reader = res.body?.getReader();
-      const decoder = new TextDecoder();
-      const assistantId = makeMsgId();
-
-      setMessages((prev) => [
-        ...prev,
-        { id: assistantId, role: "assistant", content: "", timestamp: new Date() },
-      ]);
-      setThinking(false);
-
-      if (reader) {
-        let accumulated = "";
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-          accumulated += decoder.decode(value);
-          setMessages((prev) =>
-            prev.map((m) =>
-              m.id === assistantId ? { ...m, content: accumulated } : m,
-            ),
-          );
-        }
-        const { text: parsed, cards } = parseCardsFromContent(accumulated);
-        if (cards.length > 0) {
-          setMessages((prev) =>
-            prev.map((m) =>
-              m.id === assistantId ? { ...m, content: parsed, cards } : m,
-            ),
-          );
-        }
-      }
-    } catch {
-      setThinking(false);
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: makeMsgId(),
-          role: "assistant",
-          content: t("aiUnavailable"),
-          timestamp: new Date(),
-        },
-      ]);
+    if (!isRunning && startRef.current !== null) {
+      setDuration(Date.now() - startRef.current);
     }
-  }
+  }, [isRunning]);
 
-  function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      void handleSend();
-    }
-  }
-
-  function handleClear() {
-    setMessages([]);
-    setInput("");
-  }
-
-  const showSuggestions = messages.length <= 1 && !thinking;
+  const display = getToolDisplay(toolName, (args ?? {}) as Record<string, unknown>, isRunning, tr);
+  const hasRichResult = Boolean(result) && (
+    toolName === "getOrgOverview" ||
+    toolName === "getKpiList" ||
+    toolName === "getPendingApprovals" ||
+    toolName === "comparePeriods" ||
+    toolName === "getStaleKpis" ||
+    toolName === "navigateToPage"
+  );
 
   return (
-    <>
-      <button
-        onClick={() => setOpen(true)}
-        aria-label={t("aiAssistant")}
-        className={cn(
-          "fixed bottom-6 end-6 z-[70] flex h-14 w-14 items-center justify-center rounded-full shadow-lg transition-all duration-200",
-          "bg-primary text-primary-foreground hover:scale-105 hover:shadow-xl",
-          open && "opacity-0 pointer-events-none scale-90",
-        )}
-      >
-        <Icon name="tabler:message-chatbot" className="h-6 w-6" />
-      </button>
-
+    <div className="space-y-2">
       <div
         className={cn(
-          "fixed bottom-0 end-0 z-[70] flex flex-col",
-          "h-full max-h-[680px] w-full max-w-[440px]",
-          "transition-all duration-300 ease-in-out",
-          open
-            ? "translate-y-0 opacity-100 pointer-events-auto"
-            : "translate-y-4 opacity-0 pointer-events-none",
-          "sm:bottom-6 sm:end-6 sm:rounded-2xl sm:shadow-2xl sm:border sm:border-border",
-          "bg-background",
+          "flex items-center gap-2 rounded-xl border border-border/70 bg-muted/40 px-3 py-2 text-xs text-muted-foreground",
+          isRunning && "animate-pulse",
         )}
       >
-        {/* Header */}
-        <div className="flex items-center justify-between gap-3 border-b border-border bg-primary px-4 py-3 sm:rounded-t-2xl">
-          <div className="flex items-center gap-2.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-foreground/20">
-              <Icon name="tabler:sparkles" className="h-4 w-4 text-primary-foreground" />
+        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-background/80">
+          {isRunning ? (
+            <Icon name="tabler:loader-2" className="h-4 w-4 animate-spin" />
+          ) : (
+            <Icon name={display.icon} className="h-4 w-4" />
+          )}
+        </span>
+        <div className="min-w-0 flex-1">
+          <p className="truncate font-medium text-foreground">{display.label}</p>
+          <p className="truncate text-[11px] text-muted-foreground">{display.detail}</p>
+        </div>
+        <Badge variant="outline" className="rounded-full px-2 py-0.5 text-[10px]">
+          {isRunning ? tr("Running", "قيد التشغيل") : tr("Done", "تم")}
+        </Badge>
+        {!isRunning && duration !== null ? (
+          <span className="shrink-0 text-[10px] text-muted-foreground/80">{formatDuration(duration)}</span>
+        ) : null}
+      </div>
+      {!isRunning && hasRichResult ? (
+        <ToolResultCard toolName={toolName} result={result} />
+      ) : null}
+    </div>
+  );
+}
+
+function MarkdownMessagePart() {
+  const { isArabic } = useLocale();
+  const part = useMessagePartText();
+  return <AiMarkdown content={part.text ?? ""} dir={isArabic ? "rtl" : "ltr"} />;
+}
+
+function ReasoningPart() {
+  const { tr, isArabic } = useLocale();
+  const part = useMessagePartReasoning();
+  const active = part.status?.type === "running";
+  const hasText = (part.text?.length ?? 0) > 0;
+  const [open, setOpen] = useState(false);
+  const wasActiveRef = useRef(false);
+
+  // Auto-open when running starts, auto-close when reasoning finishes
+  useEffect(() => {
+    if (active) {
+      setOpen(true);
+      wasActiveRef.current = true;
+    } else if (wasActiveRef.current && !active) {
+      // Reasoning just finished - auto close
+      setOpen(false);
+      wasActiveRef.current = false;
+    }
+  }, [active]);
+
+  // Don't show if there's no reasoning text and not running
+  if (!hasText && !active) return null;
+
+  return (
+    <div className="mb-2 rounded-lg border border-border/50 bg-muted/20 opacity-80 transition-opacity hover:opacity-100">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="flex w-full items-center justify-between gap-2 px-2.5 py-1.5 text-left"
+      >
+        <div className="flex items-center gap-2">
+          <span className={cn(
+            "flex h-5 w-5 shrink-0 items-center justify-center rounded-full",
+            active ? "bg-primary/20 text-primary" : "bg-muted-foreground/10 text-muted-foreground"
+          )}>
+            {active ? (
+              <Icon name="tabler:loader-2" className="h-3 w-3 animate-spin" />
+            ) : (
+              <Icon name="tabler:check" className="h-3 w-3" />
+            )}
+          </span>
+          <span className={cn(
+            "text-xs font-medium",
+            active ? "text-foreground" : "text-muted-foreground"
+          )}>
+            {active ? tr("Thinking...", "جاري التفكير...") : tr("Reasoning done", "اكتمل التفكير")}
+          </span>
+        </div>
+        <div className="flex items-center gap-1">
+          {active && (
+            <span className="mr-1 h-1.5 w-1.5 animate-pulse rounded-full bg-primary" />
+          )}
+          <Icon
+            name={open ? "tabler:chevron-up" : "tabler:chevron-down"}
+            className="h-3.5 w-3.5 text-muted-foreground"
+          />
+        </div>
+      </button>
+      {open && hasText ? (
+        <div className="border-t border-border/40 px-2.5 py-2">
+          <div className="max-h-40 overflow-y-auto text-muted-foreground/80">
+            <AiMarkdown
+              content={part.text ?? ""}
+              dir={isArabic ? "rtl" : "ltr"}
+            />
+          </div>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+function ThinkingPart({ status }: { status: { type: string } }) {
+  const { tr } = useLocale();
+  if (status.type !== "running") return null;
+
+  return (
+    <div className="flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1.5 text-primary">
+      <Icon name="tabler:loader-2" className="h-4 w-4 animate-spin" />
+      <span className="text-sm font-medium">{tr("Thinking...", "جاري التفكير...")}</span>
+    </div>
+  );
+}
+
+function UserMessage() {
+  return (
+    <MessagePrimitive.Root className="flex justify-end py-2" data-role="user">
+      <div className="max-w-[90%] rounded-[22px] rounded-br-md bg-primary px-4 py-3 text-sm text-primary-foreground shadow-sm">
+        <MessagePrimitive.Parts components={{ Text: MarkdownMessagePart }} />
+      </div>
+    </MessagePrimitive.Root>
+  );
+}
+
+function AssistantMessage() {
+  return (
+    <MessagePrimitive.Root className="py-2" data-role="assistant">
+      <div className="flex gap-3">
+        <div className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+          <Icon name="tabler:sparkles" className="h-4 w-4" />
+        </div>
+        <div className="min-w-0 flex-1 space-y-2">
+          <MessagePrimitive.Parts
+            components={{
+              Empty: ThinkingPart,
+              Text: MarkdownMessagePart,
+              Reasoning: ReasoningPart,
+              tools: {
+                Fallback: ToolStatusRow,
+              },
+            }}
+          />
+          <MessagePrimitive.Error>
+            <ErrorPrimitive.Root className="rounded-xl border border-destructive/40 bg-destructive/10 px-3 py-2 text-xs text-destructive">
+              <ErrorPrimitive.Message className="line-clamp-3" />
+            </ErrorPrimitive.Root>
+          </MessagePrimitive.Error>
+        </div>
+      </div>
+    </MessagePrimitive.Root>
+  );
+}
+
+function AiAssistantComposer() {
+  const { t, tr } = useLocale();
+
+  return (
+    <ComposerPrimitive.Root className="px-4 pb-4 pt-3">
+      <div className="rounded-3xl border border-border/70 bg-background/90 p-2 shadow-lg shadow-black/5">
+        <ComposerPrimitive.Input asChild>
+          <textarea
+            placeholder={t("aiAskPlaceholder")}
+            className="max-h-40 min-h-[52px] w-full resize-none bg-transparent px-2.5 pt-2 text-sm leading-6 placeholder:text-muted-foreground focus:outline-none"
+            rows={1}
+          />
+        </ComposerPrimitive.Input>
+        <div className="mt-2 flex items-center justify-between gap-3 px-1">
+          <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
+            <Badge variant="outline" className="rounded-full px-2.5 py-1 text-[10px]">
+              {tr("Grounded", "مستند للبيانات")}
+            </Badge>
+            <span>{t("aiDataAsOf")}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <AuiIf condition={({ thread }) => !thread.isRunning}>
+              <ComposerPrimitive.Send asChild>
+                <Button type="submit" size="icon" className="h-10 w-10 rounded-2xl">
+                  <Icon name="tabler:arrow-up" className="h-4 w-4" />
+                </Button>
+              </ComposerPrimitive.Send>
+            </AuiIf>
+            <AuiIf condition={({ thread }) => thread.isRunning}>
+              <ComposerPrimitive.Cancel asChild>
+                <Button type="button" variant="secondary" size="icon" className="h-10 w-10 rounded-2xl">
+                  <Icon name="tabler:square-filled" className="h-3.5 w-3.5" />
+                </Button>
+              </ComposerPrimitive.Cancel>
+            </AuiIf>
+          </div>
+        </div>
+      </div>
+    </ComposerPrimitive.Root>
+  );
+}
+
+function AiWelcomeState({
+  onPrompt,
+}: {
+  onPrompt: (prompt: string) => void;
+}) {
+  const { t, tr, isArabic } = useLocale();
+
+  return (
+    <div className="flex flex-1 flex-col justify-center px-4 py-8">
+      <div className="rounded-[28px] border border-border/70 bg-card/60 p-5 shadow-sm">
+        <div className="flex items-start gap-3">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+            <Icon name="tabler:sparkles" className="h-5 w-5" />
+          </div>
+          <div className="min-w-0">
+            <p className="text-sm font-semibold text-foreground">{t("aiAssistant")}</p>
+            <p className="mt-1 text-sm text-muted-foreground">{t("aiWelcomeMessage")}</p>
+          </div>
+        </div>
+        <Separator className="my-4" />
+        <div className="grid grid-cols-2 gap-2">
+          {QUICK_SUGGESTIONS.map((item) => (
+            <button
+              key={item.id}
+              type="button"
+              onClick={() => onPrompt(isArabic ? item.promptAr : item.prompt)}
+              className="rounded-2xl border border-border/70 bg-background/70 p-3 text-left transition hover:border-primary/30 hover:bg-background"
+            >
+              <div className="flex items-start gap-2">
+                <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                  <Icon name={item.icon} className="h-4 w-4" />
+                </span>
+                <div className="min-w-0">
+                  <p className="text-sm font-medium text-foreground">
+                    {isArabic ? item.labelAr : item.label}
+                  </p>
+                  <p className="mt-1 text-[11px] text-muted-foreground">
+                    {tr("Ask instantly", "اسأل مباشرة")}
+                  </p>
+                </div>
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ReadOnlyNotice() {
+  const { t, tr } = useLocale();
+  const [dismissed, setDismissed] = useState(false);
+  if (dismissed) return null;
+
+  return (
+    <div className="sticky top-0 z-10 py-3">
+      <div className="flex items-start justify-between gap-2 rounded-lg border border-amber-500/30 bg-amber-50 px-3 py-2 text-xs text-amber-800 dark:bg-amber-950/30 dark:text-amber-200">
+        <span className="flex-1">{t("aiReadOnly")}</span>
+        <button
+          type="button"
+          onClick={() => setDismissed(true)}
+          className="shrink-0 rounded p-0.5 hover:bg-amber-500/20"
+          title={tr("Dismiss", "إغلاق")}
+        >
+          <Icon name="tabler:x" className="h-3.5 w-3.5" />
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function AiPanelBody({
+  open,
+  onToggle,
+  status,
+  messageCount,
+  onClear,
+  onPrompt,
+}: {
+  open: boolean;
+  onToggle: () => void;
+  status: string;
+  messageCount: number;
+  onClear: () => void;
+  onPrompt: (prompt: string) => void;
+}) {
+  const { t, tr } = useLocale();
+  const running = status === "streaming" || status === "submitted";
+
+  return (
+    <div className="flex h-full min-h-0 flex-col bg-background/80 backdrop-blur-xl">
+      {/* Header */}
+      <div className="shrink-0 border-b border-border/70 bg-background/90 px-4 py-4">
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <div className="flex items-center gap-2">
+              <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-sm">
+                <Icon name="tabler:message-chatbot" className="h-5 w-5" />
+              </span>
+              <div>
+                <p className="text-sm font-semibold text-foreground">{t("aiAssistant")}</p>
+                <p className="text-xs text-muted-foreground">
+                  {running ? tr("Thinking and using tools", "يفكر ويستخدم الأدوات") : tr("Grounded workspace copilot", "مساعد عمل مستند للبيانات")}
+                </p>
+              </div>
             </div>
-            <div>
-              <p className="text-sm font-semibold text-primary-foreground">{t("aiAssistant")}</p>
-              <p className="text-[10px] text-primary-foreground/70">{t("aiPowered")}</p>
+            <div className="mt-3 flex flex-wrap items-center gap-2">
+              <Badge variant="outline" className="rounded-full px-2.5 py-1 text-[10px]">
+                {running ? tr("Live", "مباشر") : tr("Ready", "جاهز")}
+              </Badge>
+              <Badge variant="outline" className="rounded-full px-2.5 py-1 text-[10px]">
+                {tr("Read-only", "للقراءة فقط")}
+              </Badge>
+              <Badge variant="outline" className="rounded-full px-2.5 py-1 text-[10px]">
+                {messageCount} {tr("messages", "رسائل")}
+              </Badge>
             </div>
           </div>
           <div className="flex items-center gap-1">
-            {messages.length > 1 && (
+            {messageCount > 0 ? (
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8 text-primary-foreground/70 hover:bg-primary-foreground/10 hover:text-primary-foreground"
-                onClick={handleClear}
+                className="h-9 w-9 rounded-xl"
+                onClick={onClear}
                 title={tr("Clear chat", "مسح المحادثة")}
               >
-                <Icon name="tabler:trash" className="h-3.5 w-3.5" />
+                <Icon name="tabler:trash" className="h-4 w-4" />
               </Button>
-            )}
+            ) : null}
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8 text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-primary-foreground"
-              onClick={() => setOpen(false)}
+              className="h-9 w-9 rounded-xl"
+              onClick={onToggle}
+              title={tr("Close assistant", "إغلاق المساعد")}
             >
               <Icon name="tabler:x" className="h-4 w-4" />
             </Button>
           </div>
         </div>
-
-        {/* Messages */}
-        <div
-          ref={scrollRef}
-          className="flex-1 overflow-y-auto overflow-x-hidden px-4 py-4 space-y-3"
-          dir={isArabic ? "rtl" : "ltr"}
-        >
-          <div className="rounded-lg border border-blue-500/20 bg-blue-500/5 px-3 py-2 text-xs text-muted-foreground">
-            {t("aiReadOnly")}
-          </div>
-
-          {messages.map((msg) => (
-            <div
-              key={msg.id}
-              className={cn("flex flex-col w-full", msg.role === "user" ? "items-end" : "items-start")}
-            >
-              <div className={cn("flex", msg.role === "user" ? "justify-end" : "justify-start", "w-full")}>
-                {msg.role === "assistant" && (
-                  <div className="me-2 mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/10">
-                    <Icon name="tabler:sparkles" className="h-3.5 w-3.5 text-primary" />
-                  </div>
-                )}
-                <div
-                  className={cn(
-                    "max-w-[82%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed",
-                    msg.role === "user"
-                      ? "bg-primary text-primary-foreground rounded-br-sm"
-                      : "bg-muted text-foreground rounded-bl-sm",
-                  )}
-                >
-                  {msg.content ? (
-                    msg.role === "assistant" ? (
-                      <AiMarkdown content={msg.content} dir={isArabic ? "rtl" : "ltr"} />
-                    ) : (
-                      msg.content
-                    )
-                  ) : (
-                    <span className="inline-flex items-center gap-1 text-muted-foreground">
-                      <span className="h-1.5 w-1.5 rounded-full bg-current animate-bounce [animation-delay:0ms]" />
-                      <span className="h-1.5 w-1.5 rounded-full bg-current animate-bounce [animation-delay:150ms]" />
-                      <span className="h-1.5 w-1.5 rounded-full bg-current animate-bounce [animation-delay:300ms]" />
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              {/* Inline cards below assistant bubble */}
-              {msg.role === "assistant" && msg.cards && msg.cards.length > 0 && (
-                <div className="w-full ps-9 space-y-1">
-                  {msg.cards.map((card, i) => (
-                    <ChatCardRenderer key={i} card={card} />
-                  ))}
-                </div>
-              )}
-            </div>
-          ))}
-
-          {thinking && (
-            <div className="flex justify-start">
-              <div className="me-2 mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/10">
-                <Icon name="tabler:sparkles" className="h-3.5 w-3.5 text-primary" />
-              </div>
-              <div className="rounded-2xl rounded-bl-sm bg-muted px-3.5 py-2.5 text-sm text-muted-foreground">
-                <span className="inline-flex items-center gap-1">
-                  <span className="h-1.5 w-1.5 rounded-full bg-current animate-bounce [animation-delay:0ms]" />
-                  <span className="h-1.5 w-1.5 rounded-full bg-current animate-bounce [animation-delay:150ms]" />
-                  <span className="h-1.5 w-1.5 rounded-full bg-current animate-bounce [animation-delay:300ms]" />
-                </span>
-              </div>
-            </div>
-          )}
-
-          {/* Quick action suggestions — shown on empty state */}
-          {showSuggestions && (
-            <div className="space-y-2.5 pt-1">
-              <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground px-0.5">
-                {tr("Quick Insights", "رؤى سريعة")}
-              </p>
-              <div className="grid grid-cols-2 gap-2">
-                {QUICK_ACTIONS.map((action) => (
-                  <button
-                    key={action.id}
-                    onClick={() => handleQuickAction(action)}
-                    className={cn(
-                      "flex items-start gap-2 rounded-xl border border-border bg-card p-2.5 text-start",
-                      "hover:bg-muted/50 hover:border-primary/30 transition-colors",
-                    )}
-                  >
-                    <Icon name={action.icon} className="h-4 w-4 mt-0.5 text-primary shrink-0" />
-                    <div className="min-w-0">
-                      <p className="text-xs font-medium text-foreground leading-tight">
-                        {isArabic ? action.labelAr : action.label}
-                      </p>
-                      <p className="text-[10px] text-muted-foreground mt-0.5 leading-tight">
-                        {isArabic ? action.descriptionAr : action.description}
-                      </p>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Input */}
-        <div className="border-t border-border p-3">
-          <div className="flex items-end gap-2">
-            <textarea
-              ref={inputRef}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder={t("aiAskPlaceholder")}
-              rows={1}
-              dir={isArabic ? "rtl" : "ltr"}
-              className={cn(
-                "flex-1 resize-none rounded-xl border border-border bg-muted/30 px-3 py-2.5 text-sm",
-                "placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30",
-                "min-h-[42px] max-h-[120px]",
-              )}
-              style={{ overflowY: "auto" }}
-            />
-            <Button
-              size="icon"
-              className="h-[42px] w-[42px] shrink-0"
-              onClick={() => void handleSend()}
-              disabled={!input.trim() || thinking}
-              aria-label={t("aiSend")}
-            >
-              <Icon name={isArabic ? "tabler:send-2" : "tabler:send"} className="h-4 w-4" />
-            </Button>
-          </div>
-          <p className="mt-1.5 text-center text-[10px] text-muted-foreground">
-            {t("aiDataAsOf")} {new Date().toLocaleDateString(locale)}
-          </p>
-        </div>
       </div>
 
-      {open && (
-        <div
-          className="fixed inset-0 z-[65] sm:hidden"
-          onClick={() => setOpen(false)}
-        />
+      {/* Messages */}
+      <ThreadPrimitive.Root className="flex min-h-0 flex-1 flex-col">
+        <ThreadPrimitive.Viewport className="flex min-h-0 flex-1 flex-col overflow-y-auto px-4">
+          <ReadOnlyNotice />
+
+          {/* Welcome message when empty */}
+          <AuiIf condition={({ thread }) => thread.isEmpty}>
+            <AiWelcomeState onPrompt={onPrompt} />
+          </AuiIf>
+
+          <ThreadPrimitive.Messages
+            components={{
+              UserMessage,
+              AssistantMessage,
+            }}
+          />
+
+          <ThreadPrimitive.ViewportFooter className="sticky bottom-0 mt-auto bg-gradient-to-t from-background via-background to-background/60 pt-3">
+            {/* Input */}
+            <AiAssistantComposer />
+          </ThreadPrimitive.ViewportFooter>
+        </ThreadPrimitive.Viewport>
+      </ThreadPrimitive.Root>
+    </div>
+  );
+}
+
+// ── Component ─────────────────────────────────────────────────────────────────
+
+export function AiChatPanel({
+  open,
+  onToggle,
+}: {
+  open: boolean;
+  onToggle: () => void;
+}) {
+  const { locale } = useLocale();
+  const router = useRouter();
+  const lastNavigationRef = useRef<string | null>(null);
+
+  const chat = useChat({
+    transport: useMemo(
+      () => new AssistantChatTransport({ api: "/api/ai/chat", body: { locale } }),
+      [locale],
+    ),
+  });
+
+  const runtime = useAISDKRuntime(chat);
+
+  useEffect(() => {
+    for (const message of chat.messages) {
+      if (message.role !== "assistant") continue;
+      const parts = (message.parts ?? []) as AnyPart[];
+      for (const part of parts) {
+        if (!isToolPart(part)) continue;
+        if (getToolNameFromPart(part) !== "navigateToPage") continue;
+        const result = getToolOutputFromPart(part) as
+          | { navigate?: boolean; path?: string }
+          | undefined;
+        if (!result?.navigate || !result.path) continue;
+        const localizedPath = `/${locale}${result.path}`;
+        if (lastNavigationRef.current === localizedPath) continue;
+        lastNavigationRef.current = localizedPath;
+        router.push(localizedPath);
+      }
+    }
+  }, [chat.messages, locale, router]);
+
+  const clearChat = () => {
+    chat.setMessages([]);
+    lastNavigationRef.current = null;
+  };
+
+  const prompt = (text: string) => {
+    void chat.sendMessage({ text });
+  };
+
+  return (
+    <>
+      {/* Desktop panel - takes space in layout and stays sticky */}
+      <aside
+        className={cn(
+          "sticky top-0 hidden h-screen shrink-0 flex-col border-l border-border/70 bg-background/95 shadow-lg backdrop-blur-xl transition-all duration-300 ease-in-out lg:flex",
+          open ? "w-[400px] opacity-100" : "w-0 opacity-0 overflow-hidden"
+        )}
+      >
+        <AssistantRuntimeProvider runtime={runtime}>
+          <AiPanelBody
+            open={open}
+            onToggle={onToggle}
+            status={chat.status}
+            messageCount={chat.messages.length}
+            onClear={clearChat}
+            onPrompt={prompt}
+          />
+        </AssistantRuntimeProvider>
+      </aside>
+
+      {/* Mobile fixed panel (overlay only on mobile) */}
+      {open ? (
+        <>
+          <div
+            className="fixed inset-0 z-[55] bg-black/35 lg:hidden"
+            onClick={onToggle}
+          />
+          <aside className="fixed inset-y-0 right-0 z-[60] w-full max-w-[400px] border-l border-border/70 bg-background shadow-2xl lg:hidden">
+            <AssistantRuntimeProvider runtime={runtime}>
+              <AiPanelBody
+                open={open}
+                onToggle={onToggle}
+                status={chat.status}
+                messageCount={chat.messages.length}
+                onClear={clearChat}
+                onPrompt={prompt}
+              />
+            </AssistantRuntimeProvider>
+          </aside>
+        </>
+      ) : null}
+
+      {/* Floating toggle button - visible when closed on desktop */}
+      {!open && (
+        <button
+          onClick={onToggle}
+          className={cn(
+            "fixed z-[50] flex h-12 w-12 items-center justify-center",
+            "rounded-full bg-primary text-primary-foreground shadow-lg",
+            "hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary/50",
+            "transition-all duration-300 ease-in-out",
+            "right-6 bottom-6 lg:right-8 lg:bottom-8"
+          )}
+          title="AI Assistant"
+        >
+          <Icon name="tabler:message-chatbot" className="h-6 w-6" />
+        </button>
       )}
     </>
   );

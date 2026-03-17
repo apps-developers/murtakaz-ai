@@ -238,6 +238,7 @@ export function AppShell({ children, showLogo = true }: { children: React.ReactN
   const [sidebarPinned, setSidebarPinned] = useState(false);
   const [sidebarHovered, setSidebarHovered] = useState(false);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [chatOpen, setChatOpen] = useState(true);
 
   useEffect(() => {
     setMounted(true);
@@ -608,9 +609,10 @@ export function AppShell({ children, showLogo = true }: { children: React.ReactN
           </aside>
         ) : null}
 
-        <div className="flex min-w-0 flex-1 flex-col">
-          {!isAuthRoute && <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
-            <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3 lg:max-w-none">
+        <div className="flex min-w-0 flex-1">
+          <div className="flex min-w-0 flex-1 flex-col">
+            {!isAuthRoute && <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
+              <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3 lg:max-w-none">
               {isMarketingRoute ? (
                 <div className="flex items-center gap-6">
                   <Link href={`/${locale}`} className="flex items-center gap-3">
@@ -651,6 +653,19 @@ export function AppShell({ children, showLogo = true }: { children: React.ReactN
               )}
 
               <div className="flex items-center gap-3">
+                {showAppNav && aiEnabled ? (
+                  <Button
+                    variant={chatOpen ? "secondary" : "ghost"}
+                    className="hidden lg:inline-flex"
+                    onClick={() => setChatOpen((value) => !value)}
+                  >
+                    <Icon
+                      name={chatOpen ? "tabler:panel-right-close" : "tabler:panel-right-open"}
+                      className="me-2 h-4 w-4"
+                    />
+                    {t("aiAssistant")}
+                  </Button>
+                ) : null}
                 {showAppNav && userRole !== "SUPER_ADMIN" ? (
                   <Button
                     variant="ghost"
@@ -708,15 +723,18 @@ export function AppShell({ children, showLogo = true }: { children: React.ReactN
                   </Button>
                 )}
               </div>
-            </div>
-          </header>}
+              </div>
+            </header>}
 
-          <main className={isAuthRoute ? "contents" : "relative mx-auto grid w-full max-w-7xl gap-6 px-6 pb-12 pt-8 lg:px-8"}>
-            {children}
-          </main>
+            <main className={isAuthRoute ? "contents" : "relative mx-auto grid w-full max-w-7xl gap-6 px-6 pb-12 pt-8 lg:max-w-none lg:px-8"}>
+              {children}
+            </main>
+          </div>
+
+          {showAppNav && aiEnabled ? (
+            <AiChatPanel open={chatOpen} onToggle={() => setChatOpen((value) => !value)} />
+          ) : null}
         </div>
-
-        {showAppNav && aiEnabled ? <AiChatPanel /> : null}
       </div>
     </div>
   );
