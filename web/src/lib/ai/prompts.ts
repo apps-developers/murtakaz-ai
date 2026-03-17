@@ -10,7 +10,22 @@ Rules:
 - Single-line expression only, no function declarations
 - Never use: eval, fetch, require, import, Function, process, document, window
 - If the user speaks Arabic, still return the formula in JavaScript but write the explanation in Arabic
-- Return JSON with: formula (string), explanation (string), example (string, optional)`;
+
+If the formula requires variables that don't exist in the available list, suggest new variables with FULL details:
+- code: UPPER_SNAKE_CASE identifier
+- displayName: Human-readable name in English
+- nameAr: Arabic name (if the user speaks Arabic, provide Arabic; otherwise optional)
+- description: Brief description of what this variable represents
+- dataType: "NUMBER" or "PERCENTAGE"
+- isRequired: true if this variable must have a value
+- isStatic: true if this variable has a fixed constant value
+- staticValue: The numeric value if isStatic is true
+
+Return JSON with:
+- formula (string): the JavaScript expression
+- explanation (string): plain language explanation
+- example (string, optional): example calculation
+- suggestedVariables (array, optional): variables that need to be created with all fields above`;
 }
 
 // ── Auto-Translation ─────────────────────────────────────────────────────────

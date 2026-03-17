@@ -315,36 +315,38 @@ export default function NewEntityPage() {
 
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="entity-title">{t("name")}</Label>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="entity-title">{t("name")}</Label>
+                  {aiEnabled && titleAr?.trim() && (
+                    <AiTranslateButton
+                      fields={{ title, titleAr, description, descriptionAr, unit, unitAr }}
+                      direction="ar_to_en"
+                      hasExisting={!!title}
+                      onTranslated={(res) => {
+                        if ("title" in res && res.title) setTitle(res.title);
+                        if ("description" in res && res.description) setDescription(res.description);
+                        if ("unit" in res && res.unit) setUnit(res.unit);
+                      }}
+                    />
+                  )}
+                </div>
                 <Input id="entity-title" value={title} onChange={(e) => setTitle(e.target.value)} required className="bg-card" />
               </div>
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <Label htmlFor="entity-title-ar">{t("nameAr")}</Label>
-                  {aiEnabled ? (
-                    <div className="flex gap-1">
-                      <AiTranslateButton
-                        fields={{ title, titleAr, description, descriptionAr, unit, unitAr }}
-                        direction="ar_to_en"
-                        hasExisting={!!title || !!description}
-                        onTranslated={(res) => {
-                          if ("title" in res && res.title) setTitle(res.title);
-                          if ("description" in res && res.description) setDescription(res.description);
-                          if ("unit" in res && res.unit) setUnit(res.unit);
-                        }}
-                      />
-                      <AiTranslateButton
-                        fields={{ title, titleAr, description, descriptionAr, unit, unitAr }}
-                        direction="en_to_ar"
-                        hasExisting={!!titleAr || !!descriptionAr || !!unitAr}
-                        onTranslated={(res) => {
-                          if ("titleAr" in res && res.titleAr) setTitleAr(res.titleAr);
-                          if ("descriptionAr" in res && res.descriptionAr) setDescriptionAr(res.descriptionAr);
-                          if ("unitAr" in res && res.unitAr) setUnitAr(res.unitAr);
-                        }}
-                      />
-                    </div>
-                  ) : null}
+                  {aiEnabled && title?.trim() && (
+                    <AiTranslateButton
+                      fields={{ title, titleAr, description, descriptionAr, unit, unitAr }}
+                      direction="en_to_ar"
+                      hasExisting={!!titleAr}
+                      onTranslated={(res) => {
+                        if ("titleAr" in res && res.titleAr) setTitleAr(res.titleAr);
+                        if ("descriptionAr" in res && res.descriptionAr) setDescriptionAr(res.descriptionAr);
+                        if ("unitAr" in res && res.unitAr) setUnitAr(res.unitAr);
+                      }}
+                    />
+                  )}
                 </div>
                 <Input id="entity-title-ar" value={titleAr} onChange={(e) => setTitleAr(e.target.value)} className="bg-card" />
               </div>
@@ -670,7 +672,29 @@ export default function NewEntityPage() {
                     {aiEnabled ? (
                       <AiFormulaBuilder
                         variables={variables.map((v) => ({ code: v.code, displayName: v.displayName }))}
-                        onInsert={(f) => setFormula((prev) => prev ? prev + "\n" + f : f)}
+                        onInsert={(f, suggestedVars) => {
+                          setFormula((prev) => (prev ? prev + "\n" + f : f));
+                          // Add AI-suggested variables to the form
+                          if (suggestedVars && suggestedVars.length > 0) {
+                            setVariables((prev) => {
+                              const existingCodes = new Set(prev.map((v) => v.code.toUpperCase()));
+                              const newVars = suggestedVars
+                                .filter((sv) => !existingCodes.has(sv.code.toUpperCase()))
+                                .map((sv) => ({
+                                  tempId: makeTempId(),
+                                  code: sv.code,
+                                  displayName: sv.displayName,
+                                  nameAr: sv.nameAr ?? "",
+                                  dataType: sv.dataType as VariableDataTypeCode,
+                                  isRequired: sv.isRequired ?? false,
+                                  isStatic: sv.isStatic ?? false,
+                                  staticValue: sv.staticValue?.toString() ?? "",
+                                  testValue: "",
+                                }));
+                              return [...prev, ...newVars];
+                            });
+                          }
+                        }}
                       />
                     ) : null}
                   </div>

@@ -25,7 +25,12 @@ type Variable = {
 type SuggestedVariable = {
   code: string;
   displayName: string;
+  nameAr?: string;
+  description?: string;
   dataType: "NUMBER" | "PERCENTAGE";
+  isRequired?: boolean;
+  isStatic?: boolean;
+  staticValue?: number;
 };
 
 type Props = {
@@ -197,16 +202,34 @@ export function AiFormulaBuilder({ variables = [], onInsert }: Props) {
               {result.suggestedVariables && result.suggestedVariables.length > 0 && (
                 <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-3 space-y-2">
                   <p className="text-xs font-semibold text-amber-700 dark:text-amber-400 uppercase tracking-wider">
-                    {tr("Suggested Variables", "متغيرات مقترحة")}
+                    {tr("Suggested Variables", "متغيرات مقترحة")} ({result.suggestedVariables.length})
                   </p>
-                  <div className="space-y-1">
+                  <div className="space-y-2">
                     {result.suggestedVariables.map((sv) => (
-                      <div key={sv.code} className="flex items-center gap-2 text-xs">
-                        <code className="rounded-md border border-border bg-background px-1.5 py-0.5 font-mono text-[11px]">
-                          {sv.code}
-                        </code>
-                        <span className="text-muted-foreground">{sv.displayName}</span>
-                        <span className="text-[10px] text-muted-foreground/60">[{sv.dataType}]</span>
+                      <div key={sv.code} className="rounded-md border border-border/50 bg-background/50 p-2 space-y-1">
+                        <div className="flex items-center gap-2 text-xs">
+                          <code className="rounded-md border border-border bg-background px-1.5 py-0.5 font-mono text-[11px]">
+                            {sv.code}
+                          </code>
+                          <span className="font-medium">{sv.displayName}</span>
+                          <span className="text-[10px] text-muted-foreground/60">[{sv.dataType}]</span>
+                          {sv.isRequired && (
+                            <span className="text-[10px] text-red-500 font-medium">{tr("Required", "مطلوب")}</span>
+                          )}
+                          {sv.isStatic && (
+                            <span className="text-[10px] text-blue-500 font-medium">{tr("Static", "ثابت")}={sv.staticValue}</span>
+                          )}
+                        </div>
+                        {sv.nameAr && (
+                          <div className="text-[11px] text-muted-foreground text-right" dir="rtl">
+                            {sv.nameAr}
+                          </div>
+                        )}
+                        {sv.description && (
+                          <div className="text-[11px] text-muted-foreground">
+                            {sv.description}
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>

@@ -42,7 +42,12 @@ export async function POST(req: NextRequest) {
         suggestedVariables: z.array(z.object({
           code: z.string().describe("Variable code (UPPER_SNAKE_CASE)"),
           displayName: z.string().describe("Human-readable name for the variable"),
+          nameAr: z.string().optional().describe("Arabic name for the variable (if applicable)"),
+          description: z.string().optional().describe("Brief description of what this variable represents"),
           dataType: z.enum(["NUMBER", "PERCENTAGE"]).describe("Variable data type"),
+          isRequired: z.boolean().optional().describe("Whether this variable is required"),
+          isStatic: z.boolean().optional().describe("Whether this variable has a fixed/static value"),
+          staticValue: z.number().optional().describe("The static value if isStatic is true"),
         })).optional().describe("New variables needed for this formula that don't already exist"),
       }),
     });
