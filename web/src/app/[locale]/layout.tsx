@@ -24,7 +24,7 @@ export default async function RootLayout({
   const showLogo = !hideLogo;
 
   return (
-    <html lang={locale} dir={dir}>
+    <html lang={locale} dir={dir} suppressHydrationWarning>
       <head>
         <script
           dangerouslySetInnerHTML={{
