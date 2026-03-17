@@ -20,6 +20,7 @@ import { createOrgEntity, getOrgEntitiesByTypeCode, getOrgOwnerOptions, testOrgE
 import { EntitySelectorModal } from "@/components/entity-selector-modal";
 import { AiFormulaBuilder } from "@/components/ai/ai-formula-builder";
 import { AiTranslateButton } from "@/components/ai/ai-translate-button";
+import { AiDescribeModal } from "@/components/ai/ai-describe-modal";
 import { useAiEnabled } from "@/lib/ai-features";
 
 type EntityTypeRow = Awaited<ReturnType<typeof getOrgEntitiesByTypeCode>>["entityType"];
@@ -321,15 +322,28 @@ export default function NewEntityPage() {
                 <div className="flex items-center justify-between">
                   <Label htmlFor="entity-title-ar">{t("nameAr")}</Label>
                   {aiEnabled ? (
-                    <AiTranslateButton
-                      fields={{ title, description, unit }}
-                      hasExistingAr={!!titleAr || !!descriptionAr}
-                      onTranslated={(res) => {
-                        if (res.titleAr) setTitleAr(res.titleAr);
-                        if (res.descriptionAr) setDescriptionAr(res.descriptionAr);
-                        if (res.unitAr) setUnitAr(res.unitAr);
-                      }}
-                    />
+                    <div className="flex gap-1">
+                      <AiTranslateButton
+                        fields={{ title, titleAr, description, descriptionAr, unit, unitAr }}
+                        direction="ar_to_en"
+                        hasExisting={!!title || !!description}
+                        onTranslated={(res) => {
+                          if ("title" in res && res.title) setTitle(res.title);
+                          if ("description" in res && res.description) setDescription(res.description);
+                          if ("unit" in res && res.unit) setUnit(res.unit);
+                        }}
+                      />
+                      <AiTranslateButton
+                        fields={{ title, titleAr, description, descriptionAr, unit, unitAr }}
+                        direction="en_to_ar"
+                        hasExisting={!!titleAr || !!descriptionAr || !!unitAr}
+                        onTranslated={(res) => {
+                          if ("titleAr" in res && res.titleAr) setTitleAr(res.titleAr);
+                          if ("descriptionAr" in res && res.descriptionAr) setDescriptionAr(res.descriptionAr);
+                          if ("unitAr" in res && res.unitAr) setUnitAr(res.unitAr);
+                        }}
+                      />
+                    </div>
                   ) : null}
                 </div>
                 <Input id="entity-title-ar" value={titleAr} onChange={(e) => setTitleAr(e.target.value)} className="bg-card" />
@@ -382,7 +396,18 @@ export default function NewEntityPage() {
 
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="entity-desc">{t("description")}</Label>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="entity-desc">{t("description")}</Label>
+                  {aiEnabled ? (
+                    <AiDescribeModal
+                      title={title}
+                      onAccept={(desc, descAr) => {
+                        if (desc) setDescription(desc);
+                        if (descAr) setDescriptionAr(descAr);
+                      }}
+                    />
+                  ) : null}
+                </div>
                 <Textarea id="entity-desc" value={description} onChange={(e) => setDescription(e.target.value)} className="bg-card" />
               </div>
               <div className="space-y-2">

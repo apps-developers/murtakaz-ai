@@ -43,6 +43,8 @@ import {
   getEntityAttachments,
   type EntityAttachment,
 } from "@/actions/entity-attachments";
+import { AiKpiExplainer } from "@/components/ai/ai-kpi-explainer";
+import { useAiEnabled } from "@/lib/ai-features";
 
 type EntityDetail = Awaited<ReturnType<typeof getOrgEntityDetail>>;
 
@@ -102,6 +104,7 @@ export default function EntityDetailPage() {
   const router = useRouter();
   const { user, loading: sessionLoading } = useAuth();
   const { locale, t, tr, df, formatNumber, te, kpiValueStatusLabel } = useLocale();
+  const aiEnabled = useAiEnabled();
 
   const userRole = typeof (user as unknown as { role?: unknown })?.role === "string" ? String((user as unknown as { role?: unknown })?.role) : undefined;
   const canAdmin = userRole === "ADMIN";
@@ -707,6 +710,10 @@ export default function EntityDetailPage() {
             <p className="text-sm text-muted-foreground whitespace-pre-line">{df(entity.description, entity.descriptionAr)}</p>
           </CardContent>
         </Card>
+      ) : null}
+
+      {aiEnabled && entity.id ? (
+        <AiKpiExplainer entityId={entity.id} />
       ) : null}
 
       <div className="grid gap-6 lg:grid-cols-3">

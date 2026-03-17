@@ -13,6 +13,7 @@ import { useLocale } from "@/providers/locale-provider";
 import { getDashboardInsights } from "@/actions/insights";
 import { statusColorForAchievement } from "@/lib/rag";
 import { AiGenerateSummaryModal } from "@/components/ai/ai-generate-summary-modal";
+import { AiChartGenerator } from "@/components/ai/ai-chart-generator";
 import { useAiEnabled } from "@/lib/ai-features";
 import { dashboards } from "@/lib/dashboards";
 import { clamp } from "@/lib/utils";
@@ -325,6 +326,12 @@ export default function DashboardsPage() {
           </CardContent>
         </Card>
       </section>
+
+      {aiEnabled && (
+        <section>
+          <AiChartGenerator />
+        </section>
+      )}
 
       <section>
         <Card className="bg-card/70 backdrop-blur shadow-sm">

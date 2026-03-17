@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/icon";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Dialog,
@@ -21,44 +22,56 @@ type Variable = {
   displayName: string;
 };
 
+type SuggestedVariable = {
+  code: string;
+  displayName: string;
+  dataType: "NUMBER" | "PERCENTAGE";
+};
+
 type Props = {
   variables?: Variable[];
-  onInsert: (formula: string) => void;
+  onInsert: (formula: string, suggestedVariables?: SuggestedVariable[]) => void;
 };
 
 type GeneratedResult = {
   formula: string;
   explanation: string;
   example?: string;
+  suggestedVariables?: SuggestedVariable[];
 };
 
 export function AiFormulaBuilder({ variables = [], onInsert }: Props) {
-  const { t, isArabic } = useLocale();
+  const { t, tr, isArabic } = useLocale();
   const [open, setOpen] = useState(false);
   const [description, setDescription] = useState("");
+  const [refinement, setRefinement] = useState("");
   const [generating, setGenerating] = useState(false);
   const [result, setResult] = useState<GeneratedResult | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  async function handleGenerate() {
-    const text = description.trim();
+  async function handleGenerate(refineText?: string) {
+    const text = refineText?.trim() || description.trim();
     if (!text) return;
 
     setGenerating(true);
-    setResult(null);
     setError(null);
 
     try {
       const res = await fetch("/api/ai/formula", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ description: text, variables }),
+        body: JSON.stringify({
+          description: text,
+          variables,
+          previousFormula: result?.formula || undefined,
+        }),
       });
 
       if (!res.ok) throw new Error("ai_error");
 
       const data = (await res.json()) as GeneratedResult;
       setResult(data);
+      setRefinement("");
     } catch {
       setError(t("aiUnavailable"));
     } finally {
@@ -68,9 +81,10 @@ export function AiFormulaBuilder({ variables = [], onInsert }: Props) {
 
   function handleInsert() {
     if (!result?.formula) return;
-    onInsert(result.formula);
+    onInsert(result.formula, result.suggestedVariables);
     setOpen(false);
     setDescription("");
+    setRefinement("");
     setResult(null);
   }
 
@@ -78,6 +92,7 @@ export function AiFormulaBuilder({ variables = [], onInsert }: Props) {
     setOpen(val);
     if (!val) {
       setDescription("");
+      setRefinement("");
       setResult(null);
       setError(null);
       setGenerating(false);
@@ -122,17 +137,19 @@ export function AiFormulaBuilder({ variables = [], onInsert }: Props) {
             </div>
           )}
 
-          <div className="space-y-2">
-            <Label>{t("aiDescribeFormula")}</Label>
-            <Textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder={t("aiDescribeFormulaPlaceholder")}
-              rows={3}
-              dir={isArabic ? "rtl" : "ltr"}
-              className="bg-card resize-none"
-            />
-          </div>
+          {!result && (
+            <div className="space-y-2">
+              <Label>{t("aiDescribeFormula")}</Label>
+              <Textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder={t("aiDescribeFormulaPlaceholder")}
+                rows={3}
+                dir={isArabic ? "rtl" : "ltr"}
+                className="bg-card resize-none"
+              />
+            </div>
+          )}
 
           {error && (
             <div className="rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
@@ -177,14 +194,65 @@ export function AiFormulaBuilder({ variables = [], onInsert }: Props) {
                 </div>
               )}
 
+              {result.suggestedVariables && result.suggestedVariables.length > 0 && (
+                <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-3 space-y-2">
+                  <p className="text-xs font-semibold text-amber-700 dark:text-amber-400 uppercase tracking-wider">
+                    {tr("Suggested Variables", "متغيرات مقترحة")}
+                  </p>
+                  <div className="space-y-1">
+                    {result.suggestedVariables.map((sv) => (
+                      <div key={sv.code} className="flex items-center gap-2 text-xs">
+                        <code className="rounded-md border border-border bg-background px-1.5 py-0.5 font-mono text-[11px]">
+                          {sv.code}
+                        </code>
+                        <span className="text-muted-foreground">{sv.displayName}</span>
+                        <span className="text-[10px] text-muted-foreground/60">[{sv.dataType}]</span>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-[10px] text-muted-foreground">
+                    {tr("These variables will be created when you insert the formula.", "سيتم إنشاء هذه المتغيرات عند إدراج المعادلة.")}
+                  </p>
+                </div>
+              )}
+
+              <div className="flex items-center gap-2">
+                <Input
+                  value={refinement}
+                  onChange={(e) => setRefinement(e.target.value)}
+                  placeholder={tr("Refine: e.g. use percentage instead…", "تحسين: مثلاً استخدم النسبة المئوية…")}
+                  dir={isArabic ? "rtl" : "ltr"}
+                  className="bg-card text-sm"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !generating && refinement.trim()) {
+                      void handleGenerate(refinement);
+                    }
+                  }}
+                />
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  onClick={() => void handleGenerate(refinement)}
+                  disabled={generating || !refinement.trim()}
+                  className="shrink-0"
+                >
+                  {generating ? (
+                    <Icon name="tabler:loader-2" className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Icon name="tabler:refresh" className="h-4 w-4" />
+                  )}
+                </Button>
+              </div>
+
               <div className="flex items-center justify-end gap-2 pt-1">
                 <Button
                   type="button"
-                  variant="outline"
+                  variant="ghost"
                   size="sm"
-                  onClick={() => { setResult(null); setError(null); }}
+                  onClick={() => { setResult(null); setError(null); setDescription(""); }}
                 >
-                  {t("aiTryAgain")}
+                  {tr("Start Over", "البدء من جديد")}
                 </Button>
                 <Button type="button" size="sm" onClick={handleInsert}>
                   <Icon name="tabler:code-plus" className="me-2 h-4 w-4" />
