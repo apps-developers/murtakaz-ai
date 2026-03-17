@@ -544,14 +544,26 @@ function ToolStatusRow({
   );
 }
 
+// Helper to detect if text is Arabic/RTL based on first significant character
+function detectRtl(text: string): boolean {
+  // Find first letter character (skip spaces, numbers, punctuation)
+  const match = text.match(/[\p{L}]/u);
+  if (!match) return false;
+  const char = match[0];
+  // Arabic, Hebrew, Persian, Urdu ranges
+  const rtlRegex = /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\u0590-\u05FF\uFB50-\uFDFF\uFE70-\uFEFF]/;
+  return rtlRegex.test(char);
+}
+
 function MarkdownMessagePart() {
-  const { isArabic } = useLocale();
   const part = useMessagePartText();
-  return <AiMarkdown content={part.text ?? ""} dir={isArabic ? "rtl" : "ltr"} />;
+  const text = part.text ?? "";
+  const isRtl = detectRtl(text);
+  return <AiMarkdown content={text} dir={isRtl ? "rtl" : "ltr"} />;
 }
 
 function ReasoningPart() {
-  const { tr, isArabic } = useLocale();
+  const { tr } = useLocale();
   const part = useMessagePartReasoning();
   const active = part.status?.type === "running";
   const hasText = (part.text?.length ?? 0) > 0;
@@ -572,6 +584,10 @@ function ReasoningPart() {
 
   // Don't show if there's no reasoning text and not running
   if (!hasText && !active) return null;
+
+  // Auto-detect RTL for reasoning text
+  const reasoningText = part.text ?? "";
+  const isRtl = detectRtl(reasoningText);
 
   return (
     <div className="mb-2 rounded-lg border border-border/50 bg-muted/20 opacity-80 transition-opacity hover:opacity-100">
@@ -612,8 +628,8 @@ function ReasoningPart() {
         <div className="border-t border-border/40 px-2.5 py-2">
           <div className="max-h-40 overflow-y-auto text-muted-foreground/80">
             <AiMarkdown
-              content={part.text ?? ""}
-              dir={isArabic ? "rtl" : "ltr"}
+              content={reasoningText}
+              dir={isRtl ? "rtl" : "ltr"}
             />
           </div>
         </div>
@@ -897,6 +913,8 @@ export function AiChatPanel({
   const { locale } = useLocale();
   const router = useRouter();
   const lastNavigationRef = useRef<string | null>(null);
+  const storageKey = "ai-chat-messages";
+  const loadedRef = useRef(false);
 
   const chat = useChat({
     transport: useMemo(
@@ -904,6 +922,30 @@ export function AiChatPanel({
       [locale],
     ),
   });
+
+  // Load messages from localStorage on mount
+  useEffect(() => {
+    if (loadedRef.current) return;
+    loadedRef.current = true;
+    if (typeof window === "undefined") return;
+    try {
+      const saved = localStorage.getItem(storageKey);
+      if (saved) {
+        const messages = JSON.parse(saved);
+        if (Array.isArray(messages) && messages.length > 0) {
+          chat.setMessages(messages);
+        }
+      }
+    } catch { /* ignore */ }
+  }, [chat]);
+
+  // Save messages to localStorage whenever they change
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(chat.messages));
+    } catch { /* ignore */ }
+  }, [chat.messages]);
 
   const runtime = useAISDKRuntime(chat);
 

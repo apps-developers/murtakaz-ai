@@ -238,7 +238,11 @@ export function AppShell({ children, showLogo = true }: { children: React.ReactN
   const [sidebarPinned, setSidebarPinned] = useState(false);
   const [sidebarHovered, setSidebarHovered] = useState(false);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
-  const [chatOpen, setChatOpen] = useState(true);
+  const [chatOpen, setChatOpen] = useState(() => {
+    if (typeof window === "undefined") return true;
+    const saved = localStorage.getItem("ai-chat-open");
+    return saved === null ? true : saved === "true";
+  });
 
   useEffect(() => {
     setMounted(true);
@@ -262,8 +266,10 @@ export function AppShell({ children, showLogo = true }: { children: React.ReactN
   }, [canonicalPath, locale, router, showAppNav, userRole]);
 
   useEffect(() => {
-    setMobileNavOpen(false);
-  }, [canonicalPath]);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("ai-chat-open", String(chatOpen));
+    }
+  }, [chatOpen]);
 
   useEffect(() => {
     setSidebarPinned(false);
