@@ -13,19 +13,19 @@ const BRIEFS: Record<BriefType, { en: string; ar: string }> = {
 
 ### 3 Things Going Well ✅
 1. **Overall health improved** — Organization health score reached 72% this quarter (up from 64% in Q4)
-2. **Revenue Growth KPI is at 91%** — exceeding the 85% target by 6pp; strongest performance in 3 years
-3. **Approval compliance** — 89% of KPI values submitted on time this month, up from 74% last quarter
+2. **Revenue Growth is at 91%** — exceeding the 85% target by 6pp; strongest performance in 3 years
+3. **Approval compliance** — 89% of values submitted on time this month, up from 74% last quarter
 
 ### 3 Things to Discuss ⚠️
 1. **People & Culture at 48%** — Employee Retention dropped to 41%, lowest in 12 months; HR action plan needed
-2. **12 KPIs with no data** — Data freshness is the #1 governance risk; owners have not submitted for current period
+2. **12 indicators with no data** — Data freshness is the #1 governance risk; owners have not submitted for current period
 3. **4 critical risks open** — 2 have been open for 30+ days with no recorded mitigation action
 
 ### Key Question for the Board
 *"What strategic interventions will close the gap between our strong financial performance and declining people metrics before Q2?"*
 
 ---
-*AI-generated from approved KPI data — verify figures before the meeting*`,
+*AI-generated from approved data — verify figures before the meeting*`,
 
     ar: `## ملخص تحضيري: اجتماع مجلس الإدارة
 ### التاريخ: ${new Date().toLocaleDateString("ar-SA", { day: "numeric", month: "long", year: "numeric" })}
@@ -59,19 +59,19 @@ const BRIEFS: Record<BriefType, { en: string; ar: string }> = {
 
 ### 3 Things Going Well ✅
 1. **Process Cycle Time at 88%** — best performance in 6 months; down from 8.2 to 5.1 days average
-2. **All 4 monthly KPIs submitted on time** — 100% reporting compliance this month
+2. **All 4 monthly metrics submitted on time** — 100% reporting compliance this month
 3. **Risk 'Equipment failure' closed** — mitigation completed successfully last week
 
 ### 3 Things to Discuss ⚠️
 1. **Cost Efficiency dropped 4pp** (82% → 78%) — is this a one-time variance or a trend?
-2. **2 KPIs have no baseline** — makes target comparison unreliable; needs historical data input
-3. **Project 'Automation Phase 2'** — milestone 3 of 5 is 8 days overdue; blocking dependent KPIs
+2. **2 indicators have no baseline** — makes target comparison unreliable; needs historical data input
+3. **Project 'Automation Phase 2'** — milestone 3 of 5 is 8 days overdue; blocking dependent metrics
 
 ### Key Question for the Team
 *"What specific actions will bring Cost Efficiency back above 80% by end of Q2?"*
 
 ---
-*AI-generated from approved KPI data — verify figures before the meeting*`,
+*AI-generated from approved data — verify figures before the meeting*`,
 
     ar: `## ملخص تحضيري: مراجعة الإدارة
 ### النطاق: إدارة العمليات
@@ -111,7 +111,7 @@ const BRIEFS: Record<BriefType, { en: string; ar: string }> = {
 ### 3 Things to Discuss ⚠️
 1. **Milestone 7 is BLOCKED** — pending decision on cloud provider selection; 12 days delayed so far
 2. **Risk 'Integration complexity'** — rated HIGH severity; no mitigation plan documented yet
-3. **KPI 'System Uptime'** — dropped to 94% (target: 99.5%) following the Phase 2 deployment
+3. **'System Uptime' metric** — dropped to 94% (target: 99.5%) following the Phase 2 deployment
 
 ### Key Question for the Team
 *"What is the decision-making timeline for the cloud provider selection, and who has the authority to unblock Milestone 7?"*
@@ -150,20 +150,20 @@ const BRIEFS: Record<BriefType, { en: string; ar: string }> = {
 ---
 
 ### Wins to Acknowledge ✅
-1. **100% on-time submissions** — all 8 assigned KPIs submitted before deadline this month
+1. **100% on-time submissions** — all 8 assigned indicators submitted before deadline this month
 2. **Process Cycle Time improved** — went from 7.1 to 5.1 days (target: ≤ 5 days — almost there!)
 3. **Quality Rate at 93%** — consistently above the 90% target for 3 months running
 
 ### Topics to Discuss ⚠️
 1. **Customer Satisfaction at 72%** — below the 80% target; what is the root cause?
-2. **KPI 'Training Hours'** — submitted at 12 hours vs. 30-hour historical average; is there an issue with the team's development time?
-3. **Upcoming deadline** — 2 quarterly KPIs are due in 8 days; confirm data is ready
+2. **'Training Hours' metric** — submitted at 12 hours vs. 30-hour historical average; is there an issue with the team's development time?
+3. **Upcoming deadline** — 2 quarterly indicators are due in 8 days; confirm data is ready
 
 ### Coaching Question
-*"You're consistently meeting operational KPIs — what would it take to close the gap on the customer-facing metrics in Q2?"*
+*"You're consistently meeting operational indicators — what would it take to close the gap on the customer-facing metrics in Q2?"*
 
 ---
-*AI-generated from approved KPI data — adapt based on your direct knowledge of this manager*`,
+*AI-generated from approved data — adapt based on your direct knowledge of this manager*`,
 
     ar: `## ملخص تحضيري: اجتماع فردي مع مدير
 ### المدير: أحمد الراشد | إدارة العمليات

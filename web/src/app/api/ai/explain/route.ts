@@ -26,8 +26,8 @@ export async function POST(req: NextRequest) {
   const isArabic = locale === "ar";
 
   const system = isArabic
-    ? `أنت مساعد ذكي في منصة إدارة مؤشرات الأداء "رافد". اشرح مؤشر الأداء التالي بشكل موجز ومهني. اشرح ما يقيسه هذا المؤشر، وأهميته، وموقعه في الهيكل التنظيمي. استخدم العربية الفصحى.`
-    : `You are a KPI expert in the "Rafed" performance management platform. Explain the following KPI concisely and professionally. Cover what it measures, why it matters, its position in the organizational structure, and any notable trends from recent values. Keep it under 200 words.`;
+    ? `أنت مساعد ذكي في منصة إدارة مؤشرات الأداء "رافد". اشرح المؤشر التالي بشكل موجز ومهني. اشرح ما يقيسه هذا المؤشر، وأهميته، وموقعه في الهيكل التنظيمي. استخدم العربية الفصحى.`
+    : `You are a performance expert in the "Rafed" performance management platform. Explain the following indicator concisely and professionally. Cover what it measures, why it matters, its position in the organizational structure, and any notable trends from recent values. Keep it under 200 words.`;
 
   try {
     const result = streamText({

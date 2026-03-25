@@ -23,7 +23,7 @@ export function createAgentTools(orgId: string, userId: string, role: string) {
     // ── 1. Organization Overview ───────────────────────────────────────────
     getOrgOverview: tool({
       description:
-        "Get overall organization health: KPI counts by RAG status, overall health score, pending approvals, stale KPIs count. Use this when user asks about organization health, overall performance, or dashboard summary.",
+        "Get overall organization health: entity counts by RAG status, overall health score, pending approvals, stale entity count. Use this when user asks about organization health, overall performance, or dashboard summary.",
       inputSchema: zodSchema(z.object({})),
       execute: async () => {
         const where = await scopedEntityWhere(orgId, userId, role);
@@ -41,7 +41,7 @@ export function createAgentTools(orgId: string, userId: string, role: string) {
         });
 
         let green = 0, amber = 0, red = 0, noData = 0;
-        const staleKpis: string[] = [];
+        const staleEntities: string[] = [];
         const now = new Date();
 
         for (const e of entities) {
@@ -52,7 +52,7 @@ export function createAgentTools(orgId: string, userId: string, role: string) {
           else if (ach >= 60) amber++;
           else red++;
           const days = Math.floor((now.getTime() - v.createdAt.getTime()) / 86400000);
-          if (days > 30) staleKpis.push(e.title);
+          if (days > 30) staleEntities.push(e.title);
         }
 
         const total = entities.length;
@@ -80,19 +80,19 @@ export function createAgentTools(orgId: string, userId: string, role: string) {
           noData,
           overallHealth,
           pendingApprovals,
-          staleKpisCount: staleKpis.length,
-          staleKpiNames: staleKpis.slice(0, 10),
+          staleEntitiesCount: staleEntities.length,
+          staleEntityNames: staleEntities.slice(0, 10),
         };
       },
     }),
 
-    // ── 2. List KPIs ──────────────────────────────────────────────────────
-    getKpiList: tool({
+    // ── 2. List Entities ──────────────────────────────────────────────────────
+    getEntityList: tool({
       description:
-        "List KPIs with optional filters. Returns title, achievement, status, target, unit for each. Use when user asks to list KPIs, filter by status/type, or find specific KPIs.",
+        "List entities with optional filters. Returns title, achievement, status, target, unit for each. Use when user asks to list entities, filter by status/type, or find specific items.",
       inputSchema: zodSchema(z.object({
         statusFilter: z.enum(["all", "green", "amber", "red", "no_data"]).optional().describe("Filter by RAG status"),
-        entityTypeCode: z.string().optional().describe("Filter by entity type code (e.g. 'KPI', 'INITIATIVE')"),
+        entityTypeCode: z.string().optional().describe("Filter by entity type code (e.g. 'METRIC', 'INITIATIVE')"),
         search: z.string().optional().describe("Search by title keyword"),
         limit: z.number().optional().describe("Max results (default 20)"),
       })),
@@ -147,15 +147,15 @@ export function createAgentTools(orgId: string, userId: string, role: string) {
       },
     }),
 
-    // ── 3. KPI Detail ─────────────────────────────────────────────────────
-    getKpiDetail: tool({
+    // ── 3. Entity Detail ─────────────────────────────────────────────────────
+    getEntityDetail: tool({
       description:
-        "Get deep detail on a specific KPI: history, trend, target, formula, variables, owner. Use when user asks about a specific KPI by name or ID.",
+        "Get deep detail on a specific entity: history, trend, target, formula, variables, owner. Use when user asks about a specific entity by name or ID.",
       inputSchema: zodSchema(z.object({
-        kpiTitle: z.string().optional().describe("Search by KPI title (partial match)"),
-        kpiId: z.string().optional().describe("Exact KPI entity ID"),
+        entityTitle: z.string().optional().describe("Search by entity title (partial match)"),
+        entityId: z.string().optional().describe("Exact entity ID"),
       })),
-      execute: async ({ kpiTitle, kpiId }: { kpiTitle?: string; kpiId?: string }) => {
+      execute: async ({ entityTitle, entityId }: { entityTitle?: string; entityId?: string }) => {
         const includeBlock = {
           orgEntityType: { select: { code: true, name: true } },
           ownerUser: { select: { name: true, email: true } },
@@ -167,13 +167,13 @@ export function createAgentTools(orgId: string, userId: string, role: string) {
           },
         };
 
-        const entity = kpiId
-          ? await prisma.entity.findUnique({ where: { id: kpiId }, include: includeBlock })
-          : kpiTitle
-            ? await prisma.entity.findFirst({ where: { orgId, deletedAt: null, title: { contains: kpiTitle, mode: "insensitive" } }, include: includeBlock })
+        const entity = entityId
+          ? await prisma.entity.findUnique({ where: { id: entityId }, include: includeBlock })
+          : entityTitle
+            ? await prisma.entity.findFirst({ where: { orgId, deletedAt: null, title: { contains: entityTitle, mode: "insensitive" } }, include: includeBlock })
             : null;
 
-        if (!entity) return { found: false, message: "KPI not found" };
+        if (!entity) return { found: false, message: "Entity not found" };
 
         const values = entity.values.map((v) => ({
           date: v.createdAt.toISOString().slice(0, 10),
@@ -210,10 +210,10 @@ export function createAgentTools(orgId: string, userId: string, role: string) {
       },
     }),
 
-    // ── 4. Stale KPIs ─────────────────────────────────────────────────────
-    getStaleKpis: tool({
+    // ── 4. Stale Entities ─────────────────────────────────────────────────────
+    getStaleEntities: tool({
       description:
-        "Get KPIs that haven't been updated in 30+ days. Use when user asks about overdue, stale, or missing data KPIs.",
+        "Get entities that haven't been updated in 30+ days. Use when user asks about overdue, stale, or missing data items.",
       inputSchema: zodSchema(z.object({
         daysThreshold: z.number().optional().describe("Days without update to consider stale (default 30)"),
       })),
@@ -251,14 +251,14 @@ export function createAgentTools(orgId: string, userId: string, role: string) {
           .filter((e) => e.hasNoValues || (e.daysSinceUpdate != null && e.daysSinceUpdate > threshold))
           .sort((a, b) => (b.daysSinceUpdate ?? 999) - (a.daysSinceUpdate ?? 999));
 
-        return { threshold, staleCount: stale.length, kpis: stale.slice(0, 20) };
+        return { threshold, staleCount: stale.length, entities: stale.slice(0, 20) };
       },
     }),
 
     // ── 5. Pending Approvals ──────────────────────────────────────────────
     getPendingApprovals: tool({
       description:
-        "Get pending KPI value submissions awaiting approval. Shows who submitted what and the value details. Use when user asks about approvals, submissions, or review queue.",
+        "Get pending value submissions awaiting approval. Shows who submitted what and the value details. Use when user asks about approvals, submissions, or review queue.",
       inputSchema: zodSchema(z.object({})),
       execute: async () => {
         const pendingValues = await prisma.entityValue.findMany({
@@ -278,8 +278,8 @@ export function createAgentTools(orgId: string, userId: string, role: string) {
           items: pendingValues.map((v) => ({
             id: v.id,
             entityId: v.entityId,
-            kpiTitle: v.entity.title,
-            kpiTitleAr: v.entity.titleAr,
+            entityTitle: v.entity.title,
+            entityTitleAr: v.entity.titleAr,
             entityType: v.entity.orgEntityType.code,
             submittedBy: v.submittedByUser?.name ?? "Unknown",
             value: v.finalValue != null ? Number(v.finalValue) : v.actualValue != null ? Number(v.actualValue) : null,
@@ -296,7 +296,7 @@ export function createAgentTools(orgId: string, userId: string, role: string) {
     // ── 6. Entity Hierarchy ───────────────────────────────────────────────
     getEntityHierarchy: tool({
       description:
-        "Get the organization's entity type hierarchy with counts. Shows pillars, objectives, KPIs, initiatives etc. Use when user asks about org structure, entity types, or hierarchy.",
+        "Get the organization's entity type hierarchy with counts. Shows pillars, objectives, metrics, initiatives etc. Use when user asks about org structure, entity types, or hierarchy.",
       inputSchema: zodSchema(z.object({})),
       execute: async () => {
         const entityTypes = await prisma.orgEntityType.findMany({
@@ -320,7 +320,7 @@ export function createAgentTools(orgId: string, userId: string, role: string) {
     // ── 7. Navigate to Page ───────────────────────────────────────────────
     navigateToPage: tool({
       description:
-        "Navigate user to a specific page in the application. Use when user asks to go to a page, view a KPI, open approvals, etc. Returns a navigation instruction the frontend will handle.",
+        "Navigate user to a specific page in the application. Use when user asks to go to a page, view an entity, open approvals, etc. Returns a navigation instruction the frontend will handle.",
       inputSchema: zodSchema(z.object({
         page: z.enum([
           "overview",
@@ -334,7 +334,7 @@ export function createAgentTools(orgId: string, userId: string, role: string) {
           "entity_new",
           "profile",
         ]).describe("Target page type"),
-        entityTypeCode: z.string().optional().describe("Entity type code for entity pages (e.g. 'KPI')"),
+        entityTypeCode: z.string().optional().describe("Entity type code for entity pages (e.g. 'METRIC')"),
         entityId: z.string().optional().describe("Specific entity ID for detail page"),
       })),
       execute: async ({ page, entityTypeCode, entityId }: { page: string; entityTypeCode?: string; entityId?: string }) => {
@@ -347,9 +347,9 @@ export function createAgentTools(orgId: string, userId: string, role: string) {
           case "organization": path = "/organization"; break;
           case "users": path = "/users"; break;
           case "profile": path = "/profile"; break;
-          case "entity_list": path = `/entities/${entityTypeCode ?? "KPI"}`; break;
-          case "entity_detail": path = `/entities/${entityTypeCode ?? "KPI"}/${entityId ?? ""}`; break;
-          case "entity_new": path = `/entities/${entityTypeCode ?? "KPI"}/new`; break;
+          case "entity_list": path = `/entities/${entityTypeCode ?? "METRIC"}`; break;
+          case "entity_detail": path = `/entities/${entityTypeCode ?? "METRIC"}/${entityId ?? ""}`; break;
+          case "entity_new": path = `/entities/${entityTypeCode ?? "METRIC"}/new`; break;
         }
         return { navigate: true, path };
       },
@@ -358,7 +358,7 @@ export function createAgentTools(orgId: string, userId: string, role: string) {
     // ── 8. Get Users ──────────────────────────────────────────────────────
     getOrgUsers: tool({
       description:
-        "List organization users with their roles and KPI ownership counts. Use when user asks about team members, who owns what, or user management.",
+        "List organization users with their roles and entity ownership counts. Use when user asks about team members, who owns what, or user management.",
       inputSchema: zodSchema(z.object({})),
       execute: async () => {
         const users = await prisma.user.findMany({
@@ -387,7 +387,7 @@ export function createAgentTools(orgId: string, userId: string, role: string) {
     // ── 9. Get Entity Types ───────────────────────────────────────────────
     getEntityTypes: tool({
       description:
-        "Get available entity types for the organization (e.g., KPI, Initiative, Project). Use to understand what types of entities exist.",
+        "Get available entity types for the organization (e.g., Metric, Initiative, Project). Use to understand what types of entities exist.",
       inputSchema: zodSchema(z.object({})),
       execute: async () => {
         const types = await prisma.orgEntityType.findMany({
@@ -402,7 +402,7 @@ export function createAgentTools(orgId: string, userId: string, role: string) {
     // ── 10. Compare Periods ───────────────────────────────────────────────
     comparePeriods: tool({
       description:
-        "Compare KPI performance between two time periods. Returns changes in achievement for each KPI. Use when user asks to compare Q1 vs Q2, month over month, etc.",
+        "Compare entity performance between two time periods. Returns changes in achievement for each entity. Use when user asks to compare Q1 vs Q2, month over month, etc.",
       inputSchema: zodSchema(z.object({
         periodAMonthsAgo: z.number().describe("How many months ago period A starts (e.g. 6 for 6 months ago)"),
         periodBMonthsAgo: z.number().describe("How many months ago period B starts (e.g. 3 for 3 months ago)"),

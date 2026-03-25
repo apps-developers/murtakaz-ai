@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { streamText } from "ai";
 import { requireOrgMember } from "@/lib/server-action-auth";
-import { getKpiContextForAiReport } from "@/actions/insights";
+import { getEntityContextForAiReport } from "@/actions/insights";
 import { getSmartModel } from "@/lib/ai/client";
 import { summarySystemPrompt } from "@/lib/ai/prompts";
 import { isAiEnabled, aiDisabledResponse } from "../_mock-stream";
@@ -15,20 +15,20 @@ export async function POST(req: NextRequest) {
     period?: string;
   };
 
-  // Fetch real KPI context from the database
-  let kpiContext = "";
+  // Fetch real entity context from the database
+  let entityContext = "";
   try {
     const session = await requireOrgMember();
-    const kpis = await getKpiContextForAiReport(session.user.orgId, 25);
-    if (kpis.length > 0) {
-      const lines = kpis.map(
-        (k) =>
-          `- ${k.title}: ${k.achievement}% achievement (target: ${k.target ?? "N/A"}${k.unit ? ` ${k.unit}` : ""}, status: ${k.status}, direction: ${k.direction ?? "INCREASE_IS_GOOD"})`,
+    const entities = await getEntityContextForAiReport(session.user.orgId, 25);
+    if (entities.length > 0) {
+      const lines = entities.map(
+        (e) =>
+          `- ${e.title}: ${e.achievement}% achievement (target: ${e.target ?? "N/A"}${e.unit ? ` ${e.unit}` : ""}, status: ${e.status}, direction: ${e.direction ?? "INCREASE_IS_GOOD"})`,
       );
-      kpiContext =
+      entityContext =
         lang === "ar"
           ? `\n\nبيانات المؤشرات الحالية:\n${lines.join("\n")}`
-          : `\n\nCurrent KPI data:\n${lines.join("\n")}`;
+          : `\n\nCurrent performance data:\n${lines.join("\n")}`;
     }
   } catch {
     // continue without context if auth fails
@@ -40,11 +40,11 @@ export async function POST(req: NextRequest) {
   const userPrompt =
     reportType === "full"
       ? lang === "ar"
-        ? `اكتب تقرير مجلس إدارة كامل عن الفترة: ${periodLabel}. غطِّ الأداء العام، المؤشرات الرئيسية، التحديات، والتوصيات.${kpiContext}`
-        : `Write a full board report for the period: ${periodLabel}. Cover overall performance, key KPIs, challenges, and recommendations.${kpiContext}`
+        ? `اكتب تقرير مجلس إدارة كامل عن الفترة: ${periodLabel}. غطِّ الأداء العام، المؤشرات الرئيسية، التحديات، والتوصيات.${entityContext}`
+        : `Write a full board report for the period: ${periodLabel}. Cover overall performance, key metrics, challenges, and recommendations.${entityContext}`
       : lang === "ar"
-        ? `اكتب ملخصاً مختصراً عن الفترة: ${periodLabel}. أبرز المؤشرات والإجراءات المطلوبة.${kpiContext}`
-        : `Write a concise digest for the period: ${periodLabel}. Highlight key KPI performance and required actions.${kpiContext}`;
+        ? `اكتب ملخصاً مختصراً عن الفترة: ${periodLabel}. أبرز المؤشرات والإجراءات المطلوبة.${entityContext}`
+        : `Write a concise digest for the period: ${periodLabel}. Highlight key metric performance and required actions.${entityContext}`;
 
   try {
     const result = streamText({

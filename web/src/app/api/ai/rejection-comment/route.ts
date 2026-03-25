@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
       locale?: string;
     };
 
-  const title = entityTitle ?? "this KPI";
+  const title = entityTitle ?? "this entity";
   const submitted = submittedValue ?? 0;
   const avg = historicalAvg ?? 0;
   const deviation = avg !== 0 ? Math.round(((submitted - avg) / avg) * 100) : 0;

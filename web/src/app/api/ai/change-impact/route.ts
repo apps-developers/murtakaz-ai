@@ -11,11 +11,11 @@ const MOCK_BY_TYPE: Record<ChangeType, {
 }> = {
   target: {
     summary: {
-      en: "Reducing this target changes the KPI's RAG status from RED to AMBER based on current achievement. The Growth pillar weighted health score would improve from 61% to 69%, and overall org health would increase by approximately 3pp.",
+      en: "Reducing this target changes the entity's RAG status from RED to AMBER based on current achievement. The Growth pillar weighted health score would improve from 61% to 69%, and overall org health would increase by approximately 3pp.",
       ar: "يُغيّر تخفيض هذا الهدف حالة المؤشر من الحمراء إلى الصفراء بناءً على الإنجاز الحالي. سترتفع نقاط صحة محور النمو الموزونة من 61% إلى 69%، وستزيد صحة الجهة الإجمالية بنحو 3 نقاط مئوية.",
     },
     impacts: [
-      { label: "KPI RAG Status", before: "🔴 RED (67%)", after: "🟡 AMBER (80%)", direction: "positive" },
+      { label: "Entity RAG Status", before: "🔴 RED (67%)", after: "🟡 AMBER (80%)", direction: "positive" },
       { label: "Pillar Health", before: "61%", after: "69%", direction: "positive" },
       { label: "Org Health Score", before: "68%", after: "71%", direction: "positive" },
       { label: "Target Ambition", before: "High (90%)", after: "Moderate (75%)", direction: "negative" },
@@ -23,7 +23,7 @@ const MOCK_BY_TYPE: Record<ChangeType, {
     warnings: {
       en: [
         "3 peer organizations in this sector maintain targets ≥ 85% — reducing to 75% places this org below the sector benchmark.",
-        "This change may reduce motivation for the KPI owner if the revised target appears too easy to achieve.",
+        "This change may reduce motivation for the entity owner if the revised target appears too easy to achieve.",
       ],
       ar: [
         "3 جهات مشابهة في هذا القطاع تحتفظ بأهداف ≥ 85% — التخفيض إلى 75% يضع الجهة دون المعيار القطاعي.",
@@ -37,7 +37,7 @@ const MOCK_BY_TYPE: Record<ChangeType, {
   },
   formula: {
     summary: {
-      en: "Changing the formula will recalculate all historical values for this KPI. The new formula introduces a weight-based calculation that may cause historical performance scores to shift by ±5–12% depending on the period.",
+      en: "Changing the formula will recalculate all historical values for this entity. The new formula introduces a weight-based calculation that may cause historical performance scores to shift by ±5–12% depending on the period.",
       ar: "سيُعيد تغيير المعادلة حساب جميع القيم التاريخية لهذا المؤشر. تُدخل المعادلة الجديدة حساباً قائماً على الأوزان قد يؤدي إلى تحرك درجات الأداء التاريخية بمقدار ±5–12% حسب الفترة.",
     },
     impacts: [
@@ -48,7 +48,7 @@ const MOCK_BY_TYPE: Record<ChangeType, {
     ],
     warnings: {
       en: [
-        "All historical reports and dashboards referencing this KPI will show recalculated values — inform stakeholders before applying.",
+        "All historical reports and dashboards referencing this entity will show recalculated values — inform stakeholders before applying.",
         "The formula change introduces division by a variable that could be zero — add a null check to prevent formula errors.",
       ],
       ar: [
@@ -63,11 +63,11 @@ const MOCK_BY_TYPE: Record<ChangeType, {
   },
   structure: {
     summary: {
-      en: "This structural change affects 3 child KPIs and 2 initiatives linked to the current entity. Approval chains and ownership assignments will need to be reviewed after the change is applied.",
+      en: "This structural change affects 3 child entities and 2 initiatives linked to the current entity. Approval chains and ownership assignments will need to be reviewed after the change is applied.",
       ar: "يؤثر هذا التغيير الهيكلي على 3 مؤشرات تابعة ومبادرتين مرتبطتين بالكيان الحالي. ستحتاج سلاسل الموافقة وتعيينات الملكية إلى مراجعة بعد تطبيق التغيير.",
     },
     impacts: [
-      { label: "Child KPIs affected", before: "3 linked", after: "Hierarchy updated", direction: "neutral" },
+      { label: "Child entities affected", before: "3 linked", after: "Hierarchy updated", direction: "neutral" },
       { label: "Linked Initiatives", before: "2 active", after: "Reassignment needed", direction: "negative" },
       { label: "Approval Chain", before: "Defined", after: "Needs review", direction: "negative" },
       { label: "Dashboard Rollup", before: "Current pillar", after: "New parent entity", direction: "neutral" },
@@ -75,7 +75,7 @@ const MOCK_BY_TYPE: Record<ChangeType, {
     warnings: {
       en: [
         "Dashboard rollup calculations will change immediately — verify that pillar health scores are not materially affected.",
-        "Users currently assigned to this entity's child KPIs must be re-notified of any ownership changes.",
+        "Users currently assigned to this entity's child entities must be re-notified of any ownership changes.",
       ],
       ar: [
         "ستتغير حسابات تجميع لوحة المعلومات فوراً — تحقق من عدم تأثر نقاط صحة المحاور بشكل جوهري.",
@@ -83,7 +83,7 @@ const MOCK_BY_TYPE: Record<ChangeType, {
       ],
     },
     recommendation: {
-      en: "Schedule this change during a low-activity period (e.g., period close) and notify all affected KPI owners and approvers at least 3 days in advance.",
+      en: "Schedule this change during a low-activity period (e.g., period close) and notify all affected entity owners and approvers at least 3 days in advance.",
       ar: "جدوِل هذا التغيير خلال فترة نشاط منخفض (مثل إغلاق الفترة) وأخطر جميع مالكي المؤشرات والمعتمدين المتأثرين قبل 3 أيام على الأقل.",
     },
   },

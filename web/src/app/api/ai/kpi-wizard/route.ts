@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { aiDisabledResponse, isAiEnabled } from "../_mock-stream";
 
-const SECTOR_KPI_SETS: Record<string, Array<{
+const SECTOR_ENTITY_SETS: Record<string, Array<{
   title: string; titleAr: string;
   description?: string; descriptionAr?: string;
   unit: string; unitAr: string;
@@ -187,9 +187,9 @@ export async function POST(req: NextRequest) {
 
   const { sector } = (await req.json()) as { objective?: string; sector?: string; entityTypeCode?: string };
   const key = sector ?? "general";
-  const kpis = SECTOR_KPI_SETS[key] ?? SECTOR_KPI_SETS.general;
+  const entities = SECTOR_ENTITY_SETS[key] ?? SECTOR_ENTITY_SETS.general;
 
   await new Promise<void>((r) => setTimeout(r, 800));
 
-  return NextResponse.json({ kpis });
+  return NextResponse.json({ entities });
 }

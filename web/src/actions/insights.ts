@@ -899,9 +899,9 @@ export async function getGovernanceInsights() {
   };
 }
 
-export async function getKpiContextForAiReport(orgId: string, take = 20) {
-  const kpis = await getKpisWithLatestValue(orgId, take);
-  return kpis
+export async function getEntityContextForAiReport(orgId: string, take = 20) {
+  const entities = await getKpisWithLatestValue(orgId, take);
+  return entities
     .map((k) => {
       const v = k.values?.[0] ?? null;
       const achievement = computeAchievement({

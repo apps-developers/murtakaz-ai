@@ -22,52 +22,14 @@ function buildComparison(pA: string, pB: string, lang: "en" | "ar"): string {
   if (lang === "ar") {
     return `## مقارنة الأداء: ${labelA} مقابل ${labelB}
 
-### الصحة الإجمالية
-ارتفع مؤشر الصحة الإجمالية من **64%** في ${labelA} إلى **72%** في ${labelB} — تحسن بمقدار +8 نقاط مئوية.
-
-### المؤشرات التي تحسّنت (12 مؤشراً) ✅
-- **نمو الإيرادات:** من 67% إلى 91% (+24 نقطة) — أبرز تحسّن
-- **كسب العملاء:** من 38% إلى 55% (+17 نقطة)
-- **معدل الإنجاز الرقمي:** من 72% إلى 83% (+11 نقطة)
-- **التزام التقارير:** من 81% إلى 89% (+8 نقاط)
-- **كفاءة العمليات:** من 74% إلى 80% (+6 نقاط)
-
-### المؤشرات التي تراجعت (5 مؤشرات) 🔴
-- **معدل الاحتفاظ بالموظفين:** من 52% إلى 41% (-11 نقطة) — الأكثر إثارة للقلق
-- **كفاءة التكلفة:** من 82% إلى 78% (-4 نقاط)
-- **معدل إكمال التدريب:** من 68% إلى 65% (-3 نقاط)
-
-### المؤشرات الثابتة (3 مؤشرات) ➡️
-- **معدل الامتثال:** ثابت عند 94%
-- **نسبة حل الشكاوى:** ثابتة عند 87%
-
-### الاستنتاج الرئيسي
-تحسّنت مؤشرات النمو المالي والرقمي بشكل ملحوظ، في حين تراجعت مؤشرات الأفراد والثقافة. يشير هذا إلى وجود مفاضلات في تخصيص الموارد — يبدو أن التركيز على النمو جاء على حساب برامج الاحتفاظ بالموظفين. ينبغي معالجة هذا الخلل قبل نهاية الربع القادم.`;
+### ملاحظات رئيسية
+لا توجد ملاحظات.`;
   }
 
   return `## Performance Comparison: ${labelA} → ${labelB}
 
-### Overall Health
-Overall health score improved from **64%** in ${labelA} to **72%** in ${labelB} — a +8pp improvement.
-
-### Improved KPIs (12 KPIs) ✅
-- **Revenue Growth:** 67% → 91% (+24pp) — strongest improvement
-- **Customer Acquisition:** 38% → 55% (+17pp)
-- **Digital Completion Rate:** 72% → 83% (+11pp)
-- **Reporting Compliance:** 81% → 89% (+8pp)
-- **Operational Efficiency:** 74% → 80% (+6pp)
-
-### Declined KPIs (5 KPIs) 🔴
-- **Employee Retention Rate:** 52% → 41% (-11pp) — most concerning
-- **Cost Efficiency:** 82% → 78% (-4pp)
-- **Training Completion Rate:** 68% → 65% (-3pp)
-
-### Unchanged KPIs (3 KPIs) ➡️
-- **Compliance Rate:** stable at 94%
-- **Complaint Resolution Rate:** stable at 87%
-
-### Key Insight
-Growth-oriented and digital KPIs improved significantly while People & Culture KPIs declined. This pattern suggests resource allocation trade-offs — the push for growth may be consuming capacity at the expense of retention programs. This imbalance should be addressed before the next period close to prevent further HR attrition.`;
+### Key Insights
+No insights.`;
 }
 
 export async function POST(req: NextRequest) {

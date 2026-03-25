@@ -13,7 +13,7 @@ DATABASE SCHEMA:
 
 entities:
   - id: string (UUID)
-  - key: string | null (unique code like "KPI001")
+  - key: string | null (unique code like "M001")
   - title: string (entity name)
   - titleAr: string | null (Arabic title)
   - status: "PLANNED" | "ACTIVE" | "AT_RISK" | "COMPLETED"
@@ -36,15 +36,15 @@ entityValues:
 
 entityTypes:
   - id: string (UUID)
-  - code: string (e.g., "KPI", "INITIATIVE", "PROJECT")
+  - code: string (e.g., "METRIC", "INITIATIVE", "PROJECT")
   - name: string
 
 EXAMPLE QUERIES:
-- Top KPIs: { table: "entityValues", entityTypeCode: "KPI", orderBy: { field: "achievementValue", direction: "desc" }, limit: 10 }
+- Top entities: { table: "entityValues", entityTypeCode: "METRIC", orderBy: { field: "achievementValue", direction: "desc" }, limit: 10 }
 - Status breakdown: { table: "entities", where: { status: "ACTIVE" }, limit: 50 }
-- Trend: { table: "entityValues", entityTypeCode: "KPI", orderBy: { field: "createdAt", direction: "asc" }, limit: 100 }
+- Trend: { table: "entityValues", entityTypeCode: "METRIC", orderBy: { field: "createdAt", direction: "asc" }, limit: 100 }
 
-NOTE: Use "entityTypeCode" (e.g., "KPI", "INITIATIVE") to filter by type, NOT relation paths like "entityTypes.code"`;;
+NOTE: Use "entityTypeCode" (e.g., "METRIC", "INITIATIVE") to filter by type, NOT relation paths like "entityTypes.code"`;;
 
 // Execute query based on AI request
 async function executeQuery(orgId: string, query: {
@@ -147,7 +147,7 @@ Determine what data you need and construct a query.`,
         analysis: z.string().describe("Brief analysis of what data is needed"),
         query: z.object({
           table: z.enum(["entities", "entityValues", "entityTypes"]),
-          entityTypeCode: z.string().optional().describe("Filter by entity type code like KPI, INITIATIVE, PROJECT"),
+          entityTypeCode: z.string().optional().describe("Filter by entity type code like METRIC, INITIATIVE, PROJECT"),
           where: z.record(z.string(), z.any()).optional().describe("Filter conditions (status, etc)"),
           orderBy: z.object({ field: z.string(), direction: z.enum(["asc", "desc"]) }).optional(),
           limit: z.number().default(50),

@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 
 /**
- * Build a concise KPI context string for AI prompts.
+ * Build a concise entity context string for AI prompts.
  * Includes: entity title, type, formula, variables, recent values, and formula dependencies.
  */
 export async function getEntityContextForAi(entityId: string) {
@@ -105,14 +105,14 @@ function extractGetKeys(formula: string): string[] {
 }
 
 /**
- * Get a lightweight summary of org KPIs for AI context.
+ * Get a lightweight summary of org entities for AI context.
  */
-export async function getOrgKpiSummaryForAi(orgId: string, take = 15) {
-  const kpis = await prisma.entity.findMany({
+export async function getOrgEntitySummaryForAi(orgId: string, take = 15) {
+  const entities = await prisma.entity.findMany({
     where: {
       orgId,
       deletedAt: null,
-      orgEntityType: { code: { equals: "KPI", mode: "insensitive" } },
+      orgEntityType: { code: { equals: "PERFORMANCE", mode: "insensitive" } },
     },
     take,
     orderBy: { title: "asc" },
@@ -125,19 +125,19 @@ export async function getOrgKpiSummaryForAi(orgId: string, take = 15) {
     },
   });
 
-  const lines = kpis.map((k) => {
-    const v = k.values[0];
+  const lines = entities.map((e) => {
+    const v = e.values[0];
     const val = v ? (v.finalValue ?? v.calculatedValue ?? v.actualValue ?? "N/A") : "N/A";
     const ach = v?.achievementValue != null ? `${Math.round(Number(v.achievementValue))}%` : "N/A";
-    return `- ${k.title}: value=${val}, target=${k.targetValue ?? "N/A"}, achievement=${ach}`;
+    return `- ${e.title}: value=${val}, target=${e.targetValue ?? "N/A"}, achievement=${ach}`;
   });
 
-  return `Organization KPI snapshot (${kpis.length} KPIs):\n${lines.join("\n")}`;
+  return `Organization entity snapshot (${entities.length} items):\n${lines.join("\n")}`;
 }
 
 /**
  * Get comprehensive organization context for chart generation.
- * Includes: entity types, KPIs with historical data, trends, and org structure.
+ * Includes: entity types, entities with historical data, trends, and org structure.
  */
 export async function getOrgChartContextForAi(orgId: string) {
   const context: string[] = [];
@@ -156,12 +156,12 @@ export async function getOrgChartContextForAi(orgId: string) {
     context.push(`- ${et.code}: ${et.name}${nameAr} (${count} items)`);
   }
 
-  // 2. KPIs with 6-month trend data
-  const kpis = await prisma.entity.findMany({
+  // 2. Entities with 6-month trend data
+  const entities = await prisma.entity.findMany({
     where: {
       orgId,
       deletedAt: null,
-      orgEntityType: { code: { equals: "KPI", mode: "insensitive" } },
+      orgEntityType: { code: { equals: "METRIC", mode: "insensitive" } },
     },
     take: 20,
     orderBy: { title: "asc" },
@@ -182,9 +182,9 @@ export async function getOrgChartContextForAi(orgId: string) {
     },
   });
 
-  context.push(`\n=== KPIs WITH 6-MONTH HISTORY ===`);
-  for (const kpi of kpis) {
-    const values = kpi.values
+  context.push(`\n=== ENTITIES WITH 6-MONTH HISTORY ===`);
+  for (const entity of entities) {
+    const values = entity.values
       .map((v) => {
         const val = v.finalValue ?? v.calculatedValue ?? v.actualValue ?? null;
         return val != null ? Number(val) : null;
@@ -200,12 +200,12 @@ export async function getOrgChartContextForAi(orgId: string) {
       else if (change < -5) trend = "declining";
     }
 
-    const latestAch = kpi.values[0]?.achievementValue;
+    const latestAch = entity.values[0]?.achievementValue;
     const achStr = latestAch != null ? `, achievement=${Math.round(Number(latestAch))}%` : "";
     const trendStr = values.length > 1 ? `, trend=${trend}` : "";
 
     context.push(
-      `- ${kpi.title}: target=${kpi.targetValue ?? "N/A"}${achStr}${trendStr}, unit=${kpi.unit ?? "N/A"}, history=[${values.slice(0, 3).join(", ")}]`
+      `- ${entity.title}: target=${entity.targetValue ?? "N/A"}${achStr}${trendStr}, unit=${entity.unit ?? "N/A"}, history=[${values.slice(0, 3).join(", ")}]`
     );
   }
 
@@ -363,8 +363,8 @@ export function getDatabaseSchemaForAi(): string {
 === DATABASE SCHEMA FOR CHART QUERIES ===
 
 Available Tables:
-1. entities - Main KPI/entity records
-2. entityTypes - Types of entities (KPI, Initiative, Project, etc.)
+1. entities - Main performance/entity records
+2. entityTypes - Types of entities (metrics, initiatives, projects, etc.)
 3. entityValues - Time-series values for entities
 4. users - Organization users
 5. variables - Variables used in entity formulas
@@ -373,7 +373,7 @@ Available Tables:
 TABLE: entities
 Fields:
   - id: string (UUID)
-  - key: string | null (unique code like "KPI001")
+  - key: string | null (unique code like "M001")
   - title: string (entity name)
   - titleAr: string | null (Arabic title)
   - description: string | null
@@ -395,7 +395,7 @@ Fields:
 TABLE: entityTypes
 Fields:
   - id: string (UUID)
-  - code: string (e.g., "KPI", "INITIATIVE", "PROJECT")
+  - code: string (e.g., "METRIC", "INITIATIVE", "PROJECT")
   - name: string
   - nameAr: string | null
   - sortOrder: number
@@ -455,7 +455,7 @@ QUERY SPECIFICATION FORMAT:
 
 COMMON QUERY PATTERNS:
 
-1. Top KPIs by Achievement:
+1. Top Entities by Achievement:
 {
   "table": "entityValues",
   "select": ["entityId", "AVG(achievementValue)"],

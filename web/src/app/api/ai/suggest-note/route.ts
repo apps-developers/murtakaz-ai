@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
 
   const userPrompt = isArabic
     ? `المؤشر: ${entityTitle ?? "غير محدد"}\nالقيمة المُدخلة: ${enteredValue ?? "—"}${unit ?? ""}\nالمتوسط التاريخي: ${historicalAvg ?? "—"}${unit ?? ""}${deviation != null ? `\nالانحراف: ${deviation}${unit ?? ""}` : ""}\n\nاكتب ملاحظة تفسيرية موجزة.`
-    : `KPI: ${entityTitle ?? "Unknown"}\nEntered value: ${enteredValue ?? "—"}${unit ?? ""}\nHistorical average: ${historicalAvg ?? "—"}${unit ?? ""}${deviation != null ? `\nDeviation: ${deviation}${unit ?? ""}` : ""}\n\nWrite a brief explanatory note.`;
+    : `Entity: ${entityTitle ?? "Unknown"}\nEntered value: ${enteredValue ?? "—"}${unit ?? ""}\nHistorical average: ${historicalAvg ?? "—"}${unit ?? ""}${deviation != null ? `\nDeviation: ${deviation}${unit ?? ""}` : ""}\n\nWrite a brief explanatory note.`;
 
   try {
     const { text } = await generateText({

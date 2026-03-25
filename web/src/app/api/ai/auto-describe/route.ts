@@ -26,8 +26,8 @@ export async function POST(req: NextRequest) {
     : "";
 
   const prompt = userPrompt?.trim()
-    ? `KPI Title: "${title ?? ""}"\nUser instruction: ${userPrompt}${iterativeContext}`
-    : `KPI Title: "${title}"`;
+    ? `Entity Title: "${title ?? ""}"\nUser instruction: ${userPrompt}${iterativeContext}`
+    : `Entity Title: "${title}"`;
 
   try {
     const { object } = await generateObject({

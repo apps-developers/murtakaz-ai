@@ -6,7 +6,7 @@ const KEYWORD_SEVERITY: Array<{
   severity: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
   likelihood: "LOW" | "MEDIUM" | "HIGH";
   mitigations: { en: string[]; ar: string[] };
-  kpiImpacts: { title: string; impact: string }[];
+  metricImpacts: { title: string; impact: string }[];
   reasoning: { en: string; ar: string };
 }> = [
   {
@@ -27,7 +27,7 @@ const KEYWORD_SEVERITY: Array<{
         "تضمين غرامات التأخير في جميع عقود الموردين الجديدة",
       ],
     },
-    kpiImpacts: [
+    metricImpacts: [
       { title: "Production Output", impact: "Could drop 15–25% if delays exceed 2 weeks" },
       { title: "Customer Delivery SLA", impact: "At risk if production delays cascade" },
       { title: "Cost Per Unit", impact: "May increase 8–12% due to expedited alternatives" },
@@ -55,7 +55,7 @@ const KEYWORD_SEVERITY: Array<{
         "جدولة مراجعات امتثال ربع سنوية مع القيادة العليا",
       ],
     },
-    kpiImpacts: [
+    metricImpacts: [
       { title: "Compliance Rate", impact: "Direct — non-compliance will be reflected immediately" },
       { title: "Operational Continuity", impact: "Regulatory action could pause operations" },
       { title: "Reputational Score", impact: "Public compliance failures damage trust" },
@@ -83,7 +83,7 @@ const KEYWORD_SEVERITY: Array<{
         "إنشاء مكافآت احتفاظ للمناصب التي تمتلك مهارات حرجة",
       ],
     },
-    kpiImpacts: [
+    metricImpacts: [
       { title: "Employee Retention Rate", impact: "Direct negative impact" },
       { title: "Productivity per Employee", impact: "Declining as experienced staff leave" },
       { title: "Training & Onboarding Cost", impact: "Will increase significantly with turnover" },
@@ -112,7 +112,7 @@ const DEFAULT = {
       "تحديد مؤشرات إنذار مبكر للكشف عن تحقق المخاطرة",
     ],
   },
-  kpiImpacts: [
+  metricImpacts: [
     { title: "Operational Performance", impact: "Moderate negative impact expected" },
     { title: "Strategic Objectives", impact: "May delay achievement of linked goals" },
   ],
@@ -141,7 +141,7 @@ export async function POST(req: NextRequest) {
     suggestedSeverity: data.severity,
     likelihood: data.likelihood,
     mitigations: isArabic ? data.mitigations.ar : data.mitigations.en,
-    kpiImpacts: data.kpiImpacts,
+    metricImpacts: data.metricImpacts,
     reasoning: isArabic ? data.reasoning.ar : data.reasoning.en,
   });
 }
