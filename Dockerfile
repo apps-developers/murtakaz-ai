@@ -38,8 +38,8 @@ RUN addgroup --system --gid 1001 nodejs && \
 # Copy standalone output
 COPY --from=builder /app/web/.next/standalone ./
 # Copy static assets & public
-COPY --from=builder /app/web/.next/static ./web/.next/static
-COPY --from=builder /app/web/public ./web/public
+COPY --from=builder /app/web/.next/static ./.next/static
+COPY --from=builder /app/web/public ./public
 # Copy prisma schema (needed at runtime for migrations)
 COPY --from=builder /app/prisma ./prisma
 
@@ -49,4 +49,4 @@ EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-CMD ["node", "web/server.js"]
+CMD ["node", "server.js"]
