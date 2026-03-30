@@ -1,0 +1,55 @@
+{
+  "sector_info": {
+    "name_ar": "إدارة الجودة وخدمة العملاء",
+    "name_en": "Quality & Customer Service Department"
+  },
+  "formula": "(quality_dept_kpi_1 * 0.40 + quality_dept_kpi_2 * 0.30 + quality_dept_kpi_3 * 0.30) / 1.00",
+  "formula_description": "Weighted average of quality KPIs: Customer Satisfaction (40%), Complaint Resolution (30%), Service Quality (30%)",
+  "indicators": [
+    {
+      "kpi_code": "quality_dept_kpi_1",
+      "classification": "strategic",
+      "classification_en": "Strategic",
+      "frequency": "quarterly",
+      "measurement_indicator": "مؤشر رضا العملاء الإجمالي",
+      "measurement_indicator_en": "Overall Customer Satisfaction Index",
+      "unit": "%",
+      "unit_en": "%",
+      "weight": "40%",
+      "baseline_2024": 75,
+      "baseline_2025": 78,
+      "target_2026": 85,
+      "target_2028": 92
+    },
+    {
+      "kpi_code": "quality_dept_kpi_2",
+      "classification": "operational",
+      "classification_en": "Operational",
+      "frequency": "monthly",
+      "measurement_indicator": "معدل إغلاق الشكاوى في الوقت المحدد",
+      "measurement_indicator_en": "Complaint Resolution Rate within SLA",
+      "unit": "%",
+      "unit_en": "%",
+      "weight": "30%",
+      "baseline_2024": 82,
+      "baseline_2025": 85,
+      "target_2026": 90,
+      "target_2028": 95
+    },
+    {
+      "kpi_code": "quality_dept_kpi_3",
+      "classification": "operational",
+      "classification_en": "Operational",
+      "frequency": "monthly",
+      "measurement_indicator": "مؤشر جودة الخدمة",
+      "measurement_indicator_en": "Service Quality Score",
+      "unit": "score",
+      "unit_en": "score",
+      "weight": "30%",
+      "baseline_2024": 70,
+      "baseline_2025": 75,
+      "target_2026": 82,
+      "target_2028": 90
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "sector_info": {
+    "name_ar": "إدارة العمليات",
+    "name_en": "Operations Department"
+  },
+  "formula": "(operations_dept_kpi_1 * 0.30 + operations_dept_kpi_2 * 0.25 + operations_dept_kpi_3 * 0.25 + operations_dept_kpi_4 * 0.20) / 1.00",
+  "formula_description": "Weighted average of operations KPIs: Vendor Performance (30%), Fleet Availability (25%), On-Time Rate (25%), Route Efficiency (20%)",
+  "indicators": [
+    {
+      "kpi_code": "operations_dept_kpi_1",
+      "classification": "strategic",
+      "classification_en": "Strategic",
+      "frequency": "monthly",
+      "measurement_indicator": "أداء مقدمي خدمات النقل",
+      "measurement_indicator_en": "Transport Service Provider Performance",
+      "unit": "%",
+      "unit_en": "%",
+      "weight": "30%",
+      "baseline_2024": 78,
+      "baseline_2025": 82,
+      "target_2026": 88,
+      "target_2028": 95
+    },
+    {
+      "kpi_code": "operations_dept_kpi_2",
+      "classification": "strategic",
+      "classification_en": "Strategic",
+      "frequency": "monthly",
+      "measurement_indicator": "معدل توفر الأسطول",
+      "measurement_indicator_en": "Fleet Availability Rate",
+      "unit": "%",
+      "unit_en": "%",
+      "weight": "25%",
+      "baseline_2024": 92,
+      "baseline_2025": 94,
+      "target_2026": 96,
+      "target_2028": 98
+    },
+    {
+      "kpi_code": "operations_dept_kpi_3",
+      "classification": "operational",
+      "classification_en": "Operational",
+      "frequency": "daily",
+      "measurement_indicator": "معدل الالتزام بالمواعيد",
+      "measurement_indicator_en": "On-Time Performance Rate",
+      "unit": "%",
+      "unit_en": "%",
+      "weight": "25%",
+      "baseline_2024": 88,
+      "baseline_2025": 90,
+      "target_2026": 93,
+      "target_2028": 97
+    },
+    {
+      "kpi_code": "operations_dept_kpi_4",
+      "classification": "operational",
+      "classification_en": "Operational",
+      "frequency": "monthly",
+      "measurement_indicator": "كفاءة استخدام الخطوط",
+      "measurement_indicator_en": "Route Utilization Efficiency",
+      "unit": "%",
+      "unit_en": "%",
+      "weight": "20%",
+      "baseline_2024": 75,
+      "baseline_2025": 78,
+      "target_2026": 85,
+      "target_2028": 90
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "sector_info": {
+    "name_ar": "إدارة الاستراتيجية والتميز المؤسسي",
+    "name_en": "Strategy & Excellence Department"
+  },
+  "formula": "(strategy_dept_kpi_1 * 0.35 + strategy_dept_kpi_2 * 0.35 + strategy_dept_kpi_3 * 0.30) / 1.00",
+  "formula_description": "Weighted average of strategy KPIs: Strategic Goals Achievement (35%), Performance Excellence (35%), Initiative Delivery (30%)",
+  "indicators": [
+    {
+      "kpi_code": "strategy_dept_kpi_1",
+      "classification": "strategic",
+      "classification_en": "Strategic",
+      "frequency": "quarterly",
+      "measurement_indicator": "معدل تحقيق الأهداف الاستراتيجية",
+      "measurement_indicator_en": "Strategic Goals Achievement Rate",
+      "unit": "%",
+      "unit_en": "%",
+      "weight": "35%",
+      "baseline_2024": 68,
+      "baseline_2025": 72,
+      "target_2026": 80,
+      "target_2028": 95
+    },
+    {
+      "kpi_code": "strategy_dept_kpi_2",
+      "classification": "strategic",
+      "classification_en": "Strategic",
+      "frequency": "quarterly",
+      "measurement_indicator": "مؤشر التميز المؤسسي",
+      "measurement_indicator_en": "Organizational Excellence Index",
+      "unit": "score",
+      "unit_en": "score",
+      "weight": "35%",
+      "baseline_2024": 65,
+      "baseline_2025": 70,
+      "target_2026": 78,
+      "target_2028": 90
+    },
+    {
+      "kpi_code": "strategy_dept_kpi_3",
+      "classification": "operational",
+      "classification_en": "Operational",
+      "frequency": "monthly",
+      "measurement_indicator": "معدل إنجاز المبادرات",
+      "measurement_indicator_en": "Initiative Delivery Rate",
+      "unit": "%",
+      "unit_en": "%",
+      "weight": "30%",
+      "baseline_2024": 70,
+      "baseline_2025": 75,
+      "target_2026": 85,
+      "target_2028": 95
+    }
+  ]
+}

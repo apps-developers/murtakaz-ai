@@ -2,13 +2,16 @@
 
 import { z } from "zod";
 import {
+  ComplexityLevel,
   KpiAggregationMethod,
+  KpiApprovalType,
   KpiDirection,
   KpiIndicatorType,
   KpiPeriodType,
   KpiSourceType,
   KpiVariableDataType,
   KpiValueStatus,
+  ReviewDecision,
   Role,
   Status,
 } from "@/generated/prisma-client";
@@ -462,6 +465,11 @@ export async function getOrgEntitiesByTypeCode(input: z.infer<typeof getOrgEntit
         unitAr: true,
         baselineValue: true,
         targetValue: true,
+        weight: true,
+        sector: true,
+        longTermTarget: true,
+        complexityLevel: true,
+        reviewDecision: true,
         updatedAt: true,
         createdAt: true,
         values: {
@@ -615,6 +623,10 @@ export async function getOrgEntityDetail(input: { entityId: string }) {
       maxValue: true,
       weight: true,
       formula: true,
+      sector: true,
+      longTermTarget: true,
+      complexityLevel: true,
+      reviewDecision: true,
       createdAt: true,
       updatedAt: true,
       orgEntityType: {
@@ -752,6 +764,10 @@ export async function getOrgEntityDetail(input: { entityId: string }) {
         name: entity.orgEntityType.name,
         nameAr: entity.orgEntityType.nameAr,
       },
+      sector: entity.sector,
+      longTermTarget: entity.longTermTarget,
+      complexityLevel: entity.complexityLevel,
+      reviewDecision: entity.reviewDecision,
       variables: entity.variables.map((v) => ({
         id: v.id,
         code: String(v.code),
@@ -830,6 +846,14 @@ const createOrgEntitySchema = z.object({
     z.number().finite().optional(),
   ),
 
+  sector: z.string().trim().optional(),
+  longTermTarget: z.preprocess(
+    (v) => (v === "" || v === undefined || v === null ? undefined : Number(v)),
+    z.number().finite().optional(),
+  ),
+  complexityLevel: z.nativeEnum(ComplexityLevel).nullable().optional(),
+  reviewDecision: z.nativeEnum(ReviewDecision).nullable().optional(),
+
   formula: z.string().trim().optional(),
 
   variables: z
@@ -907,6 +931,11 @@ export async function createOrgEntity(input: z.infer<typeof createOrgEntitySchem
         maxValue: typeof parsed.data.maxValue === "undefined" ? null : parsed.data.maxValue,
         weight: typeof parsed.data.weight === "undefined" ? null : parsed.data.weight,
         formula,
+
+        sector: parsed.data.sector?.trim() ? parsed.data.sector.trim() : null,
+        longTermTarget: typeof parsed.data.longTermTarget === "undefined" ? null : parsed.data.longTermTarget,
+        complexityLevel: parsed.data.complexityLevel ?? null,
+        reviewDecision: parsed.data.reviewDecision ?? null,
 
         variables:
           parsed.data.variables && parsed.data.variables.length
@@ -995,6 +1024,14 @@ const updateOrgEntitySchema = z.object({
     z.number().finite().nullable().optional(),
   ),
 
+  sector: z.string().trim().nullable().optional(),
+  longTermTarget: z.preprocess(
+    (v) => (v === "" || v === undefined ? undefined : v === null ? null : Number(v)),
+    z.number().finite().nullable().optional(),
+  ),
+  complexityLevel: z.nativeEnum(ComplexityLevel).nullable().optional(),
+  reviewDecision: z.nativeEnum(ReviewDecision).nullable().optional(),
+
   formula: z.string().trim().nullable().optional(),
 
   variables: z
@@ -1065,6 +1102,10 @@ export async function updateOrgEntity(input: z.infer<typeof updateOrgEntitySchem
           ...(typeof parsed.data.maxValue !== "undefined" ? { maxValue: parsed.data.maxValue } : {}),
           ...(typeof parsed.data.weight !== "undefined" ? { weight: parsed.data.weight } : {}),
           ...(typeof parsed.data.formula !== "undefined" ? { formula: parsed.data.formula && parsed.data.formula.trim() ? parsed.data.formula.trim() : null } : {}),
+          ...(typeof parsed.data.sector !== "undefined" ? { sector: parsed.data.sector && parsed.data.sector.trim() ? parsed.data.sector.trim() : null } : {}),
+          ...(typeof parsed.data.longTermTarget !== "undefined" ? { longTermTarget: parsed.data.longTermTarget } : {}),
+          ...(typeof parsed.data.complexityLevel !== "undefined" ? { complexityLevel: parsed.data.complexityLevel } : {}),
+          ...(typeof parsed.data.reviewDecision !== "undefined" ? { reviewDecision: parsed.data.reviewDecision } : {}),
         },
         select: { id: true },
       });
@@ -1460,6 +1501,159 @@ async function cascadeRecalculateDependents(input: {
       console.error(`Failed to recalculate dependent entity ${dependent.id}:`, err);
     }
   }
+}
+
+/**
+ * Recalculate all derived entities in dependency order (bottom-up)
+ * Use this for initial seeding or bulk recalculation
+ */
+export async function recalculateAllDerivedEntities(input?: { orgId?: string }) {
+  const session = await requireOrgAdmin();
+  const orgId = input?.orgId ?? session.user.orgId;
+
+  // Get all entities with formulas that don't have variables (derived entities)
+  const derivedEntities = await prisma.entity.findMany({
+    where: {
+      orgId,
+      deletedAt: null,
+      formula: { not: null },
+      // Exclude KPIs with variables - only get formula-based aggregations
+      NOT: {
+        variables: { some: {} }
+      }
+    },
+    select: {
+      id: true,
+      key: true,
+      formula: true,
+      targetValue: true,
+      direction: true,
+      orgEntityType: { select: { code: true } },
+    },
+  });
+
+  // Build dependency graph
+  const entityByKey = new Map<string, typeof derivedEntities[0]>();
+  const dependencyMap = new Map<string, string[]>(); // key -> depends on keys
+
+  for (const entity of derivedEntities) {
+    if (!entity.key) continue;
+    entityByKey.set(entity.key, entity);
+
+    const deps = extractGetKeys(entity.formula || "").map(k => normalizeEntityKey(String(k ?? ""))).filter(Boolean);
+    dependencyMap.set(entity.key, deps);
+  }
+
+  // Calculate in topological order using DFS
+  const calculated = new Set<string>();
+  const results: Array<{ key: string; value: number | null; error?: string }> = [];
+
+  async function calculateEntity(key: string, depth = 0): Promise<number | null> {
+    if (depth > 10) {
+      console.warn(`Max depth reached for ${key}`);
+      return null;
+    }
+
+    if (calculated.has(key)) {
+      const existing = await prisma.entityValue.findFirst({
+        where: { entity: { orgId, key } },
+        orderBy: { createdAt: 'desc' },
+        select: { finalValue: true, calculatedValue: true, actualValue: true },
+      });
+      return existing?.finalValue ?? existing?.calculatedValue ?? existing?.actualValue ?? null;
+    }
+
+    const entity = entityByKey.get(key);
+    if (!entity || !entity.formula) return null;
+
+    // Calculate dependencies first (bottom-up)
+    const deps = dependencyMap.get(key) || [];
+    const depValues: Record<string, number> = {};
+
+    for (const depKey of deps) {
+      const depEntity = entityByKey.get(depKey);
+      if (depEntity) {
+        // This is also a derived entity - calculate it first
+        const depValue = await calculateEntity(depKey, depth + 1);
+        if (depValue !== null) {
+          depValues[depKey] = depValue;
+        }
+      } else {
+        // This is a leaf KPI - get its latest value from DB
+        const kpiValue = await prisma.entityValue.findFirst({
+          where: { entity: { orgId, key: depKey } },
+          orderBy: { createdAt: 'desc' },
+          select: { finalValue: true, calculatedValue: true, actualValue: true },
+        });
+        const val = kpiValue?.finalValue ?? kpiValue?.calculatedValue ?? kpiValue?.actualValue;
+        if (typeof val === 'number') {
+          depValues[depKey] = val;
+        }
+      }
+    }
+
+    // Now calculate this entity
+    const res = await evaluateEntityFormulaForOrg({
+      orgId,
+      formula: entity.formula,
+      vars: depValues,
+    });
+
+    if (!res.ok) {
+      results.push({ key, value: null, error: res.error });
+      return null;
+    }
+
+    // Check if value already exists
+    const existing = await prisma.entityValue.findFirst({
+      where: { entityId: entity.id },
+      select: { id: true }
+    });
+
+    if (existing) {
+      // Update existing
+      await prisma.entityValue.update({
+        where: { id: existing.id },
+        data: {
+          calculatedValue: res.value,
+          finalValue: res.value,
+          status: KpiValueStatus.APPROVED,
+          note: 'Bulk recalculation',
+          approvedAt: new Date(),
+        },
+      });
+    } else {
+      // Create new
+      await prisma.entityValue.create({
+        data: {
+          entityId: entity.id,
+          calculatedValue: res.value,
+          finalValue: res.value,
+          status: KpiValueStatus.APPROVED,
+          approvalType: KpiApprovalType.MANUAL,
+          note: 'Bulk recalculation',
+          enteredBy: session.user.id,
+          submittedBy: session.user.id,
+          approvedBy: session.user.id,
+          submittedAt: new Date(),
+          approvedAt: new Date(),
+        },
+      });
+    }
+
+    calculated.add(key);
+    results.push({ key, value: res.value });
+    return res.value;
+  }
+
+  // Calculate all entities
+  for (const key of entityByKey.keys()) {
+    if (!calculated.has(key)) {
+      await calculateEntity(key);
+    }
+  }
+
+  return { success: true as const, calculated: results.length, results };
 }
 
 export async function getEntityDependencyTree(input: { entityId: string; maxDepth?: number }) {

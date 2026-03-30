@@ -1,0 +1,70 @@
+{
+  "sector_info": {
+    "name_ar": "إدارة المالية",
+    "name_en": "Finance Department"
+  },
+  "formula": "(finance_dept_kpi_1 * 0.30 + finance_dept_kpi_2 * 0.25 + finance_dept_kpi_3 * 0.25 + finance_dept_kpi_4 * 0.20) / 1.00",
+  "formula_description": "Weighted average of finance KPIs: Cost Efficiency (30%), Budget Compliance (25%), ROI (25%), Cost per Trip (20%)",
+  "indicators": [
+    {
+      "kpi_code": "finance_dept_kpi_1",
+      "classification": "strategic",
+      "classification_en": "Strategic",
+      "frequency": "quarterly",
+      "measurement_indicator": "كفاءة التكلفة الإجمالية",
+      "measurement_indicator_en": "Overall Cost Efficiency",
+      "unit": "%",
+      "unit_en": "%",
+      "weight": "30%",
+      "baseline_2024": 85,
+      "baseline_2025": 87,
+      "target_2026": 90,
+      "target_2028": 95
+    },
+    {
+      "kpi_code": "finance_dept_kpi_2",
+      "classification": "strategic",
+      "classification_en": "Strategic",
+      "frequency": "monthly",
+      "measurement_indicator": "نسبة الالتزام بالميزانية",
+      "measurement_indicator_en": "Budget Compliance Rate",
+      "unit": "%",
+      "unit_en": "%",
+      "weight": "25%",
+      "baseline_2024": 92,
+      "baseline_2025": 94,
+      "target_2026": 96,
+      "target_2028": 98
+    },
+    {
+      "kpi_code": "finance_dept_kpi_3",
+      "classification": "operational",
+      "classification_en": "Operational",
+      "frequency": "quarterly",
+      "measurement_indicator": "العائد على الاستثمار",
+      "measurement_indicator_en": "Return on Investment (ROI)",
+      "unit": "%",
+      "unit_en": "%",
+      "weight": "25%",
+      "baseline_2024": 8,
+      "baseline_2025": 10,
+      "target_2026": 12,
+      "target_2028": 15
+    },
+    {
+      "kpi_code": "finance_dept_kpi_4",
+      "classification": "operational",
+      "classification_en": "Operational",
+      "frequency": "monthly",
+      "measurement_indicator": "التكلفة لكل رحلة",
+      "measurement_indicator_en": "Cost per Trip",
+      "unit": "SAR",
+      "unit_en": "SAR",
+      "weight": "20%",
+      "baseline_2024": 45,
+      "baseline_2025": 42,
+      "target_2026": 38,
+      "target_2028": 35
+    }
+  ]
+}

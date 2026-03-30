@@ -49,6 +49,7 @@ const navItems = [
   { href: "/reports", key: "reports", icon: "tabler:table" },
   { href: "/responsibilities", key: "responsibilities", icon: "tabler:user-check" },
   { href: "/approvals", key: "approvals", icon: "tabler:gavel" },
+  { href: "/admin", key: "admin", icon: "tabler:shield" },
   { href: "/organization", key: "organization", icon: "tabler:building" },
   { href: "/users", key: "users", icon: "tabler:users" },
   { href: "/departments", key: "departments", icon: "tabler:building-bank" },
@@ -380,7 +381,7 @@ export function AppShell({ children, showLogo = true }: { children: React.ReactN
       ["/dashboards", "/reports", "/responsibilities", "/approvals"].includes(item.href),
     ) as NavItem[];
     const adminItems = navItems.filter((item) =>
-      ["/organization", "/users"].includes(item.href) && userRole === "ADMIN",
+      ["/admin", "/organization", "/users"].includes(item.href) && userRole === "ADMIN",
     ) as NavItem[];
 
     return [

@@ -1,0 +1,130 @@
+{
+  "initiatives_mapping": [
+    {
+      "initiative_code": "INIT-SAFETY-01",
+      "initiative_name_ar": "برنامج السلامة المتكامل",
+      "initiative_name_en": "Integrated Safety Program",
+      "formula_description": "Comprehensive safety training and monitoring system for all drivers and supervisors",
+      "formula": "(INIT-SAFETY-01-KPI-1 + INIT-SAFETY-01-KPI-2 + INIT-SAFETY-01-KPI-3) / 3",
+      "kpis": [
+        {
+          "kpi_code": "INIT-SAFETY-01-KPI-1",
+          "type": "operational",
+          "value": "نسبة إنجاز التدريب",
+          "target": 100
+        },
+        {
+          "kpi_code": "INIT-SAFETY-01-KPI-2",
+          "type": "operational",
+          "value": "معدل الحوادث الشهرية",
+          "target": 0
+        }
+      ]
+    },
+    {
+      "initiative_code": "INIT-SAFETY-02",
+      "initiative_name_ar": "نظام إدارة المخاطر",
+      "initiative_name_en": "Risk Management System",
+      "formula_description": "Proactive risk identification and mitigation system for school transportation routes",
+      "formula": "(INIT-SAFETY-02-KPI-1 + INIT-SAFETY-02-KPI-2) / 2",
+      "kpis": [
+        {
+          "kpi_code": "INIT-SAFETY-02-KPI-1",
+          "type": "operational",
+          "value": "نسبة المسارات المقيمة",
+          "target": 100
+        },
+        {
+          "kpi_code": "INIT-SAFETY-02-KPI-2",
+          "type": "operational",
+          "value": "معدل المخاطر المحايدة",
+          "target": 95
+        }
+      ]
+    },
+    {
+      "initiative_code": "INIT-GOV-01",
+      "initiative_name_ar": "تعزيز الحوكمة والامتثال",
+      "initiative_name_en": "Governance & Compliance Enhancement",
+      "formula_description": "Strengthening internal controls and regulatory compliance framework",
+      "formula": "(INIT-GOV-01-KPI-1 + INIT-GOV-01-KPI-2 + INIT-GOV-01-KPI-3) / 3",
+      "kpis": [
+        {
+          "kpi_code": "INIT-GOV-01-KPI-1",
+          "type": "operational",
+          "value": "نسبة السياسات المحدثة",
+          "target": 100
+        },
+        {
+          "kpi_code": "INIT-GOV-01-KPI-2",
+          "type": "operational",
+          "value": "معدل الامتثال الداخلي",
+          "target": 95
+        }
+      ]
+    },
+    {
+      "initiative_code": "INIT-QUALITY-01",
+      "initiative_name_ar": "تحسين تجربة العملاء",
+      "initiative_name_en": "Customer Experience Improvement",
+      "formula_description": "Enhancing service quality and customer satisfaction through feedback systems",
+      "formula": "(INIT-QUALITY-01-KPI-1 + INIT-QUALITY-01-KPI-2) / 2",
+      "kpis": [
+        {
+          "kpi_code": "INIT-QUALITY-01-KPI-1",
+          "type": "operational",
+          "value": "معدل رضا العملاء",
+          "target": 90
+        },
+        {
+          "kpi_code": "INIT-QUALITY-01-KPI-2",
+          "type": "operational",
+          "value": "وقت استجابة الشكاوى",
+          "target": 24
+        }
+      ]
+    },
+    {
+      "initiative_code": "INIT-OPS-01",
+      "initiative_name_ar": "تحسين الكفاءة التشغيلية",
+      "initiative_name_en": "Operational Efficiency Improvement",
+      "formula_description": "Route optimization and resource utilization enhancement program",
+      "formula": "(INIT-OPS-01-KPI-1 + INIT-OPS-01-KPI-2 + INIT-OPS-01-KPI-3) / 3",
+      "kpis": [
+        {
+          "kpi_code": "INIT-OPS-01-KPI-1",
+          "type": "operational",
+          "value": "كفاءة الخطوط",
+          "target": 85
+        },
+        {
+          "kpi_code": "INIT-OPS-01-KPI-2",
+          "type": "operational",
+          "value": "معدل الالتزام بالمواعيد",
+          "target": 95
+        }
+      ]
+    },
+    {
+      "initiative_code": "INIT-TECH-01",
+      "initiative_name_ar": "التحول الرقمي",
+      "initiative_name_en": "Digital Transformation",
+      "formula_description": "Implementation of digital platforms for tracking and monitoring",
+      "formula": "(INIT-TECH-01-KPI-1 + INIT-TECH-01-KPI-2) / 2",
+      "kpis": [
+        {
+          "kpi_code": "INIT-TECH-01-KPI-1",
+          "type": "operational",
+          "value": "نسبة التغطية الرقمية",
+          "target": 100
+        },
+        {
+          "kpi_code": "INIT-TECH-01-KPI-2",
+          "type": "operational",
+          "value": "مدة توفر النظام",
+          "target": 99.9
+        }
+      ]
+    }
+  ]
+}

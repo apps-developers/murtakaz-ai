@@ -1,0 +1,55 @@
+{
+  "sector_info": {
+    "name_ar": "إدارة تقنية المعلومات",
+    "name_en": "IT Department"
+  },
+  "formula": "(it_dept_kpi_1 * 0.40 + it_dept_kpi_2 * 0.35 + it_dept_kpi_3 * 0.25) / 1.00",
+  "formula_description": "Weighted average of IT KPIs: Digital Adoption (40%), System Uptime (35%), Digital Coverage (25%)",
+  "indicators": [
+    {
+      "kpi_code": "it_dept_kpi_1",
+      "classification": "strategic",
+      "classification_en": "Strategic",
+      "frequency": "quarterly",
+      "measurement_indicator": "معدل التبني الرقمي",
+      "measurement_indicator_en": "Digital Adoption Rate",
+      "unit": "%",
+      "unit_en": "%",
+      "weight": "40%",
+      "baseline_2024": 60,
+      "baseline_2025": 70,
+      "target_2026": 80,
+      "target_2028": 95
+    },
+    {
+      "kpi_code": "it_dept_kpi_2",
+      "classification": "operational",
+      "classification_en": "Operational",
+      "frequency": "daily",
+      "measurement_indicator": "مدة تشغيل الأنظمة",
+      "measurement_indicator_en": "System Uptime",
+      "unit": "%",
+      "unit_en": "%",
+      "weight": "35%",
+      "baseline_2024": 99.5,
+      "baseline_2025": 99.7,
+      "target_2026": 99.8,
+      "target_2028": 99.95
+    },
+    {
+      "kpi_code": "it_dept_kpi_3",
+      "classification": "operational",
+      "classification_en": "Operational",
+      "frequency": "monthly",
+      "measurement_indicator": "نسبة التغطية الرقمية",
+      "measurement_indicator_en": "Digital Service Coverage",
+      "unit": "%",
+      "unit_en": "%",
+      "weight": "25%",
+      "baseline_2024": 75,
+      "baseline_2025": 82,
+      "target_2026": 90,
+      "target_2028": 100
+    }
+  ]
+}

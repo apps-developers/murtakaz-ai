@@ -102,6 +102,18 @@ enum NotificationType {
   VALUE_REJECTED
 }
 
+enum ComplexityLevel {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum ReviewDecision {
+  KEEP
+  MODIFY
+  REMOVE
+}
+
 // Models
 
 model Organization {
@@ -340,6 +352,11 @@ model Entity {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   deletedAt DateTime? @map("deleted_at")
+
+  complexityLevel   ComplexityLevel? @map("complexity_level")
+  reviewDecision    ReviewDecision?  @map("review_decision")
+  sector            String?
+  longTermTarget    Float?           @map("long_term_target")
 
   variables EntityVariable[]
   values    EntityValue[]

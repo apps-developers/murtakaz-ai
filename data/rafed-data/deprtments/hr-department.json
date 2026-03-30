@@ -1,0 +1,70 @@
+{
+  "sector_info": {
+    "name_ar": "إدارة الموارد البشرية",
+    "name_en": "Human Resources Department"
+  },
+  "formula": "(hr_dept_kpi_1 * 0.30 + hr_dept_kpi_2 * 0.25 + hr_dept_kpi_3 * 0.25 + hr_dept_kpi_4 * 0.20) / 1.00",
+  "formula_description": "Weighted average of HR KPIs: Staff Satisfaction (30%), Training Completion (25%), Retention Rate (25%), Recruitment Efficiency (20%)",
+  "indicators": [
+    {
+      "kpi_code": "hr_dept_kpi_1",
+      "classification": "strategic",
+      "classification_en": "Strategic",
+      "frequency": "quarterly",
+      "measurement_indicator": "معدل رضا الموظفين",
+      "measurement_indicator_en": "Employee Satisfaction Rate",
+      "unit": "%",
+      "unit_en": "%",
+      "weight": "30%",
+      "baseline_2024": 72,
+      "baseline_2025": 75,
+      "target_2026": 80,
+      "target_2028": 88
+    },
+    {
+      "kpi_code": "hr_dept_kpi_2",
+      "classification": "operational",
+      "classification_en": "Operational",
+      "frequency": "quarterly",
+      "measurement_indicator": "نسبة إنجاز التدريب",
+      "measurement_indicator_en": "Training Completion Rate",
+      "unit": "%",
+      "unit_en": "%",
+      "weight": "25%",
+      "baseline_2024": 85,
+      "baseline_2025": 88,
+      "target_2026": 92,
+      "target_2028": 95
+    },
+    {
+      "kpi_code": "hr_dept_kpi_3",
+      "classification": "operational",
+      "classification_en": "Operational",
+      "frequency": "monthly",
+      "measurement_indicator": "معدل الاحتفاظ بالموظفين",
+      "measurement_indicator_en": "Employee Retention Rate",
+      "unit": "%",
+      "unit_en": "%",
+      "weight": "25%",
+      "baseline_2024": 88,
+      "baseline_2025": 90,
+      "target_2026": 93,
+      "target_2028": 95
+    },
+    {
+      "kpi_code": "hr_dept_kpi_4",
+      "classification": "operational",
+      "classification_en": "Operational",
+      "frequency": "monthly",
+      "measurement_indicator": "كفاءة التوظيف",
+      "measurement_indicator_en": "Recruitment Efficiency",
+      "unit": "days",
+      "unit_en": "days",
+      "weight": "20%",
+      "baseline_2024": 45,
+      "baseline_2025": 40,
+      "target_2026": 30,
+      "target_2028": 21
+    }
+  ]
+}

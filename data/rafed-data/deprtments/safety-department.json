@@ -1,0 +1,85 @@
+{
+  "sector_info": {
+    "name_ar": "إدارة السلامة",
+    "name_en": "Safety Department"
+  },
+  "formula": "(safety_dept_kpi_1 * 0.20 + safety_dept_kpi_2 * 0.25 + safety_dept_kpi_3 * 0.25 + safety_dept_kpi_4 * 0.15 + safety_dept_kpi_5 * 0.15) / 1.00",
+  "formula_description": "Weighted average of safety KPIs: Total Accident Rate (20%), Fatality Rate (25%), Driver Compliance (25%), Violation Index (15%), Incident Rate (15%)",
+  "indicators": [
+    {
+      "kpi_code": "safety_dept_kpi_1",
+      "classification": "strategic",
+      "classification_en": "Strategic",
+      "frequency": "quarterly",
+      "measurement_indicator": "معدل الحوادث الإجمالي (لكل مليون كم)",
+      "measurement_indicator_en": "Total Accident Rate (per 1M km)",
+      "unit": "ratio",
+      "unit_en": "ratio",
+      "weight": "20%",
+      "baseline_2024": 1.2,
+      "baseline_2025": 1.0,
+      "target_2026": 0.8,
+      "target_2028": 0.5
+    },
+    {
+      "kpi_code": "safety_dept_kpi_2",
+      "classification": "strategic",
+      "classification_en": "Strategic",
+      "frequency": "monthly",
+      "measurement_indicator": "معدل الوفيات (لكل مليون رحلة)",
+      "measurement_indicator_en": "Fatality Rate (per 1M trips)",
+      "unit": "ratio",
+      "unit_en": "ratio",
+      "weight": "25%",
+      "baseline_2024": 0,
+      "baseline_2025": 0,
+      "target_2026": 0,
+      "target_2028": 0
+    },
+    {
+      "kpi_code": "safety_dept_kpi_3",
+      "classification": "operational",
+      "classification_en": "Operational",
+      "frequency": "monthly",
+      "measurement_indicator": "نسبة السائقين المدربين والمطابقين",
+      "measurement_indicator_en": "Driver Training & Compliance Rate",
+      "unit": "%",
+      "unit_en": "%",
+      "weight": "25%",
+      "baseline_2024": 94,
+      "baseline_2025": 95,
+      "target_2026": 98,
+      "target_2028": 100
+    },
+    {
+      "kpi_code": "safety_dept_kpi_4",
+      "classification": "operational",
+      "classification_en": "Operational",
+      "frequency": "monthly",
+      "measurement_indicator": "مؤشر مخالفات السلامة",
+      "measurement_indicator_en": "Safety Violation Index",
+      "unit": "score",
+      "unit_en": "score",
+      "weight": "15%",
+      "baseline_2024": 15,
+      "baseline_2025": 12,
+      "target_2026": 8,
+      "target_2028": 5
+    },
+    {
+      "kpi_code": "safety_dept_kpi_5",
+      "classification": "operational",
+      "classification_en": "Operational",
+      "frequency": "monthly",
+      "measurement_indicator": "معدل الحوادث البسيطة",
+      "measurement_indicator_en": "Minor Incident Rate",
+      "unit": "count",
+      "unit_en": "count",
+      "weight": "15%",
+      "baseline_2024": 45,
+      "baseline_2025": 35,
+      "target_2026": 25,
+      "target_2028": 15
+    }
+  ]
+}

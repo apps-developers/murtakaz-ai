@@ -1,0 +1,55 @@
+{
+  "sector_info": {
+    "name_ar": "إدارة الحوكمة والمخاطر",
+    "name_en": "Governance & Risk Department"
+  },
+  "formula": "(governance_dept_kpi_1 * 0.35 + governance_dept_kpi_2 * 0.35 + governance_dept_kpi_3 * 0.30) / 1.00",
+  "formula_description": "Weighted average of governance KPIs: Audit Score (35%), Compliance Rate (35%), Risk Mitigation (30%)",
+  "indicators": [
+    {
+      "kpi_code": "governance_dept_kpi_1",
+      "classification": "strategic",
+      "classification_en": "Strategic",
+      "frequency": "quarterly",
+      "measurement_indicator": "مؤشر التدقيق والحوكمة",
+      "measurement_indicator_en": "Audit & Governance Index",
+      "unit": "%",
+      "unit_en": "%",
+      "weight": "35%",
+      "baseline_2024": 72,
+      "baseline_2025": 78,
+      "target_2026": 85,
+      "target_2028": 95
+    },
+    {
+      "kpi_code": "governance_dept_kpi_2",
+      "classification": "strategic",
+      "classification_en": "Strategic",
+      "frequency": "quarterly",
+      "measurement_indicator": "معدل الامتثال التنظيمي",
+      "measurement_indicator_en": "Regulatory Compliance Rate",
+      "unit": "%",
+      "unit_en": "%",
+      "weight": "35%",
+      "baseline_2024": 85,
+      "baseline_2025": 88,
+      "target_2026": 92,
+      "target_2028": 98
+    },
+    {
+      "kpi_code": "governance_dept_kpi_3",
+      "classification": "operational",
+      "classification_en": "Operational",
+      "frequency": "monthly",
+      "measurement_indicator": "معدل تخفيف المخاطر",
+      "measurement_indicator_en": "Risk Mitigation Rate",
+      "unit": "%",
+      "unit_en": "%",
+      "weight": "30%",
+      "baseline_2024": 65,
+      "baseline_2025": 72,
+      "target_2026": 80,
+      "target_2028": 90
+    }
+  ]
+}

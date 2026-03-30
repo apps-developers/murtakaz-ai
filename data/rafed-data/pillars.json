@@ -1,0 +1,28 @@
+{
+  "pillar_objective_mapping": [
+    {
+      "pillar_id": 1,
+      "pillar_name_ar": "السلامة والحوكمة",
+      "pillar_name_en": "Safety & Governance",
+      "associated_strategic_goals": ["1", "2"]
+    },
+    {
+      "pillar_id": 2,
+      "pillar_name_ar": "الجودة ورضا العملاء",
+      "pillar_name_en": "Quality & Customer Experience",
+      "associated_strategic_goals": ["3", "4"]
+    },
+    {
+      "pillar_id": 3,
+      "pillar_name_ar": "الكفاءة والاستدامة",
+      "pillar_name_en": "Efficiency & Sustainability",
+      "associated_strategic_goals": ["5"]
+    },
+    {
+      "pillar_id": 4,
+      "pillar_name_ar": "التميز التشغيلي",
+      "pillar_name_en": "Operational Excellence",
+      "associated_strategic_goals": ["6"]
+    }
+  ]
+}

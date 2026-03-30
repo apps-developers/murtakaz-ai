@@ -1,0 +1,191 @@
+{
+  "page_info": {
+    "page_number": 1,
+    "title_ar": "الأهداف الاستراتيجية لرافد",
+    "title_en": "RAFED Strategic Goals",
+    "description": "Strategic goals and associated performance indicators for school transportation excellence."
+  },
+  "strategic_goals": [
+    {
+      "goal_id": "1",
+      "title_ar": "تحقيق أعلى معايير السلامة في النقل المدرسي مع معدل حوادث صفرية بحلول 2028",
+      "title_en": "Achieve the highest safety standards in school transportation with zero accident rate by 2028",
+      "page": 1,
+      "goal_weight_overall": "30%",
+      "formula": "(objective_kpi_1_1 * 0.25 + objective_kpi_1_2 * 0.25 + objective_kpi_1_3 * 0.25 + objective_kpi_1_4 * 0.25) / 1.00",
+      "formula_description": "Weighted average of safety KPIs: Total Accident Rate (25%), Fatality Rate (25%), Driver Safety Training (25%), Safety Violation Index (25%)",
+      "indicators": [
+        {
+          "code": "1.1",
+          "kpi_code": "objective_kpi_1_1",
+          "name_ar": "معدل الحوادث الإجمالي",
+          "name_en": "Total Accident Rate",
+          "weight": "25%",
+          "formula": "(safety_dept_kpi_1 * 0.10) / 0.10",
+          "formula_description": "Based on Safety Dept - Total Accident Rate"
+        },
+        {
+          "code": "1.2",
+          "kpi_code": "objective_kpi_1_2",
+          "name_ar": "معدل الوفيات أثناء النقل المدرسي",
+          "name_en": "School Transport Fatality Rate",
+          "weight": "25%",
+          "formula": "(safety_dept_kpi_2 * 0.10) / 0.10",
+          "formula_description": "Based on Safety Dept - Fatality Rate"
+        },
+        {
+          "code": "1.3",
+          "kpi_code": "objective_kpi_1_3",
+          "name_ar": "نسبة امتثال السائقين للتدريب والسلامة",
+          "name_en": "Driver Safety Training & Compliance Rate",
+          "weight": "25%",
+          "formula": "(safety_dept_kpi_3 * 0.10) / 0.10",
+          "formula_description": "Based on Safety Dept - Driver Compliance Rate"
+        },
+        {
+          "code": "1.4",
+          "kpi_code": "objective_kpi_1_4",
+          "name_ar": "مؤشر مخالفات السلامة",
+          "name_en": "Safety Violation Index",
+          "weight": "25%",
+          "formula": "(safety_dept_kpi_4 * 0.10) / 0.10",
+          "formula_description": "Based on Safety Dept - Safety Violation Index"
+        }
+      ]
+    },
+    {
+      "goal_id": "2",
+      "title_ar": "بناء نظام حوكمة شامل يضمن الامتثال بنسبة 100% لجميع المعايير التنظيمية",
+      "title_en": "Build a comprehensive governance system ensuring 100% compliance with all regulatory standards",
+      "page": 2,
+      "goal_weight_overall": "20%",
+      "formula": "(objective_kpi_2_1 * 0.40 + objective_kpi_2_2 * 0.30 + objective_kpi_2_3 * 0.30) / 1.00",
+      "formula_description": "Weighted average: Audit & Governance Index (40%), Compliance Rate (30%), Vendor Performance (30%)",
+      "indicators": [
+        {
+          "code": "2.1",
+          "kpi_code": "objective_kpi_2_1",
+          "name_ar": "مؤشر الحوكمة والتدقيق",
+          "name_en": "Safety Audit & Governance Index",
+          "weight": "40%",
+          "formula": "(governance_dept_kpi_1 * 0.10 + governance_dept_kpi_2 * 0.10) / 0.20",
+          "formula_description": "Based on Governance Dept - Audit and Compliance indicators"
+        },
+        {
+          "code": "2.2",
+          "kpi_code": "objective_kpi_2_2",
+          "name_ar": "معدل الامتثال التنظيمي",
+          "name_en": "Regulatory Compliance Rate",
+          "weight": "30%",
+          "formula": "(legal_dept_kpi_1 * 0.10) / 0.10",
+          "formula_description": "Based on Legal Dept - Compliance tracking"
+        },
+        {
+          "code": "2.3",
+          "kpi_code": "objective_kpi_2_3",
+          "name_ar": "أداء مقدمي الخدمات",
+          "name_en": "Vendor Performance Score",
+          "weight": "30%",
+          "formula": "(operations_dept_kpi_1 * 0.10 + operations_dept_kpi_2 * 0.10) / 0.20",
+          "formula_description": "Based on Operations Dept - Vendor performance metrics"
+        }
+      ]
+    },
+    {
+      "goal_id": "3",
+      "title_ar": "تحقيق رضا متميز للعملاء بنسبة 90% أو أكثر بحلول 2028",
+      "title_en": "Achieve exceptional customer satisfaction of 90% or more by 2028",
+      "page": 3,
+      "goal_weight_overall": "25%",
+      "formula": "(objective_kpi_3_1 * 0.40 + objective_kpi_3_2 * 0.35 + objective_kpi_3_3 * 0.25) / 1.00",
+      "formula_description": "Weighted average: Customer Satisfaction Index (40%), Complaint Resolution (35%), On-Time Performance (25%)",
+      "indicators": [
+        {
+          "code": "3.1",
+          "kpi_code": "objective_kpi_3_1",
+          "name_ar": "مؤشر رضا العملاء",
+          "name_en": "Customer Satisfaction Index",
+          "weight": "40%",
+          "formula": "(quality_dept_kpi_1 * 0.10) / 0.10",
+          "formula_description": "Based on Quality Dept - Customer satisfaction surveys"
+        },
+        {
+          "code": "3.2",
+          "kpi_code": "objective_kpi_3_2",
+          "name_ar": "معدل إغلاق الشكاوى",
+          "name_en": "Complaint Closure Rate",
+          "weight": "35%",
+          "formula": "(quality_dept_kpi_2 * 0.10) / 0.10",
+          "formula_description": "Based on Quality Dept - Complaint resolution tracking"
+        },
+        {
+          "code": "3.3",
+          "kpi_code": "objective_kpi_3_3",
+          "name_ar": "الالتزام بالمواعيد",
+          "name_en": "On-Time Performance Rate",
+          "weight": "25%",
+          "formula": "(operations_dept_kpi_3 * 0.10) / 0.10",
+          "formula_description": "Based on Operations Dept - Schedule adherence"
+        }
+      ]
+    },
+    {
+      "goal_id": "4",
+      "title_ar": "تعزيز الكفاءة التشغيلية وتقليل التكاليف بنسبة 15% مع الحفاظ على الجودة",
+      "title_en": "Enhance operational efficiency and reduce costs by 15% while maintaining quality",
+      "page": 4,
+      "goal_weight_overall": "15%",
+      "formula": "(objective_kpi_4_1 * 0.50 + objective_kpi_4_2 * 0.50) / 1.00",
+      "formula_description": "Weighted average: Cost Efficiency (50%), Route Optimization (50%)",
+      "indicators": [
+        {
+          "code": "4.1",
+          "kpi_code": "objective_kpi_4_1",
+          "name_ar": "مؤشر كفاءة التكلفة",
+          "name_en": "Cost Efficiency Index",
+          "weight": "50%",
+          "formula": "(finance_dept_kpi_1 * 0.10) / 0.10",
+          "formula_description": "Based on Finance Dept - Cost per trip analysis"
+        },
+        {
+          "code": "4.2",
+          "kpi_code": "objective_kpi_4_2",
+          "name_ar": "كفاءة خطوط النقل",
+          "name_en": "Route Efficiency Rate",
+          "weight": "50%",
+          "formula": "(operations_dept_kpi_4 * 0.10) / 0.10",
+          "formula_description": "Based on Operations Dept - Route optimization metrics"
+        }
+      ]
+    },
+    {
+      "goal_id": "5",
+      "title_ar": "التحول الرقمي الشامل لجميع عمليات النقل المدرسي بحلول 2027",
+      "title_en": "Comprehensive digital transformation of all school transportation operations by 2027",
+      "page": 5,
+      "goal_weight_overall": "10%",
+      "formula": "(objective_kpi_5_1 * 0.60 + objective_kpi_5_2 * 0.40) / 1.00",
+      "formula_description": "Weighted average: Digital Adoption (60%), System Uptime (40%)",
+      "indicators": [
+        {
+          "code": "5.1",
+          "kpi_code": "objective_kpi_5_1",
+          "name_ar": "معدل التبني الرقمي",
+          "name_en": "Digital Adoption Rate",
+          "weight": "60%",
+          "formula": "(it_dept_kpi_1 * 0.10) / 0.10",
+          "formula_description": "Based on IT Dept - Digital platform usage"
+        },
+        {
+          "code": "5.2",
+          "kpi_code": "objective_kpi_5_2",
+          "name_ar": "مدة تشغيل الأنظمة",
+          "name_en": "System Uptime",
+          "weight": "40%",
+          "formula": "(it_dept_kpi_2 * 0.10) / 0.10",
+          "formula_description": "Based on IT Dept - System availability"
+        }
+      ]
+    }
+  ]
+}
