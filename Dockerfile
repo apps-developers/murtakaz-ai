@@ -42,8 +42,9 @@ COPY --from=builder /app/web/.next/static ./.next/static
 COPY --from=builder /app/web/public ./public
 # Copy prisma schema (needed at runtime for migrations)
 COPY --from=builder /app/prisma ./prisma
-# Copy prisma CLI for running migrations at startup
+# Copy prisma CLI + engines for running migrations at startup
 COPY --from=builder /app/web/node_modules/prisma ./node_modules/prisma
+COPY --from=builder /app/web/node_modules/@prisma/engines ./node_modules/@prisma/engines
 
 RUN mkdir -p .next/cache && \
     chown -R nextjs:nodejs .next
