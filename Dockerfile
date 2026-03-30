@@ -42,6 +42,11 @@ COPY --from=builder /app/web/.next/static ./.next/static
 COPY --from=builder /app/web/public ./public
 # Copy prisma schema (needed at runtime for migrations)
 COPY --from=builder /app/prisma ./prisma
+# Copy prisma CLI for running migrations at startup
+COPY --from=builder /app/web/node_modules/prisma ./node_modules/prisma
+
+RUN mkdir -p .next/cache && \
+    chown -R nextjs:nodejs .next
 
 USER nextjs
 
@@ -49,4 +54,4 @@ EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-CMD ["node", "server.js"]
+CMD ["sh", "-c", "node ./node_modules/prisma/build/index.js migrate deploy --schema=./prisma/schema.prisma && node server.js"]
