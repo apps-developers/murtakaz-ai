@@ -23,7 +23,12 @@ RUN corepack enable && corepack prepare pnpm@10.25.0 --activate
 WORKDIR /app
 
 COPY --from=deps /app/web/node_modules ./web/node_modules
+COPY --from=deps /app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=deps /app/web/src/generated ./web/src/generated
 COPY . .
+
+# Skip prebuild hook (prisma generate already done in deps stage)
+RUN cd web && sed -i '/"prebuild"/d' package.json
 
 # Build Next.js (standalone output)
 RUN cd web && pnpm run build
