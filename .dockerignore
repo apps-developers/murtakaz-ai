@@ -1,0 +1,12 @@
+node_modules
+web/node_modules
+web/.next
+.git
+.env
+.env.*
+!.env.example
+.DS_Store
+*.md
+temp_pptx
+docs
+data

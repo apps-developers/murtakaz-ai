@@ -1,22 +1,52 @@
 services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: murtakaz-app
+    restart: unless-stopped
+    ports:
+      - "${PORT:-3000}:3000"
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-murtakaz_ai}?schema=public
+      - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
+      - BETTER_AUTH_URL=${BETTER_AUTH_URL}
+      - NEXT_PUBLIC_BETTER_AUTH_URL=${NEXT_PUBLIC_BETTER_AUTH_URL}
+      - NEXT_PUBLIC_AI_ENABLED=${NEXT_PUBLIC_AI_ENABLED:-true}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+      - AI_MODEL=${AI_MODEL:-google/gemini-3.1-flash-lite-preview}
+      - AI_MODEL_SMART=${AI_MODEL_SMART:-google/gemini-3.1-flash-lite-preview}
+      - AGENT_MODEL=${AGENT_MODEL:-google/gemini-3.1-flash-lite-preview}
+      - HIDE_LOGO=${HIDE_LOGO:-false}
+      - ALLOWED_ORIGIN=${ALLOWED_ORIGIN}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - murtakaz-net
+
   postgres:
     image: postgres:16-alpine
     container_name: murtakaz-postgres
     restart: unless-stopped
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-app}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-app_password}
-      POSTGRES_DB: ${POSTGRES_DB:-app_db}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-murtakaz_ai}
       PGDATA: /var/lib/postgresql/data/pgdata
-    ports:
-      - "${POSTGRES_PORT:-5433}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data/pgdata
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-app} -d ${POSTGRES_DB:-app_db}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-murtakaz_ai}"]
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - murtakaz-net
 
 volumes:
   postgres_data:
+
+networks:
+  murtakaz-net:
