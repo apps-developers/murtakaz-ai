@@ -10,6 +10,8 @@ COPY web/package.json web/pnpm-lock.yaml ./web/
 
 # Install all deps (including devDependencies for prisma generate & build)
 RUN cd web && pnpm install --frozen-lockfile
+# Generate Prisma client here where pnpm store is available (avoids auto-install issue in builder)
+RUN cd web && pnpm run prisma:generate
 
 # ── Stage 2: Build the Next.js app ──
 FROM node:22-alpine AS builder
@@ -18,9 +20,6 @@ WORKDIR /app
 
 COPY --from=deps /app/web/node_modules ./web/node_modules
 COPY . .
-
-# Generate Prisma client
-RUN cd web && pnpm run prisma:generate
 
 # Build Next.js (standalone output)
 RUN cd web && pnpm run build
