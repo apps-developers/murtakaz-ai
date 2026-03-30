@@ -12,6 +12,10 @@ COPY web/package.json web/pnpm-lock.yaml ./web/
 RUN cd web && pnpm install --frozen-lockfile
 # Generate Prisma client here where pnpm store is available (avoids auto-install issue in builder)
 RUN cd web && pnpm run prisma:generate
+# Prepare prisma CLI bundle (resolve pnpm symlinks so runner can copy plain dirs)
+RUN mkdir -p /prisma-cli/node_modules/@prisma && \
+    cp -rL $(cd /app/web && node -p "require.resolve('prisma/package.json').replace('/package.json','')") /prisma-cli/node_modules/prisma && \
+    cp -rL $(cd /app/web && node -p "require.resolve('@prisma/engines/package.json').replace('/package.json','')") /prisma-cli/node_modules/@prisma/engines
 
 # ── Stage 2: Build the Next.js app ──
 FROM node:22-alpine AS builder
@@ -41,9 +45,9 @@ COPY --from=builder /app/web/.next/static ./.next/static
 COPY --from=builder /app/web/public ./public
 # Copy prisma schema (needed at runtime for migrations)
 COPY --from=builder /app/prisma ./prisma
-# Copy prisma CLI + engines for running migrations at startup
-COPY --from=builder /app/web/node_modules/prisma ./node_modules/prisma
-COPY --from=builder /app/web/node_modules/@prisma/engines ./node_modules/@prisma/engines
+# Copy prisma CLI + engines for running migrations at startup (from deps where pnpm symlinks are resolved)
+COPY --from=deps /prisma-cli/node_modules/prisma ./node_modules/prisma
+COPY --from=deps /prisma-cli/node_modules/@prisma/engines ./node_modules/@prisma/engines
 
 RUN mkdir -p .next/cache && \
     chown -R nextjs:nodejs .next
