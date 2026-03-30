@@ -492,7 +492,7 @@ export function AppShell({ children, showLogo = true }: { children: React.ReactN
           </div>
         ) : null}
 
-        {showAppNav ? <div className="hidden lg:block lg:w-20 lg:shrink-0" /> : null}
+        {showAppNav ? <div className={cn("hidden lg:block lg:shrink-0", sidebarPinned && sidebarExpanded ? "lg:w-72" : "lg:w-20")} /> : null}
 
         {showAppNav ? (
           <aside
