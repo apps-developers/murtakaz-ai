@@ -11,11 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useLocale } from "@/providers/locale-provider";
 import { useAuth } from "@/providers/auth-provider";
 import { useEffect, useMemo, useState } from "react";
-import {
-  getOrgAdminOrganizationSettings,
-  updateOrgAdminEnabledNodeTypes,
-  updateOrgAdminOrganizationSettings,
-} from "@/actions/org-admin";
+import { getOrgAdminOrganizationSettings, updateOrgAdminOrganizationSettings, updateOrgAdminEnabledNodeTypes, uploadOrgLogo } from "@/actions/org-admin";
 import Link from "next/link";
 
 export default function OrganizationPage() {
@@ -48,6 +44,30 @@ export default function OrganizationPage() {
   const [nameArDraft, setNameArDraft] = useState("");
   const [domainDraft, setDomainDraft] = useState("");
   const [logoUrlDraft, setLogoUrlDraft] = useState("");
+  const [uploadingLogo, setUploadingLogo] = useState(false);
+  const [logoFile, setLogoFile] = useState<File | null>(null);
+
+  async function handleLogoUpload(file: File) {
+    if (!file) return;
+    setUploadingLogo(true);
+    setError(null);
+    try {
+      const formData = new FormData();
+      formData.append("logo", file);
+      const res = await uploadOrgLogo(formData);
+      if (!res.success) {
+        setError(res.error);
+        return;
+      }
+      setLogoUrlDraft(res.logoUrl);
+      setLogoFile(null);
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : "Upload failed");
+    } finally {
+      setUploadingLogo(false);
+    }
+  }
+
   const [missionDraft, setMissionDraft] = useState("");
   const [missionArDraft, setMissionArDraft] = useState("");
   const [visionDraft, setVisionDraft] = useState("");
@@ -295,7 +315,45 @@ export default function OrganizationPage() {
                     </div>
                     <div className="space-y-2">
                       <Label>{t("logoUrl")}</Label>
-                      <Input value={logoUrlDraft} onChange={(e) => setLogoUrlDraft(e.target.value)} className="bg-card" placeholder="https://..." />
+                      <div className="flex gap-2">
+                        <Input
+                          value={logoUrlDraft}
+                          onChange={(e) => setLogoUrlDraft(e.target.value)}
+                          className="bg-card"
+                          placeholder="https://..."
+                          disabled={uploadingLogo}
+                        />
+                        <label className="relative">
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="sr-only"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              if (file) void handleLogoUpload(file);
+                            }}
+                            disabled={uploadingLogo}
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            className="relative cursor-pointer px-2"
+                            disabled={uploadingLogo}
+                            asChild
+                          >
+                            <span>
+                              {uploadingLogo ? <Icon name="tabler:loader-2" className="h-4 w-4 animate-spin" /> : <Icon name="tabler:upload" className="h-4 w-4" />}
+                            </span>
+                          </Button>
+                        </label>
+                      </div>
+                      {logoUrlDraft && (
+                        <div className="mt-2 flex items-center gap-2 rounded-md border bg-muted/50 p-2">
+                          <img src={logoUrlDraft} alt="Logo preview" className="h-8 w-auto object-contain" />
+                          <span className="text-xs text-muted-foreground truncate">{logoUrlDraft}</span>
+                        </div>
+                      )}
                     </div>
                   </div>
 

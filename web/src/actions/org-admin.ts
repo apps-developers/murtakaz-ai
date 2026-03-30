@@ -6,6 +6,10 @@ import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { requireOrgAdmin as requireOrgAdminSession, requireOrgMember } from "@/lib/server-action-auth";
 import { ActionValidationIssue } from "@/types/actions";
+import { writeFile } from "fs/promises";
+import { join } from "path";
+import { mkdir } from "fs/promises";
+import { randomUUID } from "crypto";
 
 async function requireOrgAdmin() {
   return requireOrgAdminSession({ unauthorizedError: "unauthorizedAdminRequired" });
@@ -513,4 +517,56 @@ export async function getOrgLogo() {
   });
 
   return { logoUrl: org?.logoUrl ?? null };
+}
+
+/**
+ * Upload organization logo file
+ */
+export async function uploadOrgLogo(formData: FormData) {
+  const session = await requireOrgAdmin();
+  const orgId = session.user.orgId;
+
+  const file = formData.get("logo") as File | null;
+  if (!file) {
+    return { success: false as const, error: "noFileProvided" };
+  }
+
+  // Validate file type
+  const allowedTypes = ["image/png", "image/jpeg", "image/gif", "image/svg+xml", "image/webp"];
+  if (!allowedTypes.includes(file.type)) {
+    return { success: false as const, error: "invalidFileType" };
+  }
+
+  // Validate file size (max 5MB)
+  const maxSize = 5 * 1024 * 1024;
+  if (file.size > maxSize) {
+    return { success: false as const, error: "fileTooLarge" };
+  }
+
+  try {
+    // Generate unique filename
+    const ext = file.name.split(".").pop()?.toLowerCase() || "png";
+    const filename = `logo-${randomUUID()}.${ext}`;
+
+    // Ensure uploads directory exists
+    const uploadDir = join(process.cwd(), "public", "uploads", "logos");
+    await mkdir(uploadDir, { recursive: true });
+
+    // Write file
+    const filepath = join(uploadDir, filename);
+    const bytes = await file.arrayBuffer();
+    await writeFile(filepath, Buffer.from(bytes));
+
+    // Update org with logo URL
+    const logoUrl = `/uploads/logos/${filename}`;
+    await prisma.organization.update({
+      where: { id: orgId },
+      data: { logoUrl },
+    });
+
+    return { success: true as const, logoUrl };
+  } catch (error: unknown) {
+    console.error("Failed to upload logo:", error);
+    return { success: false as const, error: "uploadFailed" };
+  }
 }
