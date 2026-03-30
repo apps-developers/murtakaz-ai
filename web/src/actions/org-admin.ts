@@ -4,7 +4,7 @@ import { z } from "zod";
 import { Role, KpiApprovalLevel } from "@/generated/prisma-client";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
-import { requireOrgAdmin as requireOrgAdminSession } from "@/lib/server-action-auth";
+import { requireOrgAdmin as requireOrgAdminSession, requireOrgMember } from "@/lib/server-action-auth";
 import { ActionValidationIssue } from "@/types/actions";
 
 async function requireOrgAdmin() {
@@ -494,4 +494,23 @@ export async function deleteOrgAdminUser(data: z.infer<typeof deleteOrgUserSchem
     const message = error instanceof Error ? error.message : "Failed to delete user";
     return { success: false, error: message };
   }
+}
+
+/**
+ * Get organization logo URL for any authenticated org member
+ */
+export async function getOrgLogo() {
+  const session = await requireOrgMember();
+
+  const org = await prisma.organization.findFirst({
+    where: {
+      id: session.user.orgId,
+      deletedAt: null,
+    },
+    select: {
+      logoUrl: true,
+    },
+  });
+
+  return { logoUrl: org?.logoUrl ?? null };
 }

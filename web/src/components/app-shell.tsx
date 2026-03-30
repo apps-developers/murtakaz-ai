@@ -9,6 +9,7 @@ import { LanguageToggle } from "@/components/language-toggle";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { getMyOrganizationEntityTypes } from "@/actions/navigation";
 import { getMyNotificationCount, markNotificationsRead } from "@/actions/notifications";
+import { getOrgLogo } from "@/actions/org-admin";
 import { useAuth } from "@/providers/auth-provider";
 import { type TranslationKey, useLocale } from "@/providers/locale-provider";
 import { Icon } from "@/components/icon";
@@ -89,7 +90,8 @@ function getAppHomeHref(userRole: unknown) {
   return userRole === "SUPER_ADMIN" ? "/super-admin" : "/overview";
 }
 
-function BrandLogo({ compact }: { compact?: boolean }) {
+function BrandLogo({ compact, logoUrl }: { compact?: boolean; logoUrl?: string | null }) {
+  const src = logoUrl && logoUrl.trim() ? logoUrl : brandLogoSrc;
   return (
     <div
       className={cn(
@@ -98,7 +100,7 @@ function BrandLogo({ compact }: { compact?: boolean }) {
       )}
     >
       <Image
-        src={brandLogoSrc}
+        src={src}
         alt="Almosa"
         width={160}
         height={40}
@@ -295,6 +297,7 @@ export function AppShell({ children, showLogo = true }: { children: React.ReactN
     return matches[0]?.key;
   }, [canonicalPath]);
 
+  const [logoUrl, setLogoUrl] = useState<string | null>(null);
   const [orgEntityTypes, setOrgEntityTypes] = useState<Array<{ code: string; name: string; nameAr: string | null; sortOrder: number }>>([]);
   const [unreadCount, setUnreadCount] = useState(0);
 
@@ -332,6 +335,19 @@ export function AppShell({ children, showLogo = true }: { children: React.ReactN
         setOrgEntityTypes([]);
       }
     })();
+  }, [showAppNav, user, userRole]);
+
+  useEffect(() => {
+    if (!showAppNav || !user || userRole === "SUPER_ADMIN") return;
+    let cancelled = false;
+    async function fetchLogo() {
+      try {
+        const { logoUrl } = await getOrgLogo();
+        if (!cancelled) setLogoUrl(logoUrl);
+      } catch { /* ignore */ }
+    }
+    void fetchLogo();
+    return () => { cancelled = true; };
   }, [showAppNav, user, userRole]);
 
   const entityTypeItems = useMemo<DynamicNavItem[]>(() => orgEntityTypes
@@ -622,7 +638,7 @@ export function AppShell({ children, showLogo = true }: { children: React.ReactN
               {isMarketingRoute ? (
                 <div className="flex items-center gap-6">
                   <Link href={`/${locale}`} className="flex items-center gap-3">
-                    {showLogo ? <BrandLogo /> : null}
+                    {showLogo ? <BrandLogo logoUrl={logoUrl} /> : null}
                     <div className={cn("leading-tight")}>
                       <p className="text-sm font-semibold text-foreground">{t("murtakaz")}</p>
                       <p className="text-xs text-muted-foreground">{t("strategyExecutionPlatform")}</p>
@@ -650,7 +666,7 @@ export function AppShell({ children, showLogo = true }: { children: React.ReactN
                 </div>
               ) : (
                 <Link href={`/${locale}`} className="flex items-center gap-3">
-                  {showLogo ? <BrandLogo /> : null}
+                  {showLogo ? <BrandLogo logoUrl={logoUrl} /> : null}
                   <div className="leading-tight">
                     <p className="text-xs uppercase tracking-[0.24em] text-muted-foreground">{t("appTitle")}</p>
                     <p className="text-sm font-semibold text-foreground">{t("appTagline")}</p>

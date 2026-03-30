@@ -899,6 +899,82 @@ export async function getGovernanceInsights() {
   };
 }
 
+export async function getPillarDashboardInsights() {
+  const session = await requireOrgMember();
+  const orgId = session.user.orgId;
+
+  const pillars = await prisma.entity.findMany({
+    where: {
+      orgId,
+      deletedAt: null,
+      orgEntityType: { code: { equals: "pillar", mode: "insensitive" } },
+    },
+    orderBy: [{ title: "asc" }],
+    select: {
+      id: true,
+      title: true,
+      titleAr: true,
+      status: true,
+      values: {
+        orderBy: [{ createdAt: "desc" }],
+        take: 1,
+        select: { achievementValue: true, status: true },
+      },
+    },
+  });
+
+  const totalPillars = pillars.length;
+  const achievements = pillars
+    .map((p) => p.values?.[0]?.achievementValue)
+    .filter((v): v is number => typeof v === "number" && Number.isFinite(v));
+  const avgAchievement = achievements.length > 0
+    ? achievements.reduce((a, b) => a + b, 0) / achievements.length
+    : null;
+
+  const entityTypes = await prisma.orgEntityType.findMany({
+    where: { orgId, code: { in: ["initiative", "kpi"], mode: "insensitive" } },
+    select: { id: true, code: true },
+  });
+
+  const initiativeTypeId = entityTypes.find((et) => et.code.toLowerCase() === "initiative")?.id;
+  const kpiTypeId = entityTypes.find((et) => et.code.toLowerCase() === "kpi")?.id;
+
+  const initiativeCount = initiativeTypeId
+    ? await prisma.entity.count({ where: { orgId, deletedAt: null, orgEntityTypeId: initiativeTypeId } })
+    : 0;
+
+  const kpiCount = kpiTypeId
+    ? await prisma.entity.count({ where: { orgId, deletedAt: null, orgEntityTypeId: kpiTypeId } })
+    : 0;
+
+  const pillarHealth = pillars.map((p) => ({
+    name: String(p.title),
+    nameAr: p.titleAr ? String(p.titleAr) : null,
+    count: 1,
+    avgAchievement: p.values?.[0]?.achievementValue ?? 0,
+  }));
+
+  return {
+    summary: {
+      totalPillars,
+      avgAchievement,
+      totalInitiatives: initiativeCount,
+      totalKpis: kpiCount,
+    },
+    pillars: pillars.map((p) => ({
+      id: String(p.id),
+      name: String(p.title),
+      nameAr: p.titleAr ? String(p.titleAr) : null,
+      status: String(p.status),
+      initiativeCount: 0,
+      kpiCount: 0,
+      avgAchievement: p.values?.[0]?.achievementValue ?? null,
+    })),
+    pillarHealth,
+    kpiByPillar: pillarHealth,
+  };
+}
+
 export async function getEntityContextForAiReport(orgId: string, take = 20) {
   const entities = await getKpisWithLatestValue(orgId, take);
   return entities

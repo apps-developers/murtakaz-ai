@@ -3,14 +3,12 @@ import "./globals.css";
 import { Providers } from "./providers";
 import { AppShell } from "@/components/app-shell";
 
-/* eslint-disable @next/next/no-page-custom-font */
-
 export const metadata: Metadata = {
   title: "Strategy Execution & Performance",
   description: "Executive-grade prototype for strategy execution, KPIs, and governance",
 };
 
-export default async function RootLayout({
+export default async function LocaleLayout({
   children,
   params,
 }: Readonly<{
@@ -18,31 +16,13 @@ export default async function RootLayout({
   params: Promise<{ locale: string }>;
 }>) {
   const { locale } = await params;
-  const dir = locale === "ar" ? "rtl" : "ltr";
   const hideLogoRaw = process.env.HIDE_LOGO;
   const hideLogo = !hideLogoRaw ? false : ["true", "1", "yes", "on"].includes(hideLogoRaw.toLowerCase());
   const showLogo = !hideLogo;
 
   return (
-    <html lang={locale} dir={dir} suppressHydrationWarning>
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="dark"||(t!=="light"&&d)){document.documentElement.classList.add("dark")}else{document.documentElement.classList.remove("dark")}}catch(e){}})();`,
-          }}
-        />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap"
-          rel="stylesheet"
-        />
-      </head>
-      <body className="antialiased">
-        <Providers locale={locale}>
-          <AppShell showLogo={showLogo}>{children}</AppShell>
-        </Providers>
-      </body>
-    </html>
+    <Providers locale={locale}>
+      <AppShell showLogo={showLogo}>{children}</AppShell>
+    </Providers>
   );
 }
