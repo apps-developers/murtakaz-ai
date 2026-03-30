@@ -47,7 +47,7 @@ COPY --from=builder /app/web/public ./public
 # Copy prisma schema (needed at runtime for migrations)
 COPY --from=builder /app/prisma ./prisma
 # Install prisma CLI in isolated dir (avoids conflict with standalone package.json)
-RUN mkdir /prisma-cli && cd /prisma-cli && npm init -y --silent && npm install prisma@6.19.2 --silent 2>&1 | tail -1
+RUN mkdir /prisma-cli && cd /prisma-cli && npm init -y --silent && npm install prisma@6.19.2 --loglevel=error
 
 RUN mkdir -p .next/cache && \
     chown -R nextjs:nodejs .next
