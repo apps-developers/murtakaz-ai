@@ -281,8 +281,8 @@ export default function ResponsibilitiesPage() {
         </Card>
       ) : null}
 
-      <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as "entities" | "users")}>
-        <TabsList dir="ltr">
+      <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as "entities" | "users")} dir={locale === "ar" ? "rtl" : "ltr"}>
+        <TabsList>
           <TabsTrigger value="users">{tr("By User", "حسب المستخدم")}</TabsTrigger>
           <TabsTrigger value="entities">{tr("By Entity", "حسب الكيان")}</TabsTrigger>
         </TabsList>
