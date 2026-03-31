@@ -3,10 +3,10 @@ import { generateObject } from "ai";
 import { z } from "zod";
 import { getModel } from "@/lib/ai/client";
 import { describeSystemPrompt } from "@/lib/ai/prompts";
-import { isAiEnabled, aiDisabledResponse } from "../_mock-stream";
+import { isAiFeatureEnabled, aiDisabledResponse } from "../_mock-stream";
 
 export async function POST(req: NextRequest) {
-  if (!isAiEnabled()) return aiDisabledResponse();
+  if (!(await isAiFeatureEnabled())) return aiDisabledResponse();
 
   const { title, userPrompt, previousDescription } = (await req.json()) as {
     title?: string;

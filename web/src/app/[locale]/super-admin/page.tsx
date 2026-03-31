@@ -93,6 +93,12 @@ export default function SuperAdminPage() {
               <p className="font-semibold text-foreground">{t("users")}</p>
               <p className="mt-1 text-xs text-muted-foreground">{t("searchAndManageUsersDesc")}</p>
             </div>
+            <div className="rounded-xl border border-border bg-muted/30 px-4 py-3">
+              <Link href={`/${locale}/super-admin/settings`} className="font-semibold text-foreground hover:underline">
+                {t("settings")}
+              </Link>
+              <p className="mt-1 text-xs text-muted-foreground">{t("systemSettingsDesc")}</p>
+            </div>
           </CardContent>
         </Card>
       </div>

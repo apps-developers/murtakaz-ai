@@ -12,6 +12,136 @@ import {
 } from "@/actions/notifications";
 
 /**
+ * Get entity value detail for approval review
+ */
+export async function getEntityValueDetail(entityValueId: string) {
+  const session = await requireOrgMember();
+  
+  const parsed = z.string().uuid().safeParse(entityValueId);
+  if (!parsed.success) {
+    return { success: false as const, error: "invalidInput" };
+  }
+
+  try {
+    // Check if user has approval authority
+    const orgApprovalLevel = await getOrgKpiApprovalLevel(session.user.orgId);
+    const userRoleRank = resolveRoleRank(session.user.role as string);
+    const requiredRoleRank = resolveRoleRank(orgApprovalLevel);
+    const canApprove = userRoleRank >= requiredRoleRank;
+
+    const entityValue = await prisma.entityValue.findFirst({
+      where: {
+        id: parsed.data,
+        entity: {
+          orgId: session.user.orgId,
+          deletedAt: null,
+        },
+      },
+      include: {
+        entity: {
+          include: {
+            orgEntityType: true,
+            ownerUser: { select: { id: true, name: true, email: true } },
+            variables: true,
+          },
+        },
+        submittedByUser: { select: { id: true, name: true, email: true } },
+        approvedByUser: { select: { id: true, name: true, email: true } },
+        enteredByUser: { select: { id: true, name: true, email: true } },
+        variableValues: {
+          include: {
+            entityVariable: true,
+          },
+        },
+      },
+    });
+
+    if (!entityValue) {
+      return { success: false as const, error: "notFound" };
+    }
+
+    // Get historical values for context
+    const historicalValues = await prisma.entityValue.findMany({
+      where: {
+        entityId: entityValue.entityId,
+        status: { in: ["APPROVED", "LOCKED"] },
+        id: { not: entityValue.id },
+        finalValue: { not: null },
+      },
+      orderBy: { createdAt: "desc" },
+      take: 6,
+      select: {
+        finalValue: true,
+        calculatedValue: true,
+        actualValue: true,
+        achievementValue: true,
+        createdAt: true,
+      },
+    });
+
+    return {
+      success: true as const,
+      entityValue,
+      historicalValues,
+      canApprove,
+    };
+  } catch (error) {
+    console.error("Failed to get entity value detail:", error);
+    return { success: false as const, error: "failedToLoad" };
+  }
+}
+
+/**
+ * Add comment to entity value
+ */
+export async function addEntityValueComment(input: { entityValueId: string; comment: string }) {
+  const session = await requireOrgMember();
+  
+  const parsed = z.object({
+    entityValueId: z.string().uuid(),
+    comment: z.string().min(1).max(1000),
+  }).safeParse(input);
+
+  if (!parsed.success) {
+    return { success: false as const, error: "invalidInput" };
+  }
+
+  try {
+    // Verify entity value exists and belongs to user's org
+    const entityValue = await prisma.entityValue.findFirst({
+      where: {
+        id: parsed.data.entityValueId,
+        entity: {
+          orgId: session.user.orgId,
+          deletedAt: null,
+        },
+      },
+    });
+
+    if (!entityValue) {
+      return { success: false as const, error: "notFound" };
+    }
+
+    // Append comment to existing note
+    const existingNote = entityValue.note ?? "";
+    const timestamp = new Date().toISOString();
+    const newNote = existingNote 
+      ? `${existingNote}\n\n[${timestamp}] ${session.user.name}: ${parsed.data.comment}`
+      : `[${timestamp}] ${session.user.name}: ${parsed.data.comment}`;
+
+    await prisma.entityValue.update({
+      where: { id: parsed.data.entityValueId },
+      data: { note: newNote },
+    });
+
+    return { success: true as const };
+  } catch (error) {
+    console.error("Failed to add comment:", error);
+    return { success: false as const, error: "failedToAdd" };
+  }
+}
+
+/**
  * Submit entity value for approval
  */
 export async function submitEntityForApproval(input: { entityId: string; periodId: string }) {

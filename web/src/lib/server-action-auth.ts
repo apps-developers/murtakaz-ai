@@ -50,6 +50,21 @@ export async function requireOrgAdmin(
   return session;
 }
 
+export async function requireSuperAdmin(
+  errors: RequireSessionErrors = {},
+): Promise<NonNullable<ServerSession>> {
+  const session = await requireSession({
+    unauthorizedError: errors.unauthorizedError,
+  });
+
+  const role = (session.user as { role?: string }).role;
+  if (role !== "SUPER_ADMIN") {
+    throw new Error(errors.unauthorizedError ?? "unauthorizedSuperAdminRequired");
+  }
+
+  return session;
+}
+
 export type KpiApprovalLevelCode = "MANAGER" | "EXECUTIVE" | "ADMIN";
 
 export async function getOrgKpiApprovalLevel(orgId: string): Promise<KpiApprovalLevelCode> {

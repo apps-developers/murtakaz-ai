@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { aiDisabledResponse, isAiEnabled, streamResponse } from "../_mock-stream";
+import { aiDisabledResponse, isAiFeatureEnabled, streamResponse } from "../_mock-stream";
 
 const INSIGHTS: Record<string, { en: string; ar: string }> = {
   executive: {
@@ -37,7 +37,7 @@ const INSIGHTS: Record<string, { en: string; ar: string }> = {
 };
 
 export async function POST(req: NextRequest) {
-  if (!isAiEnabled()) return aiDisabledResponse();
+  if (!(await isAiFeatureEnabled())) return aiDisabledResponse();
 
   const { dashboardType } = (await req.json()) as { dashboardType?: string };
   const key = dashboardType ?? "executive";

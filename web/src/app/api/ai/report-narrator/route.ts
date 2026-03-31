@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { aiDisabledResponse, isAiEnabled, streamResponse } from "../_mock-stream";
+import { aiDisabledResponse, isAiFeatureEnabled, streamResponse } from "../_mock-stream";
 
 type ReportSummary = {
   entityTypeName?: string;
@@ -76,7 +76,7 @@ function buildNarrative(summary: ReportSummary, lang: "en" | "ar"): string {
 }
 
 export async function POST(req: NextRequest) {
-  if (!isAiEnabled()) return aiDisabledResponse();
+  if (!(await isAiFeatureEnabled())) return aiDisabledResponse();
 
   const { summary, lang = "en" } = (await req.json()) as { summary: ReportSummary; lang?: "en" | "ar" };
   const text = buildNarrative(summary, lang);

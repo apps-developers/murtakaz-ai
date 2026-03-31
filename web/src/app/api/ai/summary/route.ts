@@ -4,10 +4,10 @@ import { requireOrgMember } from "@/lib/server-action-auth";
 import { getEntityContextForAiReport } from "@/actions/insights";
 import { getSmartModel } from "@/lib/ai/client";
 import { summarySystemPrompt } from "@/lib/ai/prompts";
-import { isAiEnabled, aiDisabledResponse } from "../_mock-stream";
+import { isAiFeatureEnabled, aiDisabledResponse } from "../_mock-stream";
 
 export async function POST(req: NextRequest) {
-  if (!isAiEnabled()) return aiDisabledResponse();
+  if (!(await isAiFeatureEnabled())) return aiDisabledResponse();
 
   const { reportType, lang, period } = (await req.json()) as {
     reportType: "full" | "digest";

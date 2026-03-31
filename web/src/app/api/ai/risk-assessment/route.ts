@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { aiDisabledResponse, isAiEnabled } from "../_mock-stream";
+import { aiDisabledResponse, isAiFeatureEnabled } from "../_mock-stream";
 
 const KEYWORD_SEVERITY: Array<{
   keywords: string[];
@@ -123,7 +123,7 @@ const DEFAULT = {
 };
 
 export async function POST(req: NextRequest) {
-  if (!isAiEnabled()) return aiDisabledResponse();
+  if (!(await isAiFeatureEnabled())) return aiDisabledResponse();
 
   const { description = "", locale } = (await req.json()) as { description?: string; locale?: string };
   const isArabic = locale === "ar";

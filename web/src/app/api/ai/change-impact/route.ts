@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { aiDisabledResponse, isAiEnabled } from "../_mock-stream";
+import { aiDisabledResponse, isAiFeatureEnabled } from "../_mock-stream";
 
 type ChangeType = "target" | "formula" | "structure" | "other";
 
@@ -108,7 +108,7 @@ const MOCK_BY_TYPE: Record<ChangeType, {
 };
 
 export async function POST(req: NextRequest) {
-  if (!isAiEnabled()) return aiDisabledResponse();
+  if (!(await isAiFeatureEnabled())) return aiDisabledResponse();
 
   const { changeType = "other", locale } =
     (await req.json()) as {

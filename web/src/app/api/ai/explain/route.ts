@@ -2,10 +2,10 @@ import { NextRequest } from "next/server";
 import { streamText } from "ai";
 import { getModel } from "@/lib/ai/client";
 import { getEntityContextForAi } from "@/lib/ai/context";
-import { isAiEnabled, aiDisabledResponse } from "../_mock-stream";
+import { isAiFeatureEnabled, aiDisabledResponse } from "../_mock-stream";
 
 export async function POST(req: NextRequest) {
-  if (!isAiEnabled()) return aiDisabledResponse();
+  if (!(await isAiFeatureEnabled())) return aiDisabledResponse();
 
   const { entityId, locale } = (await req.json()) as {
     entityId: string;

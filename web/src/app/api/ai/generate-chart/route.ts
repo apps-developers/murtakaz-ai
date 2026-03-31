@@ -3,7 +3,7 @@ import { generateObject } from "ai";
 import { z } from "zod";
 import { getSmartModel } from "@/lib/ai/client";
 import { requireOrgMember } from "@/lib/server-action-auth";
-import { isAiEnabled, aiDisabledResponse } from "../_mock-stream";
+import { isAiFeatureEnabled, aiDisabledResponse } from "../_mock-stream";
 import { prisma } from "@/lib/prisma";
 import type { EChartsOption } from "echarts";
 
@@ -116,7 +116,7 @@ async function executeQuery(orgId: string, query: {
 }
 
 export async function POST(req: NextRequest) {
-  if (!isAiEnabled()) return aiDisabledResponse();
+  if (!(await isAiFeatureEnabled())) return aiDisabledResponse();
 
   const { prompt } = (await req.json()) as { prompt: string };
   if (!prompt?.trim()) {

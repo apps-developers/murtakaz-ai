@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { aiDisabledResponse, isAiEnabled, streamResponse } from "../_mock-stream";
+import { aiDisabledResponse, isAiFeatureEnabled, streamResponse } from "../_mock-stream";
 
 function buildNarrative(
   projectTitle: string,
@@ -76,7 +76,7 @@ function buildNarrative(
 }
 
 export async function POST(req: NextRequest) {
-  if (!isAiEnabled()) return aiDisabledResponse();
+  if (!(await isAiFeatureEnabled())) return aiDisabledResponse();
 
   const {
     projectTitle = "this project",

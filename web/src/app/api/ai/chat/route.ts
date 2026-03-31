@@ -4,12 +4,12 @@ import { requireOrgMember } from "@/lib/server-action-auth";
 import { getSmartModel } from "@/lib/ai/client";
 import { buildAgentSystemPrompt } from "@/lib/ai/agent-prompt";
 import { createAgentTools } from "@/lib/ai/tools";
-import { isAiEnabled, aiDisabledResponse } from "../_mock-stream";
+import { isAiFeatureEnabled, aiDisabledResponse } from "../_mock-stream";
 
 export const maxDuration = 60;
 
 export async function POST(req: Request) {
-  if (!isAiEnabled()) return aiDisabledResponse();
+  if (!(await isAiFeatureEnabled())) return aiDisabledResponse();
 
   let session;
   try {

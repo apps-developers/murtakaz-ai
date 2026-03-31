@@ -2,10 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { generateText } from "ai";
 import { getModel } from "@/lib/ai/client";
 import { suggestNoteSystemPrompt } from "@/lib/ai/prompts";
-import { isAiEnabled, aiDisabledResponse } from "../_mock-stream";
+import { isAiFeatureEnabled, aiDisabledResponse } from "../_mock-stream";
 
 export async function POST(req: NextRequest) {
-  if (!isAiEnabled()) return aiDisabledResponse();
+  if (!(await isAiFeatureEnabled())) return aiDisabledResponse();
 
   const { entityTitle, enteredValue, historicalAvg, unit, locale } = (await req.json()) as {
     entityTitle?: string;

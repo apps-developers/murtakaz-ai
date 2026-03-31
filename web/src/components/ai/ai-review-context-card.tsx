@@ -18,6 +18,8 @@ type Props = {
   historicalValues?: HistoricalValue[];
   managerNote?: string | null;
   anomalyType?: "high" | "low";
+  assessment?: string;
+  deviationPercent?: number;
 };
 
 export function AiReviewContextCard({
@@ -27,6 +29,8 @@ export function AiReviewContextCard({
   historicalValues = [],
   managerNote,
   anomalyType = "low",
+  assessment,
+  deviationPercent,
 }: Props) {
   const { t, formatNumber } = useLocale();
   const [dismissed, setDismissed] = useState(false);
@@ -127,10 +131,22 @@ export function AiReviewContextCard({
           {t("aiAssessmentLabel")}
         </p>
         <p className="text-sm text-foreground/80 leading-relaxed">
-          {isLow ? t("aiAnomalyUnusuallyLow") : t("aiAnomalyUnusuallyHigh")}
-          {" "}
-          {managerNote ? t("aiAnomalyWithNote") : t("aiAnomalyNoNote")}
+          {assessment ?? (
+            <>
+              {isLow ? t("aiAnomalyUnusuallyLow") : t("aiAnomalyUnusuallyHigh")}
+              {" "}
+              {managerNote ? t("aiAnomalyWithNote") : t("aiAnomalyNoNote")}
+            </>
+          )}
         </p>
+        {deviationPercent != null && deviationPercent > 0 && (
+          <p className="text-xs text-muted-foreground mt-1">
+            {deviationPercent > 20 
+              ? (deviationPercent > 20 ? "⚠️ Significant deviation" : "Within normal range")
+              : ("Within normal range")
+            }: {Math.round(deviationPercent)}%
+          </p>
+        )}
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { aiDisabledResponse, isAiEnabled } from "../_mock-stream";
+import { aiDisabledResponse, isAiFeatureEnabled } from "../_mock-stream";
 
 const SECTOR_ENTITY_SETS: Record<string, Array<{
   title: string; titleAr: string;
@@ -183,7 +183,7 @@ const SECTOR_ENTITY_SETS: Record<string, Array<{
 };
 
 export async function POST(req: NextRequest) {
-  if (!isAiEnabled()) return aiDisabledResponse();
+  if (!(await isAiFeatureEnabled())) return aiDisabledResponse();
 
   const { sector } = (await req.json()) as { objective?: string; sector?: string; entityTypeCode?: string };
   const key = sector ?? "general";

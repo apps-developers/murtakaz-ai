@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { aiDisabledResponse, isAiEnabled, streamResponse } from "../_mock-stream";
+import { aiDisabledResponse, isAiFeatureEnabled, streamResponse } from "../_mock-stream";
 
 const MOCK_EN = `## Root Cause Analysis
 
@@ -52,7 +52,7 @@ const MOCK_AR = `## تحليل السبب الجذري
 4. النظر في تحديث هدف المؤشر إذا تغيرت الظروف الخارجية تغييراً جوهرياً منذ تحديد الخط الأساسي`;
 
 export async function POST(req: NextRequest) {
-  if (!isAiEnabled()) return aiDisabledResponse();
+  if (!(await isAiFeatureEnabled())) return aiDisabledResponse();
 
   const { locale } = (await req.json()) as { entityId?: string; locale?: string };
   const text = locale === "ar" ? MOCK_AR : MOCK_EN;

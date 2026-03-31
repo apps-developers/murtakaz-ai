@@ -114,6 +114,12 @@ enum ReviewDecision {
   REMOVE
 }
 
+enum FeatureFlag {
+  AI_FEATURES
+  DIAGRAMS
+  ADVANCED_FEATURES
+}
+
 // Models
 
 model Organization {
@@ -500,6 +506,16 @@ model Notification {
   @@index([userId, readAt])
   @@index([orgId])
   @@map("notifications")
+}
+
+model SystemSettings {
+  id        String   @id @default(uuid())
+  key       String   @unique
+  value     Json
+  updatedAt DateTime @updatedAt @map("updated_at")
+  updatedBy String?  @map("updated_by")
+
+  @@map("system_settings")
 }
 
 model UserEntityAssignment {

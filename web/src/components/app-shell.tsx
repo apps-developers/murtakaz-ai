@@ -56,6 +56,7 @@ const navItems = [
   { href: "/super-admin", key: "superAdminOverview", icon: "tabler:home" },
   { href: "/super-admin/organizations", key: "organizations", icon: "tabler:building-community" },
   { href: "/super-admin/users", key: "users", icon: "tabler:users" },
+  { href: "/super-admin/settings", key: "settings", icon: "tabler:settings" },
 ] as const;
 
 type StaticNavItem = (typeof navItems)[number];

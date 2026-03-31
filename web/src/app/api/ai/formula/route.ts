@@ -4,12 +4,12 @@ import { z } from "zod";
 import { getModel } from "@/lib/ai/client";
 import { formulaSystemPrompt } from "@/lib/ai/prompts";
 import { validateFormula } from "@/lib/ai/guardrails";
-import { isAiEnabled, aiDisabledResponse } from "../_mock-stream";
+import { isAiFeatureEnabled, aiDisabledResponse } from "../_mock-stream";
 
 type Variable = { code: string; displayName: string };
 
 export async function POST(req: NextRequest) {
-  if (!isAiEnabled()) return aiDisabledResponse();
+  if (!(await isAiFeatureEnabled())) return aiDisabledResponse();
 
   const { description, variables, previousFormula } = (await req.json()) as {
     description: string;

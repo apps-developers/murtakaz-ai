@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { aiDisabledResponse, isAiEnabled, streamResponse } from "../_mock-stream";
+import { aiDisabledResponse, isAiFeatureEnabled, streamResponse } from "../_mock-stream";
 
 type BriefType = "board" | "department" | "project" | "manager-1on1";
 
@@ -190,7 +190,7 @@ const BRIEFS: Record<BriefType, { en: string; ar: string }> = {
 };
 
 export async function POST(req: NextRequest) {
-  if (!isAiEnabled()) return aiDisabledResponse();
+  if (!(await isAiFeatureEnabled())) return aiDisabledResponse();
 
   const { briefType = "board", lang = "en" } =
     (await req.json()) as { briefType?: BriefType; contextInput?: string; lang?: "en" | "ar" };

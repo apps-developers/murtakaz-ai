@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { aiDisabledResponse, isAiEnabled, streamResponse } from "../_mock-stream";
+import { aiDisabledResponse, isAiFeatureEnabled, streamResponse } from "../_mock-stream";
 
 const PERIOD_LABELS: Record<string, { en: string; ar: string }> = {
   ytd: { en: "Year-to-Date", ar: "من بداية العام" },
@@ -33,7 +33,7 @@ No insights.`;
 }
 
 export async function POST(req: NextRequest) {
-  if (!isAiEnabled()) return aiDisabledResponse();
+  if (!(await isAiFeatureEnabled())) return aiDisabledResponse();
 
   const { periodA = "q1", periodB = "q2", lang = "en" } =
     (await req.json()) as { periodA?: string; periodB?: string; lang?: "en" | "ar" };

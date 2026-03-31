@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { getFeatureFlag } from "@/actions/feature-flags";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 
 export function createMockStream(text: string, delayMs = 22): ReadableStream<Uint8Array> {
   const encoder = new TextEncoder();
@@ -25,9 +27,28 @@ export function streamResponse(text: string): Response {
 }
 
 export function aiDisabledResponse(): NextResponse {
-  return NextResponse.json({ error: "AI features are disabled." }, { status: 403 });
+  return NextResponse.json({ error: "AI features are disabled by system administrator." }, { status: 403 });
 }
 
 export function isAiEnabled(): boolean {
   return process.env.NEXT_PUBLIC_AI_ENABLED === "true";
+}
+
+/**
+ * Check if AI features are enabled via env var AND feature flag
+ */
+export async function isAiFeatureEnabled(): Promise<boolean> {
+  // First check environment variable
+  if (process.env.NEXT_PUBLIC_AI_ENABLED !== "true") {
+    return false;
+  }
+
+  // Then check database feature flag
+  try {
+    const isEnabled = await getFeatureFlag(FEATURE_FLAGS.AI_FEATURES);
+    return isEnabled;
+  } catch {
+    // If we can't check the feature flag, default to enabled
+    return true;
+  }
 }
