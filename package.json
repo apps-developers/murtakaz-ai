@@ -6,14 +6,14 @@
     "typescript": "^5.9.3"
   },
   "scripts": {
-    "db:wipe": "ts-node prisma/wipe-database.ts",
-    "db:snapshot": "ts-node prisma/export-org-snapshot.ts",
-    "db:restore-snapshot": "ts-node prisma/restore-org-snapshot.ts",
-    "db:seed-merged": "ts-node prisma/seed-merged.ts",
-    "db:seed-demo": "ts-node prisma/seed-demo.ts",
-    "db:seed-mosa": "ts-node prisma/seed-mosa-raw-data.ts",
-    "create-super-admin": "ts-node prisma/create-super-admin.ts",
-    "db:create-super-admin": "ts-node prisma/create-super-admin.ts"
+    "db:wipe": "ts-node web/prisma/wipe-database.ts",
+    "db:snapshot": "ts-node web/prisma/export-org-snapshot.ts",
+    "db:restore-snapshot": "ts-node web/prisma/restore-org-snapshot.ts",
+    "db:seed-merged": "ts-node web/prisma/seed-merged.ts",
+    "db:seed-demo": "ts-node web/prisma/seed-demo.ts",
+    "db:seed-mosa": "ts-node web/prisma/seed-mosa-raw-data.ts",
+    "create-super-admin": "ts-node web/prisma/create-super-admin.ts",
+    "db:create-super-admin": "ts-node web/prisma/create-super-admin.ts"
   },
   "dependencies": {
     "@prisma/client": "6.19.2",
@@ -22,7 +22,7 @@
     "mermaid": "^11.12.2"
   },
   "prisma": {
-    "seed": "ts-node prisma/seed-entity.ts"
+    "seed": "ts-node web/prisma/seed-entity.ts"
   },
   "packageManager": "pnpm@10.25.0+sha512.5e82639027af37cf832061bcc6d639c219634488e0f2baebe785028a793de7b525ffcd3f7ff574f5e9860654e098fe852ba8ac5dd5cefe1767d23a020a92f501"
 }
