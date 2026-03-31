@@ -10,7 +10,7 @@ import {
   PrismaClient,
   Role,
   Status,
-} from "../web/src/generated/prisma-client/index.js";
+} from "../src/generated/prisma-client/index.js";
 import { webcrypto } from "node:crypto";
 import { hashPassword } from "better-auth/crypto";
 import { readFileSync } from "fs";
