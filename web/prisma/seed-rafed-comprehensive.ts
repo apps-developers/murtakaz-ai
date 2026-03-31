@@ -723,20 +723,20 @@ async function seed() {
         mo: 3, 
         val: Math.round((baseValue + improvement * 0.9) * 10) / 10, 
         note: "Q4 2024 - Near target performance", 
-        status: kpi.key.includes("safety") ? KpiValueStatus.SUBMITTED : KpiValueStatus.APPROVED 
+        status: kpi.key?.includes("safety") ? KpiValueStatus.SUBMITTED : KpiValueStatus.APPROVED 
       },
     ];
 
     for (const p of periods) {
       const createdAt = monthsAgo(p.mo);
-      const submitterId = kpi.key.includes("safety") ? managers.safety?.id 
-        : kpi.key.includes("operations") ? managers.operations?.id
-        : kpi.key.includes("quality") ? managers.quality?.id
-        : kpi.key.includes("governance") ? managers.governance?.id
-        : kpi.key.includes("finance") ? managers.finance?.id
-        : kpi.key.includes("it") ? managers.it?.id
-        : kpi.key.includes("strategy") ? managers.strategy?.id
-        : kpi.key.includes("hr") ? managers.hr?.id
+      const submitterId = kpi.key?.includes("safety") ? managers.safety?.id 
+        : kpi.key?.includes("operations") ? managers.operations?.id
+        : kpi.key?.includes("quality") ? managers.quality?.id
+        : kpi.key?.includes("governance") ? managers.governance?.id
+        : kpi.key?.includes("finance") ? managers.finance?.id
+        : kpi.key?.includes("it") ? managers.it?.id
+        : kpi.key?.includes("strategy") ? managers.strategy?.id
+        : kpi.key?.includes("hr") ? managers.hr?.id
         : admin.id;
         
       await prisma.entityValue.create({
