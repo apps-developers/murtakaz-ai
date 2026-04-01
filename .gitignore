@@ -4,6 +4,8 @@ node_modules/
 # Next.js
 web/.next/
 web/out/
+docs/site/.next/
+docs/site/out/
 
 # build outputs
 **/dist/

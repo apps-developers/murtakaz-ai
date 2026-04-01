@@ -46,13 +46,21 @@
 
 ## العلاقة بين الركائز والأهداف
 
+```mermaid
+graph TD
+    A[الرؤية<br/>Vision] --> B[الركائز الاستراتيجية<br/>Pillars]
+    B --> C[الأهداف<br/>Objectives]
+    C --> D[مؤشرات الأداء<br/>KPIs]
+    D --> E[المشاريع<br/>Projects]
+    
+    style A fill:#3b82f6,stroke:#1d4ed8,color:#fff
+    style B fill:#60a5fa,stroke:#3b82f6,color:#fff
+    style C fill:#93c5fd,stroke:#60a5fa,color:#1e3a8a
+    style D fill:#bfdbfe,stroke:#93c5fd,color:#1e3a8a
+    style E fill:#dbeafe,stroke:#bfdbfe,color:#1e3a8a
 ```
-الرؤية
-  └── الركائز (Pillars)
-        └── الأهداف (Objectives)
-              └── مؤشرات الأداء (KPIs)
-                    └── المشاريع (Projects)
-```
+
+> **الهيكل الهرمي:** الرؤية ← الركائز ← الأهداف ← مؤشرات الأداء ← المشاريع
 
 ---
 

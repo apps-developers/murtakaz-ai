@@ -17,6 +17,20 @@
 
 > **ملاحظة:** لا يوجد دور مستقل "للموظف" في النظام الحالي. يُدار الموظفون عبر دور **MANAGER** أو من خلال تكليفات الكيانات.
 
+### هرمية الأدوار
+
+```mermaid
+graph TD
+    A[SUPER_ADMIN<br/>مسؤول المنصة] --> B[ADMIN<br/>مسؤول المؤسسة]
+    B --> C[EXECUTIVE<br/>التنفيذي]
+    B --> D[MANAGER<br/>المدير]
+    
+    style A fill:#1e3a8a,stroke:#1e40af,color:#fff
+    style B fill:#3b82f6,stroke:#2563eb,color:#fff
+    style C fill:#60a5fa,stroke:#3b82f6,color:#fff
+    style D fill:#93c5fd,stroke:#60a5fa,color:#1e3a8a
+```
+
 ---
 
 ## مصفوفة الصلاحيات

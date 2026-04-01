@@ -1,0 +1,102 @@
+import { notFound } from "next/navigation";
+import { readFile } from "fs/promises";
+import { join } from "path";
+import { DocPage } from "@/components/DocPage";
+
+interface DocPageProps {
+  params: Promise<{ slug: string }>;
+}
+
+// List of valid documentation files
+const validDocs = [
+  "01-getting-started",
+  "02-roles-and-permissions",
+  "03-overview-page",
+  "04-entities-and-kpis",
+  "05-entering-kpi-values",
+  "06-approvals",
+  "07-dashboards",
+  "08-admin-guide",
+  "09-glossary",
+  "10-reports",
+  "11-responsibilities",
+  "12-departments",
+  "13-projects",
+  "14-risks",
+  "15-pillars-and-objectives",
+  "16-organization",
+];
+
+export async function generateStaticParams() {
+  return validDocs.map((slug) => ({ slug }));
+}
+
+export async function generateMetadata({ params }: DocPageProps) {
+  const { slug } = await params;
+  const titles: Record<string, string> = {
+    "01-getting-started": "البدء والدخول",
+    "02-roles-and-permissions": "الأدوار والصلاحيات",
+    "03-overview-page": "صفحة النظرة العامة",
+    "04-entities-and-kpis": "الكيانات ومؤشرات الأداء",
+    "05-entering-kpi-values": "إدخال قيم مؤشرات الأداء",
+    "06-approvals": "الاعتمادات",
+    "07-dashboards": "لوحات المتابعة",
+    "08-admin-guide": "دليل المسؤول",
+    "09-glossary": "المسرد",
+    "10-reports": "التقارير والتحليلات",
+    "11-responsibilities": "المسؤوليات",
+    "12-departments": "الإدارات",
+    "13-projects": "المشاريع",
+    "14-risks": "المخاطر",
+    "15-pillars-and-objectives": "الركائز والأهداف",
+    "16-organization": "المؤسسة",
+  };
+
+  return {
+    title: `${titles[slug] || slug} - دليل رافد KPI`,
+  };
+}
+
+export default async function DocumentationPage({ params }: DocPageProps) {
+  const { slug } = await params;
+
+  if (!validDocs.includes(slug)) {
+    notFound();
+  }
+
+  const filePath = join(
+    process.cwd(),
+    "..",
+    "user-docs",
+    "ar",
+    `${slug}.md`
+  );
+
+  let content: string;
+  try {
+    content = await readFile(filePath, "utf-8");
+  } catch {
+    notFound();
+  }
+
+  const titles: Record<string, string> = {
+    "01-getting-started": "البدء والدخول",
+    "02-roles-and-permissions": "الأدوار والصلاحيات",
+    "03-overview-page": "صفحة النظرة العامة",
+    "04-entities-and-kpis": "الكيانات ومؤشرات الأداء",
+    "05-entering-kpi-values": "إدخال قيم مؤشرات الأداء",
+    "06-approvals": "الاعتمادات",
+    "07-dashboards": "لوحات المتابعة",
+    "08-admin-guide": "دليل المسؤول",
+    "09-glossary": "المسرد",
+    "10-reports": "التقارير والتحليلات",
+    "11-responsibilities": "المسؤوليات",
+    "12-departments": "الإدارات",
+    "13-projects": "المشاريع",
+    "14-risks": "المخاطر",
+    "15-pillars-and-objectives": "الركائز والأهداف",
+    "16-organization": "المؤسسة",
+  };
+
+  return <DocPage title={titles[slug] || slug} content={content} />;
+}

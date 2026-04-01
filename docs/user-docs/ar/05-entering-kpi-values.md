@@ -20,12 +20,19 @@
 
 ## دورة حياة القيمة
 
-```
-  [إدخال البيانات]     [إرسال]        [مراجعة واعتماد]       [قفل]
-   مسودة         ←    مُرسَل     ←       معتمد          ←    مقفل
-                                         أو مرفوض
-                                              ↓
-                                          مسودة (إعادة الإدخال)
+```mermaid
+flowchart LR
+    A[مسودة<br/>DRAFT] -->|إرسال| B[مُرسَل<br/>SUBMITTED]
+    B -->|اعتماد| C[معتمد<br/>APPROVED]
+    B -->|رفض| D[مرفوض<br/>REJECTED]
+    D -->|إعادة| A
+    C -->|قفل| E[مقفل<br/>LOCKED]
+    
+    style A fill:#fbbf24,stroke:#f59e0b
+    style B fill:#60a5fa,stroke:#3b82f6
+    style C fill:#34d399,stroke:#10b981
+    style D fill:#f87171,stroke:#ef4444
+    style E fill:#9ca3af,stroke:#6b7280
 ```
 
 | الحالة | الوصف |
