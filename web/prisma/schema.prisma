@@ -150,6 +150,13 @@ model Organization {
   changeRequests ChangeRequest[]
   notifications  Notification[]
 
+  // Customization relations
+  config         OrganizationConfig?
+  featureFlags   OrgFeatureFlag[]
+  dashboardTemplates DashboardTemplate[]
+  customEntityTypes CustomEntityType[]
+  brandingAssets BrandingAsset[]
+
   @@index([domain])
 }
 
@@ -539,4 +546,123 @@ model UserEntityAssignment {
   @@index([entityId])
   @@index([assignedBy])
   @@map("user_entity_assignments")
+}
+
+// Organization Configuration Models
+
+model OrganizationConfig {
+  id              String   @id @default(uuid())
+  organizationId  String   @unique @map("organization_id")
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  // Theme configuration (colors, fonts, spacing)
+  theme           Json?
+
+  // Branding configuration (app name, meta, legal info)
+  branding        Json?
+
+  // Layout configuration (sidebar, header, navigation)
+  layout          Json?
+
+  // Navigation items order and visibility
+  navigation      Json?
+
+  // Custom CSS overrides
+  customCSS       String?  @map("custom_css")
+
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  @@map("organization_configs")
+}
+
+model OrgFeatureFlag {
+  id              String   @id @default(uuid())
+  organizationId  String   @map("organization_id")
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  featureKey      String   @map("feature_key")
+  enabled         Boolean  @default(false)
+  config          Json?    // Feature-specific configuration
+
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  @@unique([organizationId, featureKey], name: "org_feature_flag_unique")
+  @@index([organizationId])
+  @@map("org_feature_flags")
+}
+
+model DashboardTemplate {
+  id              String   @id @default(uuid())
+  organizationId  String   @map("organization_id")
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  name            String
+  description     String?
+  isDefault       Boolean  @default(false) @map("is_default")
+  config          Json     // Widget layout and configuration
+
+  userDashboards  UserDashboard[]
+
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  @@index([organizationId])
+  @@map("dashboard_templates")
+}
+
+model UserDashboard {
+  id              String   @id @default(uuid())
+  userId          String   @map("user_id")
+
+  templateId      String?  @map("template_id")
+  template        DashboardTemplate? @relation(fields: [templateId], references: [id], onDelete: SetNull)
+
+  name            String
+  config          Json?    // Override template config
+  isDefault       Boolean  @default(false) @map("is_default")
+
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  @@index([userId])
+  @@index([templateId])
+  @@map("user_dashboards")
+}
+
+model CustomEntityType {
+  id              String   @id @default(uuid())
+  organizationId  String?  @map("organization_id")
+  organization    Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  key             String   // 'initiative', 'milestone', etc.
+  config          Json     // Full entity type configuration
+
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  @@unique([organizationId, key], name: "custom_entity_type_unique")
+  @@index([organizationId])
+  @@map("custom_entity_types")
+}
+
+model BrandingAsset {
+  id              String   @id @default(uuid())
+  organizationId  String   @map("organization_id")
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  type            String   // 'logo-light', 'logo-dark', 'favicon', 'icon-512'
+  filename        String
+  mimeType        String   @map("mime_type")
+  sizeBytes       Int      @map("size_bytes")
+  storagePath     String   @map("storage_path")
+  url             String?
+
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  @@unique([organizationId, type], name: "branding_asset_unique")
+  @@index([organizationId])
+  @@map("branding_assets")
 }

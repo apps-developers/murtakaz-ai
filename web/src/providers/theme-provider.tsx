@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import type { BrandingConfig } from "@/types/config";
 
 export type ColorTheme = "blue" | "emerald" | "violet" | "rose" | "orange" | "slate";
 type ThemeMode = "light" | "dark";
@@ -36,6 +37,7 @@ type ThemeContextValue = {
   theme: Theme;
   mode: ThemeMode;
   color: ColorTheme;
+  branding?: BrandingConfig;
   setTheme: (theme: Theme) => void;
   setMode: (mode: ThemeMode) => void;
   setColor: (color: ColorTheme) => void;
@@ -71,10 +73,12 @@ function applyThemeToDom(mode: ThemeMode, color: ColorTheme) {
 
 export function ThemeProvider({ 
   children, 
-  initialColorTheme 
+  initialColorTheme,
+  branding,
 }: { 
   children: React.ReactNode;
   initialColorTheme?: ColorTheme;
+  branding?: BrandingConfig;
 }) {
   const [mounted, setMounted] = useState(false);
   const [mode, setModeState] = useState<ThemeMode>(() => readInitialTheme().mode);
@@ -97,6 +101,7 @@ export function ThemeProvider({
       theme,
       mode,
       color,
+      branding,
       setTheme: (newTheme) => {
         const parsed = parseTheme(newTheme);
         setModeState(parsed.mode);
@@ -107,7 +112,7 @@ export function ThemeProvider({
       toggleMode: () => setModeState((prev) => (prev === "dark" ? "light" : "dark")),
       colorThemes: COLOR_THEMES,
     };
-  }, [mode, color]);
+  }, [mode, color, branding]);
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }
