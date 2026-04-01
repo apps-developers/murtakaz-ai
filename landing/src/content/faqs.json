@@ -1,0 +1,52 @@
+[
+  {
+    "id": "faq-1",
+    "question": "What is Murtakaz?",
+    "questionAr": "ما هو مرتكز؟",
+    "answer": "Murtakaz is a strategy execution platform designed to help organizations define goals, track performance via KPIs, and ensure governance compliance.",
+    "answerAr": "مرتكز منصة مؤسسية متخصصة في تنفيذ الاستراتيجية، تُمكِّن الجهات من بناء خارطة أهدافها الاستراتيجية، ومتابعة الأداء عبر مؤشرات الأداء الرئيسية (KPIs)، وضمان الالتزام بمتطلبات الحوكمة المؤسسية في بيئة واحدة متكاملة."
+  },
+  {
+    "id": "faq-2",
+    "question": "Does the system support Arabic?",
+    "questionAr": "هل يدعم النظام اللغة العربية؟",
+    "answer": "Yes, the system is fully bilingual (English & Arabic) and supports RTL layouts natively.",
+    "answerAr": "نعم، المنصة ثنائية اللغة بالكامل وتدعم العربية والإنجليزية مع توافق كامل مع معايير الكتابة من اليمين إلى اليسار (RTL) في جميع عناصر الواجهة والتقارير."
+  },
+  {
+    "id": "faq-3",
+    "question": "Can I integrate my existing data?",
+    "questionAr": "هل يمكنني ربط بياناتي الحالية؟",
+    "answer": "Yes, we offer APIs and manual import tools to bring in your existing KPIs and project data.",
+    "answerAr": "نعم، تتوفر واجهات برمجية (APIs) وأدوات استيراد لنقل بيانات مؤشرات الأداء والمشاريع القائمة إلى المنصة بسهولة ودون الحاجة إلى إعادة إدخال البيانات يدوياً."
+  },
+  {
+    "id": "faq-4",
+    "question": "How is data security handled?",
+    "questionAr": "كيف يتم التعامل مع أمن البيانات؟",
+    "answer": "We use enterprise-grade encryption and role-based access control to ensure your strategic data remains secure.",
+    "answerAr": "تعتمد المنصة تشفيراً من الدرجة المؤسسية لحماية البيانات في وضعَي الحفظ والنقل، إلى جانب آليات متقدمة للتحكم في الوصول المبني على الأدوار الوظيفية، مما يضمن سرية بياناتك الاستراتيجية في جميع الأوقات."
+  },
+  {
+    "id": "faq-5",
+    "question": "Who is this platform for?",
+    "questionAr": "لمن هذه المنصة؟",
+    "answer": "It serves Executives, PMOs, Strategy Offices, and Department Managers who need visibility into organizational performance.",
+    "answerAr": "صُمِّمت المنصة لخدمة القيادات التنفيذية ومكاتب الاستراتيجية ومكاتب إدارة المشاريع (PMO) ومديري الإدارات الذين يحتاجون إلى رؤية شاملة وواضحة للأداء المؤسسي واتساق التنفيذ."
+  },
+  {
+    "id": "faq-6",
+    "question": "How does role-based access work?",
+    "questionAr": "كيف يعمل التحكم في الوصول حسب الأدوار؟",
+    "answer": "Each user has a role (Admin, Executive, Manager, Employee). Executives and PMOs see org-wide data; managers see their own initiatives and projects; employees see only their assigned work. All visibility is enforced server-side.",
+    "answerAr": "يُحدَّد لكل مستخدم دور وظيفي (مسؤول النظام، المسؤول التنفيذي، المدير، المساهم) ينعكس مباشرةً على نطاق ما يراه ويصل إليه. يطّلع التنفيذيون ومكتب إدارة المشاريع على البيانات الشاملة للجهة، بينما يقتصر وصول المديرين على مبادراتهم ومشاريعهم، ويرى المساهمون الأعمال المسندة إليهم حصراً. يُطبَّق هذا الضبط بالكامل على مستوى الخادم."
+  },
+  {
+    "id": "faq-7",
+    "question": "What does the approvals workflow cover?",
+    "questionAr": "ما الذي يغطيه سير عمل الموافقات؟",
+    "answer": "KPI value submissions follow a draft → submit → approve/reject flow. Formula and target changes require PMO approval by default. All decisions are logged with actor, timestamp, and before/after detail.",
+    "answerAr": "تمرّ إدخالات قيم مؤشرات الأداء الرئيسية بمراحل محددة: مسودة ← تقديم ← موافقة أو رفض. وتستلزم أي تعديلات على صيغ الحساب أو المستهدفات الحصول على موافقة مكتب إدارة المشاريع بشكل افتراضي. وتُسجَّل جميع القرارات والتغييرات في سجل تدقيق شامل يتضمن هوية المنفِّذ والتوقيت والحالة قبل التغيير وبعده."
+  }
+]
+

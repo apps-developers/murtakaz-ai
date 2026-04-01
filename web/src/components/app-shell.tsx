@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils";
 import { AiChatPanel } from "@/components/ai/ai-chat-panel";
 import { useAiEnabled, useDashboardsEnabled, useNotificationsEnabled } from "@/lib/ai-features";
 
-const marketingRouteSet = new Set(["/", "/pricing", "/faq", "/about", "/contact", "/careers", "/privacy", "/terms"]);
+const marketingRouteSet = new Set(["/"]);
 
 const brandLogoSrc = "/AlmosaLogoWhite.png";
 
@@ -658,50 +658,13 @@ export function AppShell({ children, showLogo = true }: { children: React.ReactN
           <div className="flex min-w-0 flex-1 flex-col">
             {!isAuthRoute && <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
               <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3 lg:max-w-none">
-              {isMarketingRoute ? (
-                <div className="flex items-center gap-6">
-                  <Link href={`/${locale}`} className="flex items-center gap-3">
-                  {showLogo ? <BrandLogo logoUrl={logoUrl} useSystemFallback={!user} /> : null}
-                  <div className={cn("leading-tight")}>
-                    <p className="text-sm font-semibold text-foreground">{t("murtakaz")}</p>
-                    <p className="text-xs text-muted-foreground">{t("strategyExecutionPlatform")}</p>
-                  </div>
-                </Link>
-
-                  <nav
-                    className={cn(
-                      "hidden items-center gap-5 text-sm text-muted-foreground lg:flex",
-                    )}
-                  >
-                    <Link href={`/${locale}#features`} className="hover:text-foreground transition-colors">
-                      {t("features")}
-                    </Link>
-                    <Link href={`/${locale}#how-it-works`} className="hover:text-foreground transition-colors">
-                      {t("howItWorks")}
-                    </Link>
-                    <Link href={`/${locale}#benefits`} className="hover:text-foreground transition-colors">
-                      {locale === "ar" ? "لماذا نحن" : "Why Us"}
-                    </Link>
-                    <Link href={`/${locale}/pricing`} className="hover:text-foreground transition-colors">
-                      {t("pricing")}
-                    </Link>
-                    <Link href={`/${locale}#faq`} className="hover:text-foreground transition-colors">
-                      {t("faq")}
-                    </Link>
-                    <Link href={`/${locale}/contact`} className="hover:text-foreground transition-colors">
-                      {t("contact")}
-                    </Link>
-                  </nav>
-                </div>
-              ) : (
-                <Link href={`/${locale}`} className="flex items-center gap-3">
+              <Link href={`/${locale}`} className="flex items-center gap-3">
                 {showLogo ? <BrandLogo logoUrl={logoUrl} useSystemFallback={!user} /> : null}
                 <div className="leading-tight">
                   <p className="text-xs uppercase tracking-[0.24em] text-muted-foreground">{t("appTitle")}</p>
                   <p className="text-sm font-semibold text-foreground">{t("appTagline")}</p>
                 </div>
               </Link>
-              )}
 
               <div className="flex items-center gap-3">
                 {showAppNav && aiEnabled ? (
@@ -753,19 +716,6 @@ export function AppShell({ children, showLogo = true }: { children: React.ReactN
                   <>
                     <Button asChild variant="secondary">
                       <Link href={`/${locale}/overview`}>{t("workspace")}</Link>
-                    </Button>
-                  </>
-                ) : isMarketingRoute ? (
-                  <>
-                    <Button
-                      asChild
-                      variant="outline"
-                      className="hidden sm:inline-flex"
-                    >
-                      <Link href={`/${locale}/contact`}>{t("requestDemo")}</Link>
-                    </Button>
-                    <Button asChild variant="secondary">
-                      <Link href={withLocale(locale, "/auth/login")}>{t("signIn")}</Link>
                     </Button>
                   </>
                 ) : (

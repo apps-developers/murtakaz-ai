@@ -1,0 +1,113 @@
+{
+  "hero": {
+    "title": "Turn Strategy into Results",
+    "titleAr": "حوِّل استراتيجيتك إلى نتائج قابلة للقياس",
+    "subtitle": "The unified platform for strategy execution, KPI governance, and performance management — built for executives, PMOs, and teams.",
+    "subtitleAr": "المنصة المؤسسية الموحدة لتنفيذ الاستراتيجية وحوكمة مؤشرات الأداء الرئيسية وإدارة الأداء — مصممة للقيادات التنفيذية ومكاتب الاستراتيجية والفرق.",
+    "cta": "Get Started",
+    "ctaAr": "ابدأ تجربتك الآن",
+    "image": "/images/hero-dashboard.svg"
+  },
+  "stats": [
+    {
+      "value": "90%",
+      "label": "Initiatives tracked",
+      "labelAr": "من المبادرات الاستراتيجية مُتابَعة ومرصودة"
+    },
+    {
+      "value": "50%",
+      "label": "Reporting time saved",
+      "labelAr": "تخفيض في وقت إعداد تقارير الأداء"
+    },
+    {
+      "value": "100%",
+      "label": "KPI definitions standardized",
+      "labelAr": "توحيد كامل لتعريفات مؤشرات الأداء الرئيسية"
+    },
+    {
+      "value": "5+",
+      "label": "Role-based dashboards",
+      "labelAr": "لوحات معلومات تنفيذية مخصصة حسب الدور الوظيفي"
+    }
+  ],
+  "features": [
+    {
+      "id": "feat-1",
+      "title": "Configurable Strategy Framework",
+      "titleAr": "إطار استراتيجي مرن وقابل للتخصيص",
+      "description": "Model your organization's pillars, goals, initiatives, and projects in a flexible hierarchy — no rigid templates.",
+      "descriptionAr": "صمِّم هيكلاً هرمياً مرناً يعكس ركائز مؤسستك وأهدافها ومبادراتها ومشاريعها بحرية تامة — دون قيود القوالب الجاهزة.",
+      "icon": "target"
+    },
+    {
+      "id": "feat-2",
+      "title": "KPI Governance & Formulas",
+      "titleAr": "حوكمة مؤشرات الأداء الرئيسية وصيغ الحساب",
+      "description": "Define KPIs with targets, formulas, owners, and frequencies. Calculated metrics reference other KPIs automatically.",
+      "descriptionAr": "حدِّد مؤشرات الأداء بمستهدفاتها وصيغ حسابها وأصحابها ودوريتها. تحسب المؤشرات المشتقة قيمها تلقائياً استناداً إلى مؤشرات أخرى.",
+      "icon": "chart-bar"
+    },
+    {
+      "id": "feat-3",
+      "title": "Governance & Approvals",
+      "titleAr": "الحوكمة المؤسسية وسير عمل الموافقات",
+      "description": "Change requests, approval workflows, and an immutable audit trail for every strategy and KPI change.",
+      "descriptionAr": "إدارة طلبات التغيير عبر مسارات موافقة منظمة مع سجل تدقيق دائم وغير قابل للتعديل لكل تغيير استراتيجي أو على مؤشرات الأداء.",
+      "icon": "shield-check"
+    },
+    {
+      "id": "feat-4",
+      "title": "Executive-Grade Dashboards",
+      "titleAr": "لوحات معلومات تنفيذية احترافية",
+      "description": "CEO, PMO, Manager, and Employee dashboards with drill-down from pillar to KPI. Export to CSV/PDF.",
+      "descriptionAr": "لوحات معلومات مخصصة للرئيس التنفيذي ومكتب الاستراتيجية والمدير والمساهم، مع إمكانية التعمق من الركيزة حتى المؤشر. تصدير بصيغتَي CSV و PDF.",
+      "icon": "dashboard"
+    },
+    {
+      "id": "feat-5",
+      "title": "Risk & Escalation Tracking",
+      "titleAr": "إدارة المخاطر ومتابعة التصعيد",
+      "description": "Proactively track risks with severity, ownership, and escalation history linked directly to initiatives and projects.",
+      "descriptionAr": "تتبُّع استباقي للمخاطر بمستويات خطورتها وأصحابها وسجل تصعيدها المرتبط مباشرةً بالمبادرات والمشاريع المعنية.",
+      "icon": "alert"
+    },
+    {
+      "id": "feat-6",
+      "title": "Bilingual & RTL Native",
+      "titleAr": "دعم كامل للعربية والإنجليزية مع RTL أصيل",
+      "description": "Full English and Arabic support with proper RTL layout. Every label, date, and number respects your locale.",
+      "descriptionAr": "واجهة مؤسسية ثنائية اللغة بدعم أصيل لمعايير الكتابة من اليمين إلى اليسار. كل تسمية وتاريخ ورقم يتوافق تلقائياً مع إعدادات اللغة المختارة.",
+      "icon": "language"
+    }
+  ],
+  "benefits": {
+    "title": "Why Choose Murtakaz?",
+    "titleAr": "لماذا مرتكز؟",
+    "items": [
+      {
+        "title": "Visibility",
+        "titleAr": "الرؤية الشاملة والشفافية",
+        "description": "Eliminate silos with a single source of truth.",
+        "descriptionAr": "تجاوَز حواجز العمل المنعزل بمصدر بيانات موحَّد وموثوق يمنح جميع المستويات رؤية واضحة ومتسقة."
+      },
+      {
+        "title": "Accountability",
+        "titleAr": "المساءلة وتحديد المسؤوليات",
+        "description": "Clear ownership for every KPI and initiative.",
+        "descriptionAr": "مسؤوليات محددة وواضحة لكل مؤشر أداء رئيسي ومبادرة استراتيجية، مما يعزز ثقافة المساءلة المؤسسية."
+      },
+      {
+        "title": "Agility",
+        "titleAr": "الرشاقة المؤسسية والاستجابة السريعة",
+        "description": "Adapt quickly to market changes with real-time data.",
+        "descriptionAr": "تكيَّف بسرعة مع متغيرات السوق واستجب للتحديات بناءً على بيانات آنية ودقيقة تدعم القرار في الوقت المناسب."
+      }
+    ]
+  },
+  "cta_section": {
+    "title": "Ready to execute with confidence?",
+    "titleAr": "هل أنت مستعد لتنفيذ استراتيجيتك باحترافية؟",
+    "button": "Request Demo",
+    "buttonAr": "اطلب عرضاً توضيحياً"
+  }
+}

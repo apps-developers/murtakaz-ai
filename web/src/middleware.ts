@@ -31,22 +31,8 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
   
-  // Allow public routes
+  // Root path: let the page component handle the redirect
   if (canonicalPath === "/") {
-    return NextResponse.next();
-  }
-  
-  const publicPaths = [
-    "/pricing",
-    "/faq",
-    "/about",
-    "/contact",
-    "/careers",
-    "/privacy",
-    "/terms"
-  ];
-  
-  if (publicPaths.includes(canonicalPath)) {
     return NextResponse.next();
   }
 
