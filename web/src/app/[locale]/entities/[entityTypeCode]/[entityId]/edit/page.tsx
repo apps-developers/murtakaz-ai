@@ -21,7 +21,7 @@ import { EntitySelectorModal } from "@/components/entity-selector-modal";
 import { AiFormulaBuilder } from "@/components/ai/ai-formula-builder";
 import { AiTranslateButton } from "@/components/ai/ai-translate-button";
 import { AiDescribeModal } from "@/components/ai/ai-describe-modal";
-import { useAiEnabled } from "@/lib/ai-features";
+import { useAiEnabled, useAdvancedFeaturesEnabled } from "@/lib/ai-features";
 
 type EntityDetail = Awaited<ReturnType<typeof getOrgEntityDetail>>;
 type OwnerOption = Awaited<ReturnType<typeof getOrgOwnerOptions>>[number];
@@ -65,6 +65,7 @@ export default function EditEntityPage() {
   const { user, loading } = useAuth();
   const { locale, t, tr, te, df } = useLocale();
   const aiEnabled = useAiEnabled();
+  const advancedFeaturesEnabled = useAdvancedFeaturesEnabled();
   const { theme } = useTheme();
 
   const userRole =
@@ -463,7 +464,7 @@ export default function EditEntityPage() {
               </div>
             </div>
 
-            {showMeasurement && (
+            {advancedFeaturesEnabled && showMeasurement && (
             <div className="rounded-2xl border border-border bg-muted/20 p-4 space-y-4">
               <div className="space-y-1">
                 <p className="text-sm font-semibold">{tr("Measurement", "القياس")}</p>

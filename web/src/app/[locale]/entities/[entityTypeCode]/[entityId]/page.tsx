@@ -44,7 +44,7 @@ import {
   type EntityAttachment,
 } from "@/actions/entity-attachments";
 import { AiKpiExplainer } from "@/components/ai/ai-kpi-explainer";
-import { useAiEnabled } from "@/lib/ai-features";
+import { useAiEnabled, useDiagramsEnabled } from "@/lib/ai-features";
 
 type EntityDetail = Awaited<ReturnType<typeof getOrgEntityDetail>>;
 
@@ -105,6 +105,7 @@ export default function EntityDetailPage() {
   const { user, loading: sessionLoading } = useAuth();
   const { locale, t, tr, df, formatNumber, te, kpiValueStatusLabel } = useLocale();
   const aiEnabled = useAiEnabled();
+  const diagramsEnabled = useDiagramsEnabled();
 
   const userRole = typeof (user as unknown as { role?: unknown })?.role === "string" ? String((user as unknown as { role?: unknown })?.role) : undefined;
   const canAdmin = userRole === "ADMIN";
@@ -1222,7 +1223,7 @@ export default function EntityDetailPage() {
         </Card>
       ) : null}
 
-      {entity ? (
+      {diagramsEnabled && entity ? (
         <Card className="bg-card/70 backdrop-blur shadow-sm">
           <CardHeader>
             <CardTitle className="text-base">{tr("Formula Dependency Tree", "شجرة الاعتماديات")}</CardTitle>

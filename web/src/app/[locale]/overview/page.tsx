@@ -13,7 +13,7 @@ import { useLocale } from "@/providers/locale-provider";
 import { getOverviewInsights } from "@/actions/insights";
 import { getFirstEntityTypeCode } from "@/actions/navigation";
 import { AiGenerateSummaryModal } from "@/components/ai/ai-generate-summary-modal";
-import { useAiEnabled } from "@/lib/ai-features";
+import { useAiEnabled, useAdvancedFeaturesEnabled } from "@/lib/ai-features";
 
 function activityBadge(status: string) {
   const up = String(status ?? "").toUpperCase();
@@ -26,6 +26,7 @@ function activityBadge(status: string) {
 export default function OverviewPage() {
   const { locale, t, df, formatDate, kpiValueStatusLabel } = useLocale();
   const aiEnabled = useAiEnabled();
+  const advancedFeaturesEnabled = useAdvancedFeaturesEnabled();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<Awaited<ReturnType<typeof getOverviewInsights>> | null>(null);
@@ -486,6 +487,7 @@ export default function OverviewPage() {
                   </div>
                 </Link>
               </Button>
+              {advancedFeaturesEnabled && (
               <Button asChild variant="outline" className="h-auto justify-start gap-3 p-4">
                 <Link href={`/${locale}/risks`}>
                   <Icon name="tabler:shield-exclamation" className="h-6 w-6 text-amber-500" />
@@ -495,6 +497,7 @@ export default function OverviewPage() {
                   </div>
                 </Link>
               </Button>
+              )}
               <Button asChild variant="outline" className="h-auto justify-start gap-3 p-4">
                 <Link href={`/${locale}/organization`}>
                   <Icon name="tabler:building" className="h-6 w-6 text-rose-500" />

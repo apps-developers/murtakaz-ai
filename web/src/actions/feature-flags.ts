@@ -18,6 +18,78 @@ const updateFeatureFlagSchema = z.object({
 });
 
 /**
+ * Check if AI features are enabled via env var AND feature flag
+ * This is a public action that can be called from the frontend
+ */
+export async function getAiFeatureEnabled(): Promise<boolean> {
+  // First check environment variable
+  if (process.env.NEXT_PUBLIC_AI_ENABLED !== "true") {
+    return false;
+  }
+
+  // Then check database feature flag
+  try {
+    const setting = await prisma.systemSettings.findUnique({
+      where: { key: FEATURE_FLAGS.AI_FEATURES },
+    });
+
+    if (!setting) {
+      return DEFAULT_FEATURE_FLAGS[FEATURE_FLAGS.AI_FEATURES];
+    }
+
+    const value = setting.value as { enabled: boolean };
+    return value.enabled ?? DEFAULT_FEATURE_FLAGS[FEATURE_FLAGS.AI_FEATURES];
+  } catch {
+    // If we can't check the feature flag, default to enabled
+    return true;
+  }
+}
+
+/**
+ * Check if Diagram features are enabled via feature flag
+ * This is a public action that can be called from the frontend
+ */
+export async function getDiagramsFeatureEnabled(): Promise<boolean> {
+  try {
+    const setting = await prisma.systemSettings.findUnique({
+      where: { key: FEATURE_FLAGS.DIAGRAMS },
+    });
+
+    if (!setting) {
+      return DEFAULT_FEATURE_FLAGS[FEATURE_FLAGS.DIAGRAMS];
+    }
+
+    const value = setting.value as { enabled: boolean };
+    return value.enabled ?? DEFAULT_FEATURE_FLAGS[FEATURE_FLAGS.DIAGRAMS];
+  } catch {
+    // If we can't check the feature flag, default to enabled
+    return true;
+  }
+}
+
+/**
+ * Check if Advanced features are enabled via feature flag
+ * This is a public action that can be called from the frontend
+ */
+export async function getAdvancedFeaturesEnabled(): Promise<boolean> {
+  try {
+    const setting = await prisma.systemSettings.findUnique({
+      where: { key: FEATURE_FLAGS.ADVANCED_FEATURES },
+    });
+
+    if (!setting) {
+      return DEFAULT_FEATURE_FLAGS[FEATURE_FLAGS.ADVANCED_FEATURES];
+    }
+
+    const value = setting.value as { enabled: boolean };
+    return value.enabled ?? DEFAULT_FEATURE_FLAGS[FEATURE_FLAGS.ADVANCED_FEATURES];
+  } catch {
+    // If we can't check the feature flag, default to enabled
+    return true;
+  }
+}
+
+/**
  * Get all feature flags with their current values
  * Creates default entries if they don't exist
  */
