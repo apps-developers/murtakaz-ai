@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
 import { Eye, EyeOff, BarChart3, ShieldCheck, TrendingUp, Layers } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -21,6 +21,13 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
 
+  const [shake, setShake] = useState(false);
+
+  const triggerShake = useCallback(() => {
+    setShake(true);
+    setTimeout(() => setShake(false), 500);
+  }, []);
+
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
@@ -32,7 +39,21 @@ export default function LoginPage() {
         password,
         fetchOptions: {
           onError: (ctx) => {
-            setError(ctx.error.message);
+            const status = ctx.error?.status;
+            const message = ctx.error?.message;
+            
+            // User-friendly error messages based on status code
+            if (status === 401 || message?.toLowerCase().includes("invalid")) {
+              setError(t("invalidEmailOrPassword") || "Invalid email or password");
+            } else if (status === 429) {
+              setError(t("tooManyAttempts") || "Too many attempts. Please try again later.");
+            } else if (status >= 500) {
+              setError(t("serverError") || "Server error. Please try again later.");
+            } else {
+              setError(t("signInFailed") || "Sign in failed. Please try again.");
+            }
+            
+            triggerShake();
             setLoading(false);
           },
           onSuccess: async () => {
@@ -53,6 +74,7 @@ export default function LoginPage() {
             } catch (err) {
               console.error("Post-login session/redirect failed:", err);
               setError(t("failedToLoad"));
+              triggerShake();
               setLoading(false);
             }
           },
@@ -60,7 +82,8 @@ export default function LoginPage() {
       });
     } catch (err) {
       console.error("Sign-in failed:", err);
-      setError(t("failedToLoad"));
+      setError(t("signInFailed") || "Sign in failed. Please try again.");
+      triggerShake();
       setLoading(false);
     }
   }
@@ -153,7 +176,7 @@ export default function LoginPage() {
           </div>
 
           {/* Form */}
-          <form onSubmit={handleLogin} className="space-y-5">
+          <form onSubmit={handleLogin} className={`space-y-5 transition-transform ${shake ? "animate-shake" : ""}`}>
             <div className="space-y-2">
               <Label htmlFor="email" className="text-sm font-medium">{t("email")}</Label>
               <Input
@@ -201,9 +224,13 @@ export default function LoginPage() {
             </div>
 
             {error && (
-              <div className="flex items-center gap-2 rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2.5">
-                <div className="h-1.5 w-1.5 shrink-0 rounded-full bg-destructive" />
-                <p className="text-sm text-destructive">{error}</p>
+              <div className="flex items-center gap-3 rounded-lg border border-destructive/20 bg-destructive/5 px-4 py-3 animate-in fade-in slide-in-from-top-1 duration-200">
+                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-destructive/10">
+                  <svg className="h-4 w-4 text-destructive" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <p className="text-sm font-medium text-destructive">{error}</p>
               </div>
             )}
 
