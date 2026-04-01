@@ -871,6 +871,8 @@
   "managerHigherPosition": "يجب أن يكون المدير في منصب أعلى أو مساوٍ للمستخدم.",
   "cannotCreateSuperAdmin": "لا يمكن إنشاء مستخدمي SUPER_ADMIN داخل الجهة.",
   "cannotAssignSuperAdmin": "لا يمكن تعيين دور SUPER_ADMIN.",
+  "cannotRemoveEntityTypesWithEntities": "لا يمكن إزالة أنواع العقد التي تحتوي على عناصر مرتبطة.",
+  "failedToUpdateEntityTypes": "فشل تحديث أنواع العقد.",
   "unexpectedError": "حدث خطأ غير متوقع.",
   "unit": "الوحدة",
   "unitAr": "الوحدة (بالعربية)",
@@ -1136,5 +1138,7 @@
   "exportCsv": "تصدير CSV",
   "allKpis": "جميع المؤشرات",
   "avgAchievement": "متوسط الإنجاز",
-  "achievementFilter": "الإنجاز"
+  "achievementFilter": "الإنجاز",
+  "colorTheme": "سمة اللون",
+  "colorThemeDesc": "اختر لون التمييز المفضل لواجهة التطبيق."
 }

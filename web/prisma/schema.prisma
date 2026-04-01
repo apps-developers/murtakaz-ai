@@ -142,6 +142,7 @@ model Organization {
   about     String?
   aboutAr   String?   @map("about_ar")
   contacts  Json?
+  colorTheme String?  @default("blue") @map("color_theme")
 
   users          User[]
   entities       Entity[]

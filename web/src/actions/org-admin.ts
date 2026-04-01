@@ -4,12 +4,16 @@ import { z } from "zod";
 import { Role, KpiApprovalLevel } from "@/generated/prisma-client";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
-import { requireOrgAdmin as requireOrgAdminSession, requireOrgMember } from "@/lib/server-action-auth";
+import { requireOrgAdmin as requireOrgAdminSession, requireOrgMember, requireSuperAdmin } from "@/lib/server-action-auth";
 import { ActionValidationIssue } from "@/types/actions";
 import { writeFile } from "fs/promises";
 import { join } from "path";
 import { mkdir } from "fs/promises";
 import { randomUUID } from "crypto";
+
+// Valid color themes
+const COLOR_THEMES = ["blue", "emerald", "violet", "rose", "orange", "slate"] as const;
+type ColorTheme = typeof COLOR_THEMES[number];
 
 async function requireOrgAdmin() {
   return requireOrgAdminSession({ unauthorizedError: "unauthorizedAdminRequired" });
@@ -143,9 +147,51 @@ export async function getOrgAdminOrganizationSettings() {
     },
   });
 
-  const nodeTypeOptions: Array<{ id: string; code: string; displayName: string; nameAr: string | null; levelOrder: number }> = [];
-  const enabledNodeTypes: Array<{ id: string; displayName: string }> = [];
-  const enabledNodeTypeCounts: Array<{ nodeTypeId: string; displayName: string; count: number }> = [];
+  // Fetch all entity types for this organization
+  const orgEntityTypes = await prisma.orgEntityType.findMany({
+    where: {
+      orgId: session.user.orgId,
+    },
+    orderBy: { sortOrder: "asc" },
+    select: {
+      id: true,
+      code: true,
+      name: true,
+      nameAr: true,
+      sortOrder: true,
+    },
+  });
+
+  const nodeTypeOptions = orgEntityTypes.map((et) => ({
+    id: et.id,
+    code: et.code,
+    displayName: et.name,
+    nameAr: et.nameAr,
+    levelOrder: et.sortOrder,
+  }));
+
+  const enabledNodeTypes = nodeTypeOptions.map((nt) => ({
+    id: nt.id,
+    displayName: nt.displayName,
+  }));
+
+  // Get counts of entities per entity type
+  const entityCounts = await prisma.entity.groupBy({
+    by: ["orgEntityTypeId"],
+    where: {
+      orgId: session.user.orgId,
+      deletedAt: null,
+    },
+    _count: {
+      id: true,
+    },
+  });
+
+  const enabledNodeTypeCounts = nodeTypeOptions.map((nt) => ({
+    nodeTypeId: nt.id,
+    displayName: nt.displayName,
+    count: entityCounts.find((ec) => ec.orgEntityTypeId === nt.id)?._count.id ?? 0,
+  }));
 
   return {
     org: org
@@ -226,9 +272,10 @@ const updateNodeTypesSchema = z.object({
 
 /**
  * Update enabled node types for organization
+ * This creates missing entity types and removes ones not in the list
  */
 export async function updateOrgAdminEnabledNodeTypes(data: z.infer<typeof updateNodeTypesSchema>) {
-  await requireOrgAdmin();
+  const session = await requireOrgAdmin();
   const parsedResult = updateNodeTypesSchema.safeParse(data);
   
   if (!parsedResult.success) {
@@ -239,8 +286,77 @@ export async function updateOrgAdminEnabledNodeTypes(data: z.infer<typeof update
     };
   }
 
-  // For now, just return success as node types are handled elsewhere
-  return { success: true as const };
+  const { nodeTypeIds } = parsedResult.data;
+  const orgId = session.user.orgId;
+
+  try {
+    // Get current entity types for this org
+    const currentTypes = await prisma.orgEntityType.findMany({
+      where: { orgId },
+      select: { id: true, code: true },
+    });
+
+    // IDs to keep (intersection of current and requested)
+    const currentIds = currentTypes.map((t) => t.id);
+    const idsToKeep = nodeTypeIds.filter((id) => currentIds.includes(id));
+    
+    // IDs to remove (in current but not in requested)
+    const idsToRemove = currentIds.filter((id) => !nodeTypeIds.includes(id));
+
+    // Check if any entities exist for types being removed
+    if (idsToRemove.length > 0) {
+      const entityCounts = await prisma.entity.count({
+        where: {
+          orgEntityTypeId: { in: idsToRemove },
+          deletedAt: null,
+        },
+      });
+
+      if (entityCounts > 0) {
+        return {
+          success: false as const,
+          error: "cannotRemoveEntityTypesWithEntities",
+        };
+      }
+
+      // Safe to delete entity types with no entities
+      await prisma.orgEntityType.deleteMany({
+        where: {
+          id: { in: idsToRemove },
+          orgId,
+        },
+      });
+    }
+
+    // Create default entity types if none exist
+    if (idsToKeep.length === 0) {
+      // Create default entity types
+      const defaultTypes = [
+        { code: "pillar", name: "Pillar", nameAr: "الركائز", sortOrder: 1 },
+        { code: "objective", name: "Objective", nameAr: "الأهداف", sortOrder: 2 },
+        { code: "initiative", name: "Initiative", nameAr: "المبادرات", sortOrder: 3 },
+        { code: "project", name: "Project", nameAr: "المشاريع", sortOrder: 4 },
+        { code: "kpi", name: "KPI", nameAr: "مؤشرات الأداء", sortOrder: 5 },
+      ];
+
+      for (const type of defaultTypes) {
+        await prisma.orgEntityType.create({
+          data: {
+            orgId,
+            code: type.code,
+            name: type.name,
+            nameAr: type.nameAr,
+            sortOrder: type.sortOrder,
+          },
+        });
+      }
+    }
+
+    return { success: true as const };
+  } catch (error: unknown) {
+    console.error("Failed to update entity types:", error);
+    return { success: false as const, error: "failedToUpdateEntityTypes" };
+  }
 }
 
 type OrgAdminDepartmentRow = {
@@ -520,53 +636,63 @@ export async function getOrgLogo() {
 }
 
 /**
- * Upload organization logo file
+ * Get organization color theme for any authenticated org member
  */
-export async function uploadOrgLogo(formData: FormData) {
-  const session = await requireOrgAdmin();
-  const orgId = session.user.orgId;
+export async function getOrgColorTheme() {
+  const session = await requireOrgMember();
 
-  const file = formData.get("logo") as File | null;
-  if (!file) {
-    return { success: false as const, error: "noFileProvided" };
+  const org = await prisma.organization.findFirst({
+    where: {
+      id: session.user.orgId,
+      deletedAt: null,
+    },
+    select: {
+      colorTheme: true,
+    },
+  });
+
+  return { colorTheme: org?.colorTheme ?? "blue" };
+}
+
+const updateOrgColorThemeSchema = z.object({
+  colorTheme: z.enum(COLOR_THEMES),
+});
+
+/**
+ * Update organization color theme (admin or super-admin)
+ */
+export async function updateOrgColorTheme(data: z.infer<typeof updateOrgColorThemeSchema>) {
+  const session = await requireOrgMember({ unauthorizedError: "unauthorized" });
+  
+  // Allow both ADMIN and SUPER_ADMIN roles
+  const role = (session.user as { role?: string }).role;
+  if (role !== "ADMIN" && role !== "SUPER_ADMIN") {
+    throw new Error("unauthorizedAdminRequired");
   }
+  
+  const parsedResult = updateOrgColorThemeSchema.safeParse(data);
 
-  // Validate file type
-  const allowedTypes = ["image/png", "image/jpeg", "image/gif", "image/svg+xml", "image/webp"];
-  if (!allowedTypes.includes(file.type)) {
-    return { success: false as const, error: "invalidFileType" };
-  }
-
-  // Validate file size (max 5MB)
-  const maxSize = 5 * 1024 * 1024;
-  if (file.size > maxSize) {
-    return { success: false as const, error: "fileTooLarge" };
+  if (!parsedResult.success) {
+    return {
+      success: false as const,
+      error: "validationFailed",
+      issues: zodIssues(parsedResult.error),
+    };
   }
 
   try {
-    // Generate unique filename
-    const ext = file.name.split(".").pop()?.toLowerCase() || "png";
-    const filename = `logo-${randomUUID()}.${ext}`;
-
-    // Ensure uploads directory exists
-    const uploadDir = join(process.cwd(), "public", "uploads", "logos");
-    await mkdir(uploadDir, { recursive: true });
-
-    // Write file
-    const filepath = join(uploadDir, filename);
-    const bytes = await file.arrayBuffer();
-    await writeFile(filepath, Buffer.from(bytes));
-
-    // Update org with logo URL
-    const logoUrl = `/uploads/logos/${filename}`;
     await prisma.organization.update({
-      where: { id: orgId },
-      data: { logoUrl },
+      where: {
+        id: session.user.orgId,
+      },
+      data: {
+        colorTheme: parsedResult.data.colorTheme,
+      },
     });
 
-    return { success: true as const, logoUrl };
+    return { success: true as const };
   } catch (error: unknown) {
-    console.error("Failed to upload logo:", error);
-    return { success: false as const, error: "uploadFailed" };
+    console.error("Failed to update organization color theme:", error);
+    return { success: false as const, error: "failedToUpdate" };
   }
 }

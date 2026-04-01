@@ -10,7 +10,8 @@ import { useFeatureFlags } from "@/hooks/use-feature-flags";
 import { updateFeatureFlag } from "@/actions/feature-flags";
 import { FEATURE_FLAGS, type FeatureFlagKey } from "@/lib/feature-flags";
 import { useState, useCallback } from "react";
-import { Loader2, Sparkles, Workflow, Wand2, FileText, LayoutDashboard, Bell, ScrollText } from "lucide-react";
+import { Loader2, Sparkles, Workflow, Wand2, FileText, LayoutDashboard, Bell, ScrollText, Palette } from "lucide-react";
+import { ColorThemeSelector } from "@/components/color-theme-selector";
 
 const FEATURE_CONFIG: Array<{
   key: FeatureFlagKey;
@@ -157,6 +158,21 @@ export default function SystemSettingsPage() {
               );
             })
           )}
+        </CardContent>
+      </Card>
+
+      <Card className="border-border bg-card/50 shadow-sm">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-base">
+            <Palette className="h-5 w-5 text-muted-foreground" />
+            {t("colorTheme")}
+          </CardTitle>
+          <CardDescription className="text-muted-foreground">
+            {t("colorThemeDesc")}
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ColorThemeSelector />
         </CardContent>
       </Card>
     </div>

@@ -1135,5 +1135,7 @@
   "exportCsv": "Export CSV",
   "allKpis": "All KPIs",
   "avgAchievement": "Avg Achievement",
-  "achievementFilter": "Achievement"
+  "achievementFilter": "Achievement",
+  "colorTheme": "Color Theme",
+  "colorThemeDesc": "Choose your preferred accent color for the application interface."
 }
