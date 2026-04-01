@@ -15,7 +15,7 @@ import { type TranslationKey, useLocale } from "@/providers/locale-provider";
 import { Icon } from "@/components/icon";
 import { cn } from "@/lib/utils";
 import { AiChatPanel } from "@/components/ai/ai-chat-panel";
-import { useAiEnabled } from "@/lib/ai-features";
+import { useAiEnabled, useDashboardsEnabled, useNotificationsEnabled } from "@/lib/ai-features";
 
 const marketingRouteSet = new Set(["/", "/pricing", "/faq", "/about", "/contact", "/careers", "/privacy", "/terms"]);
 
@@ -231,6 +231,8 @@ export function AppShell({ children, showLogo = true }: { children: React.ReactN
   const { t, locale } = useLocale();
   const { user, loading } = useAuth();
   const aiEnabled = useAiEnabled();
+  const dashboardsEnabled = useDashboardsEnabled();
+  const notificationsEnabled = useNotificationsEnabled();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const userRole = (user as any)?.role;
   const profileHref = userRole === "SUPER_ADMIN" ? withLocale(locale, "/super-admin/profile") : withLocale(locale, "/profile");
@@ -390,9 +392,16 @@ export function AppShell({ children, showLogo = true }: { children: React.ReactN
     }
 
     const overviewItem = navItems.find((item) => item.href === "/overview");
+    
+    // Filter workflow items based on feature flags
+    const workflowItemHrefs = ["/reports", "/responsibilities"];
+    if (dashboardsEnabled) workflowItemHrefs.push("/dashboards");
+    // Approvals link is handled separately via notifications or can be added if needed
+    
     const workflowItems = navItems.filter((item) =>
-      ["/dashboards", "/reports", "/responsibilities", "/approvals"].includes(item.href),
+      workflowItemHrefs.includes(item.href),
     ) as NavItem[];
+    
     const adminItems = navItems.filter((item) =>
       ["/admin", "/organization", "/users"].includes(item.href) && userRole === "ADMIN",
     ) as NavItem[];
@@ -403,7 +412,7 @@ export function AppShell({ children, showLogo = true }: { children: React.ReactN
       ...(workflowItems.length > 0 ? [{ sectionKey: "workflow", labelKey: "approvals" as TranslationKey, items: workflowItems }] : []),
       ...(adminItems.length > 0 ? [{ sectionKey: "admin", labelKey: "admin" as TranslationKey, items: adminItems }] : []),
     ];
-  }, [entityTypeItems, userRole]);
+  }, [entityTypeItems, userRole, dashboardsEnabled]);
 
   // flat list for mobile (keeps same order)
   const visibleNavItems = useMemo(
@@ -708,7 +717,7 @@ export function AppShell({ children, showLogo = true }: { children: React.ReactN
                     {t("aiAssistant")}
                   </Button>
                 ) : null}
-                {showAppNav && userRole !== "SUPER_ADMIN" ? (
+                {showAppNav && notificationsEnabled && userRole !== "SUPER_ADMIN" ? (
                   <Button
                     variant="ghost"
                     className="relative h-9 w-9 px-0 text-muted-foreground hover:bg-accent hover:text-foreground"

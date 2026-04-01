@@ -10,7 +10,7 @@ import { useFeatureFlags } from "@/hooks/use-feature-flags";
 import { updateFeatureFlag } from "@/actions/feature-flags";
 import { FEATURE_FLAGS, type FeatureFlagKey } from "@/lib/feature-flags";
 import { useState, useCallback } from "react";
-import { Loader2, Sparkles, Workflow, Wand2 } from "lucide-react";
+import { Loader2, Sparkles, Workflow, Wand2, FileText, LayoutDashboard, Bell, ScrollText } from "lucide-react";
 
 const FEATURE_CONFIG: Array<{
   key: FeatureFlagKey;
@@ -36,6 +36,36 @@ const FEATURE_CONFIG: Array<{
     descriptionKey: "advancedFeaturesDesc",
     icon: <Wand2 className="h-5 w-5" />,
   },
+  {
+    key: FEATURE_FLAGS.APPROVALS_WORKFLOW,
+    labelKey: "approvalsWorkflow",
+    descriptionKey: "approvalsWorkflowDesc",
+    icon: <Workflow className="h-5 w-5" />,
+  },
+  {
+    key: FEATURE_FLAGS.FILE_ATTACHMENTS,
+    labelKey: "fileAttachments",
+    descriptionKey: "fileAttachmentsDesc",
+    icon: <FileText className="h-5 w-5" />,
+  },
+  {
+    key: FEATURE_FLAGS.DASHBOARDS,
+    labelKey: "dashboards",
+    descriptionKey: "dashboardsDesc",
+    icon: <LayoutDashboard className="h-5 w-5" />,
+  },
+  {
+    key: FEATURE_FLAGS.NOTIFICATIONS,
+    labelKey: "notifications",
+    descriptionKey: "notificationsDesc",
+    icon: <Bell className="h-5 w-5" />,
+  },
+  {
+    key: FEATURE_FLAGS.AUDIT_LOGS,
+    labelKey: "auditLogs",
+    descriptionKey: "auditLogsDesc",
+    icon: <ScrollText className="h-5 w-5" />,
+  },
 ];
 
 export default function SystemSettingsPage() {
@@ -45,6 +75,11 @@ export default function SystemSettingsPage() {
     [FEATURE_FLAGS.AI_FEATURES]: false,
     [FEATURE_FLAGS.DIAGRAMS]: false,
     [FEATURE_FLAGS.ADVANCED_FEATURES]: false,
+    [FEATURE_FLAGS.APPROVALS_WORKFLOW]: false,
+    [FEATURE_FLAGS.FILE_ATTACHMENTS]: false,
+    [FEATURE_FLAGS.DASHBOARDS]: false,
+    [FEATURE_FLAGS.NOTIFICATIONS]: false,
+    [FEATURE_FLAGS.AUDIT_LOGS]: false,
   });
 
   const handleToggle = useCallback(async (key: FeatureFlagKey, enabled: boolean) => {
@@ -88,7 +123,7 @@ export default function SystemSettingsPage() {
                 {t("failedToLoadFeatureFlags")}
               </p>
               <Button variant="outline" size="sm" className="mt-2" onClick={refresh}>
-                {t("tryAgain")}
+                إعادة المحاولة
               </Button>
             </div>
           ) : (

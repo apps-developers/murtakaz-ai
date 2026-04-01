@@ -10,6 +10,11 @@ const featureFlagSchema = z.enum([
   FEATURE_FLAGS.AI_FEATURES,
   FEATURE_FLAGS.DIAGRAMS,
   FEATURE_FLAGS.ADVANCED_FEATURES,
+  FEATURE_FLAGS.APPROVALS_WORKFLOW,
+  FEATURE_FLAGS.FILE_ATTACHMENTS,
+  FEATURE_FLAGS.DASHBOARDS,
+  FEATURE_FLAGS.NOTIFICATIONS,
+  FEATURE_FLAGS.AUDIT_LOGS,
 ]);
 
 const updateFeatureFlagSchema = z.object({
@@ -85,6 +90,107 @@ export async function getAdvancedFeaturesEnabled(): Promise<boolean> {
     return value.enabled ?? DEFAULT_FEATURE_FLAGS[FEATURE_FLAGS.ADVANCED_FEATURES];
   } catch {
     // If we can't check the feature flag, default to enabled
+    return true;
+  }
+}
+
+/**
+ * Check if Approvals Workflow is enabled via feature flag
+ * This is a public action that can be called from the frontend
+ */
+export async function getApprovalsWorkflowEnabled(): Promise<boolean> {
+  try {
+    const setting = await prisma.systemSettings.findUnique({
+      where: { key: FEATURE_FLAGS.APPROVALS_WORKFLOW },
+    });
+
+    if (!setting) {
+      return DEFAULT_FEATURE_FLAGS[FEATURE_FLAGS.APPROVALS_WORKFLOW];
+    }
+
+    const value = setting.value as { enabled: boolean };
+    return value.enabled ?? DEFAULT_FEATURE_FLAGS[FEATURE_FLAGS.APPROVALS_WORKFLOW];
+  } catch {
+    return true;
+  }
+}
+
+/**
+ * Check if File Attachments is enabled via feature flag
+ */
+export async function getFileAttachmentsEnabled(): Promise<boolean> {
+  try {
+    const setting = await prisma.systemSettings.findUnique({
+      where: { key: FEATURE_FLAGS.FILE_ATTACHMENTS },
+    });
+
+    if (!setting) {
+      return DEFAULT_FEATURE_FLAGS[FEATURE_FLAGS.FILE_ATTACHMENTS];
+    }
+
+    const value = setting.value as { enabled: boolean };
+    return value.enabled ?? DEFAULT_FEATURE_FLAGS[FEATURE_FLAGS.FILE_ATTACHMENTS];
+  } catch {
+    return true;
+  }
+}
+
+/**
+ * Check if Dashboards is enabled via feature flag
+ */
+export async function getDashboardsEnabled(): Promise<boolean> {
+  try {
+    const setting = await prisma.systemSettings.findUnique({
+      where: { key: FEATURE_FLAGS.DASHBOARDS },
+    });
+
+    if (!setting) {
+      return DEFAULT_FEATURE_FLAGS[FEATURE_FLAGS.DASHBOARDS];
+    }
+
+    const value = setting.value as { enabled: boolean };
+    return value.enabled ?? DEFAULT_FEATURE_FLAGS[FEATURE_FLAGS.DASHBOARDS];
+  } catch {
+    return true;
+  }
+}
+
+/**
+ * Check if Notifications is enabled via feature flag
+ */
+export async function getNotificationsEnabled(): Promise<boolean> {
+  try {
+    const setting = await prisma.systemSettings.findUnique({
+      where: { key: FEATURE_FLAGS.NOTIFICATIONS },
+    });
+
+    if (!setting) {
+      return DEFAULT_FEATURE_FLAGS[FEATURE_FLAGS.NOTIFICATIONS];
+    }
+
+    const value = setting.value as { enabled: boolean };
+    return value.enabled ?? DEFAULT_FEATURE_FLAGS[FEATURE_FLAGS.NOTIFICATIONS];
+  } catch {
+    return true;
+  }
+}
+
+/**
+ * Check if Audit Logs is enabled via feature flag
+ */
+export async function getAuditLogsEnabled(): Promise<boolean> {
+  try {
+    const setting = await prisma.systemSettings.findUnique({
+      where: { key: FEATURE_FLAGS.AUDIT_LOGS },
+    });
+
+    if (!setting) {
+      return DEFAULT_FEATURE_FLAGS[FEATURE_FLAGS.AUDIT_LOGS];
+    }
+
+    const value = setting.value as { enabled: boolean };
+    return value.enabled ?? DEFAULT_FEATURE_FLAGS[FEATURE_FLAGS.AUDIT_LOGS];
+  } catch {
     return true;
   }
 }

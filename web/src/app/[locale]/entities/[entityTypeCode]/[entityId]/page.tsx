@@ -44,7 +44,7 @@ import {
   type EntityAttachment,
 } from "@/actions/entity-attachments";
 import { AiKpiExplainer } from "@/components/ai/ai-kpi-explainer";
-import { useAiEnabled, useDiagramsEnabled } from "@/lib/ai-features";
+import { useAiEnabled, useDiagramsEnabled, useApprovalsWorkflowEnabled, useFileAttachmentsEnabled } from "@/lib/ai-features";
 
 type EntityDetail = Awaited<ReturnType<typeof getOrgEntityDetail>>;
 
@@ -106,6 +106,8 @@ export default function EntityDetailPage() {
   const { locale, t, tr, df, formatNumber, te, kpiValueStatusLabel } = useLocale();
   const aiEnabled = useAiEnabled();
   const diagramsEnabled = useDiagramsEnabled();
+  const approvalsWorkflowEnabled = useApprovalsWorkflowEnabled();
+  const fileAttachmentsEnabled = useFileAttachmentsEnabled();
 
   const userRole = typeof (user as unknown as { role?: unknown })?.role === "string" ? String((user as unknown as { role?: unknown })?.role) : undefined;
   const canAdmin = userRole === "ADMIN";
@@ -782,7 +784,7 @@ export default function EntityDetailPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             {/* Approval Status Badge */}
-            {data?.currentPeriod && (
+            {approvalsWorkflowEnabled && data?.currentPeriod && (
               <div className="flex items-center justify-between pb-2 border-b">
                 <div className="flex items-center gap-2">
                   <span className="text-sm text-muted-foreground">{tr("Status", "الحالة")}:</span>
@@ -884,7 +886,7 @@ export default function EntityDetailPage() {
                   <div className="rounded-xl border border-amber-500/40 bg-amber-500/10 px-4 py-3 text-sm text-amber-600 dark:text-amber-500 flex-1">
                     {tr("Read-only: You can view this entity but cannot edit its values.", "للقراءة فقط: يمكنك عرض هذا الكيان لكن لا يمكنك تعديل قيمه.")}
                   </div>
-                ) : isSubmitted ? (
+                ) : approvalsWorkflowEnabled && isSubmitted ? (
                 <div className="flex items-center justify-between w-full">
                   <div className="rounded-xl border border-amber-500/40 bg-amber-500/10 px-4 py-3 text-sm text-amber-600 dark:text-amber-500">
                     {tr("Locked for approval. Contact an approver to make changes.", "مقفل للاعتماد. اتصل بالمعتمد لإجراء تغييرات.")}
@@ -928,16 +930,18 @@ export default function EntityDetailPage() {
                           t("save")
                         )}
                       </Button>
-                      <Button type="button" onClick={() => void handleSubmitForApproval()} disabled={submitting}>
-                        {submitting ? (
-                          <>
-                            <Loader2 className="me-2 h-4 w-4 animate-spin" />
-                            {tr("Submitting", "جارٍ الإرسال")}
-                          </>
-                        ) : (
-                          tr("Submit for Approval", "إرسال للاعتماد")
-                        )}
-                      </Button>
+                      {approvalsWorkflowEnabled && (
+                        <Button type="button" onClick={() => void handleSubmitForApproval()} disabled={submitting}>
+                          {submitting ? (
+                            <>
+                              <Loader2 className="me-2 h-4 w-4 animate-spin" />
+                              {tr("Submitting", "جارٍ الإرسال")}
+                            </>
+                          ) : (
+                            tr("Submit for Approval", "إرسال للاعتماد")
+                          )}
+                        </Button>
+                      )}
                     </>
                   )}
                 </div>
@@ -1014,7 +1018,7 @@ export default function EntityDetailPage() {
       ) : null}
 
       {/* Attachments Section */}
-      {entity ? (
+      {fileAttachmentsEnabled && entity ? (
         <Card className="bg-card/70 backdrop-blur shadow-sm">
           <CardHeader>
             <div className="flex items-center justify-between">
