@@ -917,33 +917,42 @@ export default function EntityDetailPage() {
                   )}
                 </div>
               ) : (
-                <div className="flex items-center justify-end gap-2 w-full">
-                  {canEditPeriod && (
-                    <>
-                      <Button type="button" variant="outline" onClick={() => void handleSaveDraft()} disabled={saving}>
-                        {saving ? (
-                          <>
-                            <Loader2 className="me-2 h-4 w-4 animate-spin" />
-                            {t("saving")}
-                          </>
-                        ) : (
-                          t("save")
-                        )}
-                      </Button>
-                      {approvalsWorkflowEnabled && (
-                        <Button type="button" onClick={() => void handleSubmitForApproval()} disabled={submitting}>
-                          {submitting ? (
+                <div className="flex items-center justify-between w-full">
+                  {isApproved ? (
+                    <div className="rounded-xl border border-green-500/40 bg-green-500/10 px-4 py-3 text-sm text-green-600 dark:text-green-500">
+                      {tr("This period has been approved. Changes require creating a new version.", "تم اعتماد هذه الفترة. التغييرات تتطلب إنشاء نسخة جديدة.")}
+                    </div>
+                  ) : (
+                    <div />
+                  )}
+                  <div className="flex items-center justify-end gap-2">
+                    {canEditPeriod && (
+                      <>
+                        <Button type="button" variant="outline" onClick={() => void handleSaveDraft()} disabled={saving}>
+                          {saving ? (
                             <>
                               <Loader2 className="me-2 h-4 w-4 animate-spin" />
-                              {tr("Submitting", "جارٍ الإرسال")}
+                              {t("saving")}
                             </>
                           ) : (
-                            tr("Submit for Approval", "إرسال للاعتماد")
+                            t("save")
                           )}
                         </Button>
-                      )}
-                    </>
-                  )}
+                        {approvalsWorkflowEnabled && !isApproved && (
+                          <Button type="button" onClick={() => void handleSubmitForApproval()} disabled={submitting}>
+                            {submitting ? (
+                              <>
+                                <Loader2 className="me-2 h-4 w-4 animate-spin" />
+                                {tr("Submitting", "جارٍ الإرسال")}
+                              </>
+                            ) : (
+                              tr("Submit for Approval", "إرسال للاعتماد")
+                            )}
+                          </Button>
+                        )}
+                      </>
+                    )}
+                  </div>
                 </div>
               )}
               </div>

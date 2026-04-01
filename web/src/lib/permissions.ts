@@ -203,6 +203,18 @@ export async function getEntityAccess(
   entityId: string,
   orgId: string
 ): Promise<EntityAccess> {
+  // Get user role for executive/admin checks
+  const user = await prisma.user.findFirst({
+    where: { id: userId, orgId, deletedAt: null },
+    select: { role: true },
+  });
+  const userRole = user?.role;
+
+  // Admin and Executive have full org access
+  if (userRole === "ADMIN" || userRole === "EXECUTIVE") {
+    return { canRead: true, canEditValues: true, canEditDefinition: userRole === "ADMIN", reason: "admin" };
+  }
+
   // Check direct assignment (EDIT access)
   const directAssignment = await prisma.userEntityAssignment.findUnique({
     where: {
