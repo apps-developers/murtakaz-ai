@@ -120,15 +120,15 @@ export default function LoginPage() {
           </div>
         </div>
 
-        {/* Bottom logo */}
-        <div className="relative z-10">
-          <Image
-            src="/AlmosaLogoWhite.png"
-            alt="Logo"
-            width={120}
-            height={40}
-            className="opacity-60 object-contain"
-          />
+        {/* Bottom logo - system icon when no customer logged in */}
+        <div className="relative z-10 flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/20 bg-white/10 backdrop-blur-sm">
+            <BarChart3 className="h-5 w-5 text-white" />
+          </div>
+          <div className="leading-tight">
+            <p className="text-[11px] uppercase tracking-[0.22em] text-white/50">{t("appTitle")}</p>
+            <p className="text-sm font-semibold text-white">{t("appShortTitle")}</p>
+          </div>
         </div>
       </div>
 

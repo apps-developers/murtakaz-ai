@@ -320,6 +320,88 @@ export default function LandingPage() {
         </m.div>
       </section>
 
+      {/* Benefits Section - Why Choose Murtakaz */}
+      <section id="benefits" className="space-y-12 scroll-mt-28">
+        <m.div variants={cardVariants}>
+          <SectionHeading
+            isArabic={isArabic}
+            title={isArabic ? landing.benefits.titleAr : landing.benefits.title}
+            centered
+          />
+        </m.div>
+
+        <m.div
+          className="grid gap-6 md:grid-cols-3"
+          variants={gridVariants}
+          initial={shouldReduceMotion ? false : "hidden"}
+          whileInView={shouldReduceMotion ? undefined : "show"}
+          viewport={{ once: true, amount: 0.25 }}
+        >
+          {[
+            {
+              icon: "tabler:eye",
+              title: isArabic ? landing.benefits.items[0].titleAr : landing.benefits.items[0].title,
+              body: isArabic ? landing.benefits.items[0].descriptionAr : landing.benefits.items[0].description,
+            },
+            {
+              icon: "tabler:user-check",
+              title: isArabic ? landing.benefits.items[1].titleAr : landing.benefits.items[1].title,
+              body: isArabic ? landing.benefits.items[1].descriptionAr : landing.benefits.items[1].description,
+            },
+            {
+              icon: "tabler:bolt",
+              title: isArabic ? landing.benefits.items[2].titleAr : landing.benefits.items[2].title,
+              body: isArabic ? landing.benefits.items[2].descriptionAr : landing.benefits.items[2].description,
+            },
+          ].map((benefit, idx) => (
+            <m.div key={idx} variants={cardVariants} whileHover={shouldReduceMotion ? undefined : { y: -6, scale: 1.02 }} transition={{ duration: 0.3, ease: "easeOut" }}>
+              <div className="group h-full rounded-2xl border border-border bg-gradient-to-br from-card/80 to-card/40 p-8 backdrop-blur-sm transition-all hover:border-primary/30 hover:from-card/90 hover:to-card/50">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary transition-colors group-hover:bg-primary/20">
+                  <Icon name={benefit.icon} className="h-7 w-7" />
+                </div>
+                <div className={cn("mt-6 space-y-2", isArabic && "text-right")}>
+                  <h3 className="text-xl font-bold text-foreground">{benefit.title}</h3>
+                  <p className="text-base text-muted-foreground leading-relaxed">{benefit.body}</p>
+                </div>
+              </div>
+            </m.div>
+          ))}
+        </m.div>
+      </section>
+
+      {/* Trust & Security Badges */}
+      <section className="py-8">
+        <m.div
+          className="rounded-2xl border border-border bg-card/30 px-8 py-6 backdrop-blur-sm"
+          variants={cardVariants}
+          initial={shouldReduceMotion ? false : "hidden"}
+          whileInView={shouldReduceMotion ? undefined : "show"}
+          viewport={{ once: true, amount: 0.5 }}
+        >
+          <p className={cn("mb-6 text-center text-sm font-medium text-muted-foreground", isArabic && "text-right")}>
+            {isArabic ? "موثوق من قِبَل فرق الاستراتيجية في مختلف القطاعات" : "Trusted by strategy teams across industries"}
+          </p>
+          <div className={cn("flex flex-wrap items-center justify-center gap-8 opacity-60", isArabic && "flex-row-reverse")}>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Icon name="tabler:shield-check" className="h-5 w-5" />
+              <span>{isArabic ? "بيانات مشفرة" : "Encrypted Data"}</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Icon name="tabler:server" className="h-5 w-5" />
+              <span>{isArabic ? "استضافة سحابية آمنة" : "Secure Cloud Hosting"}</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Icon name="tabler:lock" className="h-5 w-5" />
+              <span>{isArabic ? "مصادقة متعددة العوامل" : "Multi-Factor Auth"}</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Icon name="tabler:certificate" className="h-5 w-5" />
+              <span>{isArabic ? "متوافق مع معايير الحوكمة" : "Governance Compliant"}</span>
+            </div>
+          </div>
+        </m.div>
+      </section>
+
       <section className="space-y-12">
         <m.div variants={cardVariants}>
           <SectionHeading

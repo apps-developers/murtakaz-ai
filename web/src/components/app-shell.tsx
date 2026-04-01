@@ -92,8 +92,20 @@ function getAppHomeHref(userRole: unknown) {
   return userRole === "SUPER_ADMIN" ? "/super-admin" : "/overview";
 }
 
-function BrandLogo({ compact, logoUrl }: { compact?: boolean; logoUrl?: string | null }) {
-  const src = logoUrl && logoUrl.trim() ? logoUrl : brandLogoSrc;
+function BrandLogo({ compact, logoUrl, useSystemFallback }: { compact?: boolean; logoUrl?: string | null; useSystemFallback?: boolean }) {
+  // Show system icon when explicitly requested (no customer context) or when no logo available
+  if (useSystemFallback || !logoUrl || !logoUrl.trim()) {
+    return (
+      <div
+        className={cn(
+          "flex items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-sm",
+          compact ? "h-10 w-10" : "h-10 w-10",
+        )}
+      >
+        <Icon name="tabler:chart-arrows-vertical" className={cn("text-primary-foreground", compact ? "h-5 w-5" : "h-5 w-5")} />
+      </div>
+    );
+  }
   return (
     <div
       className={cn(
@@ -102,8 +114,8 @@ function BrandLogo({ compact, logoUrl }: { compact?: boolean; logoUrl?: string |
       )}
     >
       <Image
-        src={src}
-        alt="Almosa"
+        src={logoUrl}
+        alt="Logo"
         width={160}
         height={40}
         className={cn("w-auto object-contain", compact ? "h-7 max-w-[2.25rem]" : "h-7")}
@@ -640,12 +652,12 @@ export function AppShell({ children, showLogo = true }: { children: React.ReactN
               {isMarketingRoute ? (
                 <div className="flex items-center gap-6">
                   <Link href={`/${locale}`} className="flex items-center gap-3">
-                    {showLogo ? <BrandLogo logoUrl={logoUrl} /> : null}
-                    <div className={cn("leading-tight")}>
-                      <p className="text-sm font-semibold text-foreground">{t("murtakaz")}</p>
-                      <p className="text-xs text-muted-foreground">{t("strategyExecutionPlatform")}</p>
-                    </div>
-                  </Link>
+                  {showLogo ? <BrandLogo logoUrl={logoUrl} useSystemFallback={!user} /> : null}
+                  <div className={cn("leading-tight")}>
+                    <p className="text-sm font-semibold text-foreground">{t("murtakaz")}</p>
+                    <p className="text-xs text-muted-foreground">{t("strategyExecutionPlatform")}</p>
+                  </div>
+                </Link>
 
                   <nav
                     className={cn(
@@ -658,6 +670,12 @@ export function AppShell({ children, showLogo = true }: { children: React.ReactN
                     <Link href={`/${locale}#how-it-works`} className="hover:text-foreground transition-colors">
                       {t("howItWorks")}
                     </Link>
+                    <Link href={`/${locale}#benefits`} className="hover:text-foreground transition-colors">
+                      {locale === "ar" ? "لماذا نحن" : "Why Us"}
+                    </Link>
+                    <Link href={`/${locale}/pricing`} className="hover:text-foreground transition-colors">
+                      {t("pricing")}
+                    </Link>
                     <Link href={`/${locale}#faq`} className="hover:text-foreground transition-colors">
                       {t("faq")}
                     </Link>
@@ -668,12 +686,12 @@ export function AppShell({ children, showLogo = true }: { children: React.ReactN
                 </div>
               ) : (
                 <Link href={`/${locale}`} className="flex items-center gap-3">
-                  {showLogo ? <BrandLogo logoUrl={logoUrl} /> : null}
-                  <div className="leading-tight">
-                    <p className="text-xs uppercase tracking-[0.24em] text-muted-foreground">{t("appTitle")}</p>
-                    <p className="text-sm font-semibold text-foreground">{t("appTagline")}</p>
-                  </div>
-                </Link>
+                {showLogo ? <BrandLogo logoUrl={logoUrl} useSystemFallback={!user} /> : null}
+                <div className="leading-tight">
+                  <p className="text-xs uppercase tracking-[0.24em] text-muted-foreground">{t("appTitle")}</p>
+                  <p className="text-sm font-semibold text-foreground">{t("appTagline")}</p>
+                </div>
+              </Link>
               )}
 
               <div className="flex items-center gap-3">
