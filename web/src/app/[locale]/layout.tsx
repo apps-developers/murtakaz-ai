@@ -61,16 +61,14 @@ export default async function LocaleLayout({
 
   return (
     <html suppressHydrationWarning>
-      <head>
-        {/* Dynamic organization theme CSS */}
+      <body className="antialiased">
+        {/* Dynamic organization theme CSS - injected in body to avoid hydration issues */}
         {themeCSS && (
           <style
             id="dynamic-org-theme"
             dangerouslySetInnerHTML={{ __html: themeCSS }}
           />
         )}
-      </head>
-      <body className="antialiased">
         <Providers locale={locale} initialColorTheme={colorTheme} branding={branding}>
           <AppShell showLogo={showLogo}>{children}</AppShell>
         </Providers>
