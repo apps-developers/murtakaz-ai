@@ -21,6 +21,8 @@ const navItems: NavItem[] = [
   { title: "إدخال قيم مؤشرات الأداء", href: "/05-entering-kpi-values", file: "05-entering-kpi-values.md" },
   { title: "الاعتمادات", href: "/06-approvals", file: "06-approvals.md" },
   { title: "لوحات المتابعة", href: "/07-dashboards", file: "07-dashboards.md" },
+  { title: "دليل المسؤول", href: "/08-admin-guide", file: "08-admin-guide.md" },
+  { title: "المسرد", href: "/09-glossary", file: "09-glossary.md" },
   { title: "التقارير والتحليلات", href: "/10-reports", file: "10-reports.md" },
   { title: "المسؤوليات", href: "/11-responsibilities", file: "11-responsibilities.md" },
   { title: "الإدارات", href: "/12-departments", file: "12-departments.md" },
@@ -28,8 +30,8 @@ const navItems: NavItem[] = [
   { title: "المخاطر", href: "/14-risks", file: "14-risks.md" },
   { title: "الركائز والأهداف", href: "/15-pillars-and-objectives", file: "15-pillars-and-objectives.md" },
   { title: "المؤسسة", href: "/16-organization", file: "16-organization.md" },
-  { title: "دليل المسؤول", href: "/08-admin-guide", file: "08-admin-guide.md" },
-  { title: "المسرد", href: "/09-glossary", file: "09-glossary.md" },
+  { title: "سير عمل الموافقات", href: "/17-approval-workflow", file: "17-approval-workflow.md" },
+  { title: "المساعد الذكي (AI)", href: "/18-ai-assistant", file: "18-ai-assistant.md" },
 ];
 
 interface SidebarProps {

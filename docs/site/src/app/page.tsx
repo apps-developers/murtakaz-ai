@@ -10,6 +10,8 @@ const docs = [
   { title: "إدخال قيم مؤشرات الأداء", href: "/05-entering-kpi-values", desc: "دورة عمل: مسودة ← إرسال ← اعتماد" },
   { title: "الاعتمادات", href: "/06-approvals", desc: "مراجعة قيم مؤشرات الأداء المُرسَلة" },
   { title: "لوحات المتابعة", href: "/07-dashboards", desc: "جميع لوحات المتابعة المتاحة" },
+  { title: "دليل المسؤول", href: "/08-admin-guide", desc: "إدارة المستخدمين والإعدادات المتقدمة" },
+  { title: "المسرد", href: "/09-glossary", desc: "المصطلحات والمفاهيم الأساسية" },
   { title: "التقارير والتحليلات", href: "/10-reports", desc: "التقارير التحليلية والتصدير" },
   { title: "المسؤوليات", href: "/11-responsibilities", desc: "إدارة تكليفات المستخدمين بالكيانات" },
   { title: "الإدارات", href: "/12-departments", desc: "إدارة الهيكل التنظيمي والأقسام" },
@@ -17,8 +19,8 @@ const docs = [
   { title: "المخاطر", href: "/14-risks", desc: "إدارة سجل المخاطر المؤسسية" },
   { title: "الركائز والأهداف", href: "/15-pillars-and-objectives", desc: "التخطيط الاستراتيجي" },
   { title: "المؤسسة", href: "/16-organization", desc: "إعدادات وإدارة المؤسسة" },
-  { title: "دليل المسؤول", href: "/08-admin-guide", desc: "إدارة المستخدمين والإعدادات المتقدمة" },
-  { title: "المسرد", href: "/09-glossary", desc: "المصطلحات والمفاهيم الأساسية" },
+  { title: "سير عمل الموافقات", href: "/17-approval-workflow", desc: "دليل شامل لسير عمل الاعتماد والحوكمة" },
+  { title: "المساعد الذكي (AI)", href: "/18-ai-assistant", desc: "كيفية استخدام الذكاء الاصطناعي في النظام" },
 ];
 
 export default function HomePage() {

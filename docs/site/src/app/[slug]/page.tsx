@@ -25,6 +25,8 @@ const validDocs = [
   "14-risks",
   "15-pillars-and-objectives",
   "16-organization",
+  "17-approval-workflow",
+  "18-ai-assistant",
 ];
 
 export async function generateStaticParams() {
@@ -50,6 +52,8 @@ export async function generateMetadata({ params }: DocPageProps) {
     "14-risks": "المخاطر",
     "15-pillars-and-objectives": "الركائز والأهداف",
     "16-organization": "المؤسسة",
+    "17-approval-workflow": "سير عمل الموافقات",
+    "18-ai-assistant": "المساعد الذكي (AI)",
   };
 
   return {
@@ -96,6 +100,8 @@ export default async function DocumentationPage({ params }: DocPageProps) {
     "14-risks": "المخاطر",
     "15-pillars-and-objectives": "الركائز والأهداف",
     "16-organization": "المؤسسة",
+    "17-approval-workflow": "سير عمل الموافقات",
+    "18-ai-assistant": "المساعد الذكي (AI)",
   };
 
   return <DocPage title={titles[slug] || slug} content={content} />;

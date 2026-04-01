@@ -20,19 +20,87 @@
 
 ## دورة حياة القيمة
 
+### مخطط حالات القيمة
+
 ```mermaid
-flowchart LR
-    A[مسودة<br/>DRAFT] -->|إرسال| B[مُرسَل<br/>SUBMITTED]
-    B -->|اعتماد| C[معتمد<br/>APPROVED]
-    B -->|رفض| D[مرفوض<br/>REJECTED]
-    D -->|إعادة| A
-    C -->|قفل| E[مقفل<br/>LOCKED]
+stateDiagram-v2
+    [*] --> DRAFT : إنشاء مسودة
+    DRAFT --> DRAFT : حفظ التغييرات
+    DRAFT --> SUBMITTED : إرسال للاعتماد
     
-    style A fill:#fbbf24,stroke:#f59e0b
-    style B fill:#60a5fa,stroke:#3b82f6
-    style C fill:#34d399,stroke:#10b981
-    style D fill:#f87171,stroke:#ef4444
-    style E fill:#9ca3af,stroke:#6b7280
+    SUBMITTED --> APPROVED : اعتماد من المعتمد
+    SUBMITTED --> REJECTED : رفض مع سبب
+    SUBMITTED --> DRAFT : رفض بدون إشعار
+    
+    REJECTED --> DRAFT : إعادة الإدخال
+    
+    APPROVED --> LOCKED : قفل تلقائي
+    APPROVED --> APPROVED : استخدام في التقارير
+    
+    LOCKED --> [*] : أرشفة
+    
+    note right of DRAFT
+        ✏️ قابلة للتعديل
+        👤 خاصة بالمستخدم
+        🔒 غير مرئية للمعتمدين
+    end note
+    
+    note right of SUBMITTED
+        ⏳ في انتظار القرار
+        👁️ مرئية للمعتمدين
+        🔒 مقفلة للتعديل
+    end note
+    
+    note right of APPROVED
+        ✅ معتمدة نهائيًا
+        📊 تُستخدم في التقارير
+        🎯 تؤثر على الإنجاز
+    end note
+    
+    note right of LOCKED
+        🔒 مقفلة نهائيًا
+        📁 جزء من الأرشيف
+        👁️ للقراءة فقط
+    end note
+```
+
+### تدفق العمل الكامل
+
+```mermaid
+flowchart TD
+    subgraph "المرحلة 1: الإدخال"
+        A[المستخدم] -->|1. الانتقال للكيان| B[صفحة تفاصيل الكيان]
+        B -->|2. فتح تبويب القيم| C[قائمة القيم التاريخية]
+        C -->|3. إضافة قيمة| D[نموذج إدخال القيمة]
+    end
+    
+    subgraph "المرحلة 2: الحفظ"
+        D -->|4. إدخال القيمة| E{نوع المصدر}
+        E -->|MANUAL| F[قيمة مباشرة]
+        E -->|CALCULATED| G[ملء المتغيرات]
+        F --> H[حفظ كمسودة]
+        G --> H
+    end
+    
+    subgraph "المرحلة 3: الإرسال"
+        H -->|5. مراجعة| I{القيمة صحيحة؟}
+        I -->|نعم| J[إرسال للاعتماد]
+        I -->|لا| K[تعديل المسودة]
+        K --> D
+    end
+    
+    subgraph "المرحلة 4: الاعتماد"
+        J -->|6. إشعار| L[المعتمد]
+        L -->|7. مراجعة| M{القرار}
+        M -->|اعتماد| N[حالة: APPROVED]
+        M -->|رفض| O[حالة: REJECTED]
+        O -->|8. إشعار| P[المستخدم]
+        P -->|9. إعادة| D
+    end
+    
+    subgraph "المرحلة 5: القفل"
+        N -->|10. مرور الوقت| Q[حالة: LOCKED]
+    end
 ```
 
 | الحالة | الوصف |

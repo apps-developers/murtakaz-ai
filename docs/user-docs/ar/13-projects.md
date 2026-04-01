@@ -47,11 +47,38 @@
 
 تعرض صفحة التفاصيل:
 
-### 1. النظرة العامة
-- العنوان والوصف
-- حالة المشروع
-- المالك والمُكلَّفون
-- المعالم الرئيسية
+### مخطط حالات المشروع
+
+```mermaid
+stateDiagram-v2
+    [*] --> PLANNED : تخطيط
+    PLANNED --> ACTIVE : بدء التنفيذ
+    ACTIVE --> COMPLETED : إنجاز المشروع
+    ACTIVE --> AT_RISK : تحذير
+    AT_RISK --> ACTIVE : التعافي
+    AT_RISK --> COMPLETED : إنجاز رغم المخاطر
+    COMPLETED --> [*] : أرشفة
+    
+    note right of PLANNED
+        📋 مخطط
+        لم يبدأ بعد
+    end note
+    
+    note right of ACTIVE
+        🟢 نشط
+        قيد التنفيذ
+    end note
+    
+    note right of AT_RISK
+        🔴 في خطر
+        يحتاج تدخل
+    end note
+    
+    note right of COMPLETED
+        ✅ مكتمل
+        تم الإنجاز
+    end note
+```
 
 ### 2. القيم
 - القياسات الدورية للمشروع
@@ -82,7 +109,34 @@
 
 ---
 
-## ربط المشروع بالاستراتيجية
+### ربط المشروع بالاستراتيجية
+
+```mermaid
+flowchart TB
+    subgraph "المستوى الاستراتيجي"
+        P[الركائز]
+        O[الأهداف]
+    end
+    
+    subgraph "المستوى التشغيلي"
+        PR[المشروع]
+    end
+    
+    subgraph "المستوى القياسي"
+        K[مؤشرات الأداء]
+    end
+    
+    P -->|تدعم تحقيق| O
+    O -->|تُنفذ عبر| PR
+    PR -->|يُقاس أداؤه بـ| K
+    K -->|تُقيس تقدم| O
+    O -->|تُقيّم إنجاز| P
+    
+    style P fill:#1e3a8a,stroke:#1e40af,color:#fff
+    style O fill:#3b82f6,stroke:#2563eb,color:#fff
+    style PR fill:#34d399,stroke:#10b981,color:#fff
+    style K fill:#fbbf24,stroke:#f59e0b,color:#1e3a8a
+```
 
 يمكن ربط المشاريع بـ:
 - **الركائز الاستراتيجية** — لربط المشروع بمحور استراتيجي

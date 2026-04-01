@@ -8,6 +8,44 @@
 
 ## فهم أنواع الكيانات
 
+### هرمية الكيانات الاستراتيجية
+
+```mermaid
+graph TD
+    A[الركيزة الاستراتيجية<br/>Pillar] --> B[الهدف<br/>Objective]
+    B --> C[المبادرة<br/>Initiative]
+    B --> D[مؤشر الأداء<br/>KPI]
+    
+    C --> D
+    
+    D --> E[المشروع<br/>Project]
+    
+    style A fill:#1e3a8a,stroke:#1e40af,color:#fff
+    style B fill:#3b82f6,stroke:#2563eb,color:#fff
+    style C fill:#60a5fa,stroke:#3b82f6,color:#fff
+    style D fill:#34d399,stroke:#10b981,color:#fff
+    style E fill:#fbbf24,stroke:#f59e0b,color:#1e3a8a
+```
+
+### أنواع الكيانات وخصائصها
+
+```mermaid
+flowchart LR
+    subgraph "الأنواع الرئيسية"
+        direction TB
+        
+        MANUAL[MANUAL<br/>يدوي]
+        CALCULATED[CALCULATED<br/>محسوب]
+        DERIVED[DERIVED<br/>مشتق]
+        SCORE[SCORE<br/>درجة]
+    end
+    
+    MANUAL -->|إدخال يدوي| V1[قيمة مباشرة]
+    CALCULATED -->|صيغة + متغيرات| V2[قيمة محسوبة]
+    DERIVED -->|من كيان آخر| V3[قيمة موروثة]
+    SCORE -->|تجميع| V4[درجة مركبة]
+```
+
 تُهيِّئ كل مؤسسة **أنواع الكيانات** الخاصة بها (مثل: "الركيزة الاستراتيجية"، "المبادرة"، "مؤشر الأداء"، "الهدف"). لكل نوع:
 
 - **رمز (Code)** — معرّف قصير يُستخدم في الروابط (مثل: `/entities/kpi`)
@@ -87,6 +125,27 @@
 ---
 
 ## أنواع المصدر
+
+### تدفق أنواع المصدر
+
+```mermaid
+flowchart TD
+    subgraph "إدخال القيمة"
+        A[المستخدم] --> B{نوع المصدر}
+        
+        B -->|MANUAL| C[إدخال قيمة<br/>مباشرة]
+        B -->|CALCULATED| D[ملء المتغيرات]
+        B -->|DERIVED| E[استلام قيمة<br/>من كيان مصدر]
+        B -->|SCORE| F[تجميع قيم<br/>الكيانات الفرعية]
+    end
+    
+    C --> G[حفظ القيمة]
+    D --> H[حساب الصيغة<br/>تلقائياً] --> G
+    E --> I[قراءة القيمة<br/>من الكيان المصدر] --> G
+    F --> J[حساب الدرجة<br/>المركبة] --> G
+    
+    G --> K[عرض في<br/>لوحات المتابعة]
+```
 
 | نوع المصدر | المعنى |
 |-----------|--------|
