@@ -136,10 +136,23 @@ function Tab({
       const hoveredElement = tabRefs.current[hoveredIndex];
       if (hoveredElement) {
         const { offsetLeft, offsetWidth } = hoveredElement;
-        setHoverStyle({
-          left: `${offsetLeft}px`,
-          width: `${offsetWidth}px`,
-        });
+        const parentElement = hoveredElement.parentElement;
+        const isRTL = parentElement?.dir === 'rtl' || getComputedStyle(parentElement!).direction === 'rtl';
+        
+        if (isRTL) {
+          const parentWidth = parentElement!.offsetWidth;
+          setHoverStyle({
+            right: `${parentWidth - offsetLeft - offsetWidth}px`,
+            width: `${offsetWidth}px`,
+            left: 'auto',
+          });
+        } else {
+          setHoverStyle({
+            left: `${offsetLeft}px`,
+            width: `${offsetWidth}px`,
+            right: 'auto',
+          });
+        }
       }
     }
   }, [hoveredIndex]);
@@ -149,10 +162,23 @@ function Tab({
       const activeElement = tabRefs.current[activeIndex];
       if (activeElement) {
         const { offsetLeft, offsetWidth } = activeElement;
-        setActiveStyle({
-          left: `${offsetLeft}px`,
-          width: `${offsetWidth}px`,
-        });
+        const parentElement = activeElement.parentElement;
+        const isRTL = parentElement?.dir === 'rtl' || getComputedStyle(parentElement!).direction === 'rtl';
+        
+        if (isRTL) {
+          const parentWidth = parentElement!.offsetWidth;
+          setActiveStyle({
+            right: `${parentWidth - offsetLeft - offsetWidth}px`,
+            width: `${offsetWidth}px`,
+            left: 'auto',
+          });
+        } else {
+          setActiveStyle({
+            left: `${offsetLeft}px`,
+            width: `${offsetWidth}px`,
+            right: 'auto',
+          });
+        }
       }
     }
   }, [activeIndex]);
@@ -166,10 +192,23 @@ function Tab({
         const activeElement = tabRefs.current[initialActiveIndex];
         if (activeElement) {
           const { offsetLeft, offsetWidth } = activeElement;
-          setActiveStyle({
-            left: `${offsetLeft}px`,
-            width: `${offsetWidth}px`,
-          });
+          const parentElement = activeElement.parentElement;
+          const isRTL = parentElement?.dir === 'rtl' || getComputedStyle(parentElement!).direction === 'rtl';
+          
+          if (isRTL) {
+            const parentWidth = parentElement!.offsetWidth;
+            setActiveStyle({
+              right: `${parentWidth - offsetLeft - offsetWidth}px`,
+              width: `${offsetWidth}px`,
+              left: 'auto',
+            });
+          } else {
+            setActiveStyle({
+              left: `${offsetLeft}px`,
+              width: `${offsetWidth}px`,
+              right: 'auto',
+            });
+          }
         }
       }
     });
@@ -323,14 +362,15 @@ function TabIndicator({
   );
 }
 
-function TabContainer({ className, ...props }: React.ComponentProps<"div">) {
+function TabContainer({ className, dir, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       className={cn(
-        "scrollbar-none relative flex items-center space-x-[6px] overflow-x-auto pb-2",
+        "scrollbar-none relative flex items-center gap-[6px] overflow-x-auto pb-2",
         className,
       )}
       data-slot="tab-container"
+      dir={dir}
       role="tablist"
       {...props}
     />
