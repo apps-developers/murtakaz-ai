@@ -7,6 +7,7 @@ import { generateThemeCSS } from "@/lib/config/theme";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { getDefaultConfig } from "@/lib/config/defaults";
+import { prisma } from "@/lib/prisma";
 
 export const metadata: Metadata = {
   title: "Strategy Execution & Performance",
@@ -33,25 +34,26 @@ export default async function LocaleLayout({
   try {
     const session = await auth.api.getSession({ headers: await headers() });
     if (session?.user?.orgId) {
-      const orgConfig = await getOrgConfig(session.user.orgId);
+      const [orgConfig, org] = await Promise.all([
+        getOrgConfig(session.user.orgId),
+        prisma.organization.findUnique({
+          where: { id: session.user.orgId },
+          select: { colorTheme: true },
+        }),
+      ]);
       
-      // Generate dynamic CSS
-      themeCSS = generateThemeCSS(orgConfig.theme);
       branding = orgConfig.branding;
       
-      // Extract color theme from config
-      const themeToColorMap: Record<string, string> = {
-        '215 62% 30%': 'blue',
-        '160 84% 24%': 'emerald',
-        '262 56% 46%': 'violet',
-        '346 84% 40%': 'rose',
-        '24 95% 42%': 'orange',
-        '215 25% 25%': 'slate',
-      };
+      // Read color theme directly from organization record (set by super admin)
+      colorTheme = org?.colorTheme ?? "blue";
       
-      // Try to map primary color to theme name
-      const primaryColor = orgConfig.theme.primary;
-      colorTheme = themeToColorMap[primaryColor] || 'blue';
+      // Only inject dynamic CSS if the org uses a custom theme (not a built-in preset).
+      // Built-in presets (blue, emerald, violet, etc.) are handled by globals.css
+      // via [data-color-theme] selectors — injecting inline CSS would override them.
+      const builtInThemes = ["blue", "emerald", "violet", "rose", "orange", "slate"];
+      if (!builtInThemes.includes(colorTheme)) {
+        themeCSS = generateThemeCSS(orgConfig.theme);
+      }
     }
   } catch {
     // Not authenticated or other error, use defaults
@@ -60,7 +62,7 @@ export default async function LocaleLayout({
   }
 
   return (
-    <html suppressHydrationWarning>
+    <html suppressHydrationWarning data-color-theme={colorTheme}>
       <body className="antialiased">
         {/* Dynamic organization theme CSS - injected in body to avoid hydration issues */}
         {themeCSS && (
