@@ -1,0 +1,27 @@
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
+  output: "standalone",
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  experimental: {
+    serverActions: {
+      allowedOrigins: [
+        "localhost:3000",
+        "localhost:3001",
+        "localhost:3002",
+        "localhost:3003",
+        "localhost:3004",
+        "localhost:3005",
+        "127.0.0.1:54273",
+        ...(process.env.ALLOWED_ORIGIN ? [process.env.ALLOWED_ORIGIN] : []),
+      ],
+    },
+  },
+};
+
+export default nextConfig;

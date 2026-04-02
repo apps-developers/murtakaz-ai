@@ -1,0 +1,68 @@
+[
+  {
+    "id": "risk-1",
+    "initiativeId": "init-1",
+    "title": "Market Volatility",
+    "titleAr": "تذبذب الأسواق وعدم استقرار بيئة الاستثمار",
+    "description": "Fluctuations in global markets may affect new sector entry.",
+    "descriptionAr": "قد تؤثر التقلبات في الأسواق الإقليمية والعالمية سلباً على جدوى الدخول في قطاعات استثمارية جديدة وتوقيت التنفيذ.",
+    "severity": "HIGH",
+    "status": "ACTIVE",
+    "owner": "Investment"
+  },
+  {
+    "id": "risk-2",
+    "initiativeId": "init-3",
+    "title": "Data Accuracy",
+    "titleAr": "عدم اكتمال بيانات السوق وموثوقيتها",
+    "description": "Incomplete market data may lead to incorrect investment assumptions.",
+    "descriptionAr": "قد يؤدي نقص بيانات السوق أو عدم دقتها إلى افتراضات استثمارية مغلوطة تنعكس على جودة قرارات التوسع.",
+    "severity": "MEDIUM",
+    "status": "ACTIVE",
+    "owner": "Investment"
+  },
+  {
+    "id": "risk-3",
+    "initiativeId": "init-6",
+    "title": "Operational Disruption",
+    "titleAr": "اضطراب العمليات خلال مرحلة نقل الخدمات",
+    "description": "Transfer of services may cause temporary service interruptions.",
+    "descriptionAr": "قد تتسبب عملية نقل الخدمات المشتركة إلى الشركات التابعة في انقطاعات تشغيلية مؤقتة تؤثر على مستوى الخدمة.",
+    "severity": "MEDIUM",
+    "status": "ACTIVE",
+    "owner": "Strategy & Excellence"
+  },
+  {
+    "id": "risk-4",
+    "initiativeId": "init-9",
+    "title": "Low Adoption of L&D",
+    "titleAr": "ضعف الإقبال على برامج التعلم والتطوير",
+    "description": "Employees may not actively participate in new training programs.",
+    "descriptionAr": "قد يُحجم بعض الموظفين عن المشاركة الفاعلة في البرامج التدريبية الجديدة مما يُعيق تحقيق أهداف تطوير الكفاءات.",
+    "severity": "LOW",
+    "status": "ACTIVE",
+    "owner": "HR"
+  },
+  {
+    "id": "risk-5",
+    "initiativeId": "init-12",
+    "title": "Legacy System Integration",
+    "titleAr": "تعقيدات التكامل مع الأنظمة التقنية القائمة",
+    "description": "Difficulty integrating new digital platforms with legacy systems.",
+    "descriptionAr": "قد تعترض صعوبات تقنية عملية دمج المنصات الرقمية الجديدة مع الأنظمة الموروثة مما يزيد من تكاليف التحول وجداوله الزمنية.",
+    "severity": "HIGH",
+    "status": "ACTIVE",
+    "owner": "IT"
+  },
+  {
+    "id": "risk-6",
+    "initiativeId": "init-4",
+    "title": "Compliance Resistance",
+    "titleAr": "مقاومة الشركات التابعة لتطبيق السياسات الموحدة",
+    "description": "Subsidiaries may resist new unified financial policies.",
+    "descriptionAr": "قد تُبدي بعض الشركات التابعة مقاومة لتطبيق السياسات والأنظمة المالية الموحدة مما يُضعف الانضباط المالي على مستوى المجموعة.",
+    "severity": "MEDIUM",
+    "status": "ACTIVE",
+    "owner": "Finance"
+  }
+]

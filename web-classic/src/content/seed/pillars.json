@@ -1,0 +1,34 @@
+[
+  {
+    "id": "pillar-1",
+    "title": "Governance & Excellence",
+    "titleAr": "الحوكمة والتميز المؤسسي",
+    "description": "Establish robust governance frameworks and operational excellence.",
+    "descriptionAr": "ترسيخ أُطر حوكمة رشيدة وتحقيق التميز في الأداء التشغيلي على مستوى المجموعة.",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "pillar-2",
+    "title": "Brand",
+    "titleAr": "الهوية والعلامة التجارية",
+    "description": "Enhance brand value and market presence.",
+    "descriptionAr": "تعزيز قيمة العلامة التجارية للمجموعة وتوسيع حضورها في الأسواق المستهدفة.",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "pillar-3",
+    "title": "Financial Sustainability",
+    "titleAr": "الاستدامة المالية وتنويع الإيرادات",
+    "description": "Ensure long-term financial health and diversified revenue.",
+    "descriptionAr": "ضمان المتانة المالية على المدى البعيد وبناء مصادر إيراد متنوعة ومستدامة.",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "pillar-4",
+    "title": "Investment Leadership & Portfolio Diversification",
+    "titleAr": "الريادة الاستثمارية وتنويع المحفظة",
+    "description": "Lead in investment returns and enter new sectors.",
+    "descriptionAr": "تحقيق الريادة في العوائد الاستثمارية والتوسع في قطاعات واعدة لتنويع المحفظة الاستثمارية.",
+    "status": "ACTIVE"
+  }
+]

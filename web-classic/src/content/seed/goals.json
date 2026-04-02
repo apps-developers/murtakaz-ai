@@ -1,0 +1,74 @@
+[
+  {
+    "id": "goal-1",
+    "pillarId": "pillar-4",
+    "title": "Expand Investment Portfolio",
+    "titleAr": "توسيع المحفظة الاستثمارية",
+    "description": "Enter 7 new sectors by 2028.",
+    "descriptionAr": "الدخول في 7 قطاعات استثمارية جديدة بحلول عام 2028م لتعظيم التنويع وتوزيع المخاطر.",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "goal-2",
+    "pillarId": "pillar-4",
+    "title": "Enhance Investment Leadership",
+    "titleAr": "تعزيز الريادة الاستثمارية",
+    "description": "Achieve ROI > 15% above market average by 2028.",
+    "descriptionAr": "تحقيق عائد على الاستثمار يتجاوز متوسط السوق بنسبة لا تقل عن 15% بحلول عام 2028م.",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "goal-3",
+    "pillarId": "pillar-3",
+    "title": "Boost Revenue & Sustainability",
+    "titleAr": "رفع الإيرادات وتعزيز الاستدامة المالية",
+    "description": "Increase total annual revenue and sustainable revenue share.",
+    "descriptionAr": "رفع إجمالي الإيرادات السنوية وزيادة حصة الإيرادات المتكررة والمستدامة ضمن المزيج الإيرادي.",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "goal-4",
+    "pillarId": "pillar-3",
+    "title": "Financial Discipline",
+    "titleAr": "الانضباط المالي والامتثال التنظيمي",
+    "description": "Compliance with financial systems and unified reporting.",
+    "descriptionAr": "ضمان الامتثال الكامل للأنظمة والسياسات المالية المعتمدة وتوحيد منظومة التقارير المالية.",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "goal-5",
+    "pillarId": "pillar-1",
+    "title": "Governance Compliance",
+    "titleAr": "الامتثال لمتطلبات الحوكمة",
+    "description": "Ensure compliance with governance requirements and successful audits.",
+    "descriptionAr": "ضمان الالتزام التام بمتطلبات الحوكمة المؤسسية واجتياز عمليات التدقيق الداخلي والخارجي بنجاح.",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "goal-6",
+    "pillarId": "pillar-1",
+    "title": "Organizational Culture & Capability",
+    "titleAr": "بناء الثقافة المؤسسية وتطوير الكفاءات",
+    "description": "High training participation and strong organizational culture.",
+    "descriptionAr": "تعزيز ثقافة التعلم المستمر ورفع نسبة المشاركة في برامج التدريب والتطوير لبناء كفاءات مؤسسية متميزة.",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "goal-7",
+    "pillarId": "pillar-2",
+    "title": "Increase Brand Value",
+    "titleAr": "رفع قيمة العلامة التجارية",
+    "description": "Increase nominal brand value and brand association.",
+    "descriptionAr": "رفع القيمة السوقية للعلامة التجارية وتعميق ارتباطها بالقطاعات الاستراتيجية المستهدفة.",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "goal-8",
+    "pillarId": "pillar-2",
+    "title": "Brand Awareness",
+    "titleAr": "تعزيز الوعي بالعلامة التجارية",
+    "description": "Execute marketing campaigns and boost awareness index.",
+    "descriptionAr": "تنفيذ حملات تسويقية واتصالية مدروسة لرفع مؤشر الوعي بالعلامة التجارية في الأسواق المستهدفة.",
+    "status": "ACTIVE"
+  }
+]

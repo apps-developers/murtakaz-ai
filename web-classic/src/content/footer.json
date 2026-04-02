@@ -1,0 +1,38 @@
+{
+  "company": {
+    "name": "Murtakaz",
+    "nameAr": "مرتكز",
+    "description": "Empowering organizations to execute strategy with precision.",
+    "descriptionAr": "منصة مؤسسية متكاملة لتنفيذ الاستراتيجية وقياس الأداء وإدارة الحوكمة بدقة واحترافية."
+  },
+  "links": [
+    {
+      "title": "Product",
+      "titleAr": "المنتج",
+      "items": [
+        { "label": "Features", "labelAr": "مميزات المنصة", "href": "#features" },
+        { "label": "Pricing", "labelAr": "باقات الأسعار", "href": "/pricing" },
+        { "label": "FAQ", "labelAr": "الأسئلة المتكررة", "href": "/faq" }
+      ]
+    },
+    {
+      "title": "Company",
+      "titleAr": "الشركة",
+      "items": [
+        { "label": "About Us", "labelAr": "عن مرتكز", "href": "/about" },
+        { "label": "Contact", "labelAr": "تواصل مع فريقنا", "href": "/contact" },
+        { "label": "Careers", "labelAr": "الوظائف المتاحة", "href": "/careers" }
+      ]
+    },
+    {
+      "title": "Legal",
+      "titleAr": "الشؤون القانونية",
+      "items": [
+        { "label": "Privacy Policy", "labelAr": "سياسة الخصوصية وحماية البيانات", "href": "/privacy" },
+        { "label": "Terms of Use", "labelAr": "الشروط والأحكام", "href": "/terms" }
+      ]
+    }
+  ],
+  "copyright": "© 2025 Murtakaz. All rights reserved.",
+  "copyrightAr": "© 2025 مرتكز. جميع الحقوق محفوظة."
+}
