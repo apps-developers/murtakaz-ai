@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { EChart } from "@/components/charts/echart";
 import { KpiGauge } from "@/components/charts/kpi-gauge";
 import { KpiRingCard } from "@/components/charts/kpi-ring-card";
@@ -719,6 +720,31 @@ export default function EntityDetailPage() {
         <AiKpiExplainer entityId={entity.id} />
       ) : null}
 
+      <Tabs defaultValue="overview" className="space-y-6">
+        <TabsList className="w-full justify-start">
+          <TabsTrigger value="overview" className="gap-1.5">
+            <Gauge className="h-3.5 w-3.5" />
+            {tr("Overview", "نظرة عامة")}
+          </TabsTrigger>
+          {showInputsSection && (
+            <TabsTrigger value="inputs" className="gap-1.5">
+              <Pencil className="h-3.5 w-3.5" />
+              {t("inputs")}
+            </TabsTrigger>
+          )}
+          <TabsTrigger value="history" className="gap-1.5">
+            <Calendar className="h-3.5 w-3.5" />
+            {tr("History", "السجل")}
+          </TabsTrigger>
+          {fileAttachmentsEnabled && (
+            <TabsTrigger value="attachments" className="gap-1.5">
+              <FileText className="h-3.5 w-3.5" />
+              {tr("Attachments", "المرفقات")}
+            </TabsTrigger>
+          )}
+        </TabsList>
+
+        <TabsContent value="overview" className="space-y-6">
       <div className="grid gap-6 lg:grid-cols-3">
         <Card className="bg-card/70 backdrop-blur shadow-sm lg:col-span-1">
           <CardHeader>
@@ -727,6 +753,29 @@ export default function EntityDetailPage() {
           </CardHeader>
           <CardContent>
             <KpiRingCard value={currentValue} target={entity.targetValue ?? null} unit={unitLabel || undefined} size={128} />
+            {/* Baseline → Current → Target */}
+            {(typeof entity.baselineValue === "number" || typeof entity.targetValue === "number") && (
+              <div className="mt-4 flex items-center justify-between gap-2 rounded-lg border border-border bg-muted/20 px-3 py-2">
+                {typeof entity.baselineValue === "number" && (
+                  <div className="text-center flex-1">
+                    <div className="text-[10px] text-muted-foreground">{tr("Baseline", "خط الأساس")}</div>
+                    <div className="text-sm font-semibold tabular-nums" dir="ltr">{formatNumber(entity.baselineValue)}{unitLabel ? ` ${unitLabel}` : ""}</div>
+                  </div>
+                )}
+                {typeof entity.baselineValue === "number" && <div className="text-muted-foreground/40">→</div>}
+                <div className="text-center flex-1">
+                  <div className="text-[10px] text-muted-foreground">{tr("Current", "الحالي")}</div>
+                  <div className="text-sm font-bold tabular-nums text-primary" dir="ltr">{currentValue !== null ? formatNumber(Math.round(currentValue * 10) / 10) : "—"}{unitLabel ? ` ${unitLabel}` : ""}</div>
+                </div>
+                {typeof entity.targetValue === "number" && <div className="text-muted-foreground/40">→</div>}
+                {typeof entity.targetValue === "number" && (
+                  <div className="text-center flex-1">
+                    <div className="text-[10px] text-muted-foreground">{tr("Target", "المستهدف")}</div>
+                    <div className="text-sm font-semibold tabular-nums" dir="ltr">{formatNumber(entity.targetValue)}{unitLabel ? ` ${unitLabel}` : ""}</div>
+                  </div>
+                )}
+              </div>
+            )}
             {isKpiEntity && (
               <div className="mt-3 text-xs text-muted-foreground">
                 {tr("Status", "الحالة")}: {kpiValueStatusLabel(String(data?.currentPeriod?.status ?? data?.latest?.status ?? "DRAFT"))}
@@ -775,7 +824,9 @@ export default function EntityDetailPage() {
           </CardContent>
         </Card>
       </div>
+        </TabsContent>
 
+        <TabsContent value="inputs" className="space-y-6">
       {showInputsSection ? (
         <Card className="bg-card/70 backdrop-blur shadow-sm">
           <CardHeader>
@@ -960,7 +1011,9 @@ export default function EntityDetailPage() {
           </CardContent>
         </Card>
       ) : null}
+        </TabsContent>
 
+        <TabsContent value="history" className="space-y-6">
       {/* Previous Values Table */}
       {entity ? (
         <Card className="bg-card/70 backdrop-blur shadow-sm">
@@ -1025,7 +1078,9 @@ export default function EntityDetailPage() {
           </CardContent>
         </Card>
       ) : null}
+        </TabsContent>
 
+        <TabsContent value="attachments" className="space-y-6">
       {/* Attachments Section */}
       {fileAttachmentsEnabled && entity ? (
         <Card className="bg-card/70 backdrop-blur shadow-sm">
@@ -1235,6 +1290,8 @@ export default function EntityDetailPage() {
           </CardContent>
         </Card>
       ) : null}
+        </TabsContent>
+      </Tabs>
 
       {diagramsEnabled && entity ? (
         <Card className="bg-card/70 backdrop-blur shadow-sm">

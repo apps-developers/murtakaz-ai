@@ -12,6 +12,19 @@ import {
 } from "@/actions/notifications";
 
 /**
+ * Get count of pending (SUBMITTED) entity values for sidebar badge
+ */
+export async function getPendingApprovalCount() {
+  const session = await requireOrgMember();
+  return prisma.entityValue.count({
+    where: {
+      entity: { orgId: session.user.orgId, deletedAt: null },
+      status: "SUBMITTED" as KpiValueStatus,
+    },
+  });
+}
+
+/**
  * Get entity value detail for approval review
  */
 export async function getEntityValueDetail(entityValueId: string) {

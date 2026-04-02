@@ -486,7 +486,7 @@ export async function getOrgEntitiesByTypeCode(input: z.infer<typeof getOrgEntit
         },
         values: {
           orderBy: [{ createdAt: "desc" }],
-          take: 1,
+          take: 6,
           select: {
             createdAt: true,
             status: true,

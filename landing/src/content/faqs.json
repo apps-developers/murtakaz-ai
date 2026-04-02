@@ -47,6 +47,27 @@
     "questionAr": "ما الذي يغطيه سير عمل الموافقات؟",
     "answer": "KPI value submissions follow a draft → submit → approve/reject flow. Formula and target changes require PMO approval by default. All decisions are logged with actor, timestamp, and before/after detail.",
     "answerAr": "تمرّ إدخالات قيم مؤشرات الأداء الرئيسية بمراحل محددة: مسودة ← تقديم ← موافقة أو رفض. وتستلزم أي تعديلات على صيغ الحساب أو المستهدفات الحصول على موافقة مكتب إدارة المشاريع بشكل افتراضي. وتُسجَّل جميع القرارات والتغييرات في سجل تدقيق شامل يتضمن هوية المنفِّذ والتوقيت والحالة قبل التغيير وبعده."
+  },
+  {
+    "id": "faq-8",
+    "question": "Which performance management frameworks are supported?",
+    "questionAr": "ما هي أطر إدارة الأداء المدعومة؟",
+    "answer": "Murtakaz supports Balanced Scorecard (BSC), OKRs, EFQM, and Hoshin Kanri methodologies. You can configure entity hierarchies, measurement approaches, and reporting cycles to match your preferred framework.",
+    "answerAr": "يدعم مرتكز منهجيات بطاقة الأداء المتوازن (BSC)، وأهداف ونتائج رئيسية (OKRs)، ونموذج EFQM، وهوشين كانري. يمكنك تهيئة الهياكل الهرمية للكيانات وأساليب القياس ودوريات التقارير لتتناسب مع الإطار المفضل لديك."
+  },
+  {
+    "id": "faq-9",
+    "question": "How does the RAG health scoring system work?",
+    "questionAr": "كيف يعمل نظام التصنيف اللوني RAG للصحة المؤسسية؟",
+    "answer": "Individual KPIs are scored Red (<50%), Amber (50-75%), or Green (≥75%) based on target achievement. These roll up through weighted aggregation to department and organizational health scores, visible on executive dashboards.",
+    "answerAr": "تُصنَّف مؤشرات الأداء الفردية حمراء (<50%)، صفراء (50-75%)، أو خضراء (≥75%) بناءً على تحقيق المستهدفات. تتصاعد هذه الدرجات عبر التجميع المرجّح إلى درجات صحة الإدارات والمؤسسة بأكملها، مرئية على لوحات المتابعة التنفيذية."
+  },
+  {
+    "id": "faq-10",
+    "question": "Is Murtakaz suitable for Saudi Vision 2030 alignment?",
+    "questionAr": "هل مرتكز مناسب للجهات المتوافقة مع رؤية السعودية 2030؟",
+    "answer": "Yes. Murtakaz is designed for organizations tracking Vision Realization Programs (VRPs). It supports quarterly reporting cycles, national KPI alignment, and the performance management culture established by Vision 2030.",
+    "answerAr": "نعم. صُمِّم مرتكز للجهات التي تتبع برامج تحقيق الرؤية (VRPs). يدعم دورات التقارير الربع سنوية ومواءاة مؤشرات الأداء الوطنية وثقافة إدارة الأداء التي أرساها برنامج رؤية 2030."
   }
 ]
 

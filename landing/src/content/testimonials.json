@@ -1,33 +1,36 @@
 [
   {
     "id": "t-1",
-    "author": "Abdullah Al-Hamad",
-    "authorAr": "عبدالله الحمد",
-    "role": "CEO, Future Corp",
-    "roleAr": "الرئيس التنفيذي، مجموعة المستقبل",
-    "quote": "Murtakaz transformed how we track our strategic initiatives. The visibility is unmatched.",
-    "quoteAr": "أحدث مرتكز نقلة نوعية في طريقة متابعتنا للمبادرات الاستراتيجية؛ مستوى الوضوح والشفافية الذي يوفره لم نجده في أي أداة أخرى.",
-    "image": "/images/avatar-1.svg"
+    "author": "Strategy Director",
+    "authorAr": "مدير الاستراتيجية",
+    "role": "Government Entity, Riyadh",
+    "roleAr": "جهة حكومية، الرياض",
+    "quote": "We implemented EFQM and needed a platform that understood both the framework and Saudi Vision 2030 requirements. Murtakaz delivered exactly that—our quarterly VRP reporting is now seamless.",
+    "quoteAr": "طبقنا نموذج EFQM وكنا نحتاج منصة تفهم الإطار ومتطلبات رؤية 2030. مرتكز وفّر بالضبط ما نحتاجه—تقارير برامج تحقيق الرؤية الربع سنوية أصبحت سلسة الآن.",
+    "image": "/images/avatar-1.svg",
+    "industry": "Government"
   },
   {
     "id": "t-2",
-    "author": "Sarah Al-Otaibi",
-    "authorAr": "سارة العتيبي",
-    "role": "Head of Strategy",
-    "roleAr": "رئيسة قطاع الاستراتيجية والتطوير",
-    "quote": "Finally, a tool that connects our daily projects to our long-term vision effortlessly.",
-    "quoteAr": "أخيراً وجدنا منصة تربط مشاريعنا التشغيلية اليومية بأهدافنا الاستراتيجية بعيدة المدى بسلاسة تامة دون تعقيدات.",
-    "image": "/images/avatar-2.svg"
+    "author": "Head of PMO",
+    "authorAr": "رئيس مكتب إدارة المشاريع",
+    "role": "Large Private Conglomerate",
+    "roleAr": "تكتل خاص كبير",
+    "quote": "Moving from static Excel BSC templates to Murtakaz was transformative. The drill-down from organizational health to individual KPI ownership finally gives us the accountability we needed.",
+    "quoteAr": "الانتقال من قوالب Excel الثابتة لبطاقة الأداء المتوازن إلى مرتكز كان تحولاً نوعياً. إمكانية التعمق من الصحة المؤسسية إلى مالكي المؤشرات الفرديين أعطانا أخيراً المساءلة التي كنا نحتاجها.",
+    "image": "/images/avatar-2.svg",
+    "industry": "Private Sector"
   },
   {
     "id": "t-3",
-    "author": "Omar Khalil",
-    "authorAr": "عمر خليل",
-    "role": "Director of PMO",
-    "roleAr": "مدير مكتب إدارة المشاريع والتميز المؤسسي",
-    "quote": "The bilingual support and RTL design made adoption seamless for our entire team.",
-    "quoteAr": "الدعم الكامل للغة العربية وتصميم الواجهة وفق معايير RTL جعل تبني النظام من قِبل الفريق بأكمله أمراً سلساً ومريحاً.",
-    "image": "/images/avatar-3.svg"
+    "author": "Strategy & Transformation Lead",
+    "authorAr": "قائد الاستراتيجية والتحول",
+    "role": "Healthcare Organization",
+    "roleAr": "مؤسسة صحية",
+    "quote": "The bilingual support and native RTL design meant zero friction for our Arabic-first teams. Combined with OKR methodology support, we're finally executing strategy instead of just documenting it.",
+    "quoteAr": "الدعم ثنائي اللغة وتصميم RTL الأصيل يعني عدم وجود احتكاك لفريقنا الناطق بالعربية. بالإضافة لدعم منهجية OKRs، نفذنا أخيراً الاستراتيجية بدلاً من مجرد توثيقها.",
+    "image": "/images/avatar-3.svg",
+    "industry": "Healthcare"
   }
 ]
 

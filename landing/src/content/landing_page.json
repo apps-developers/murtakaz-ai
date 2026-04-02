@@ -2,8 +2,8 @@
   "hero": {
     "title": "Turn Strategy into Results",
     "titleAr": "حوِّل استراتيجيتك إلى نتائج قابلة للقياس",
-    "subtitle": "The unified platform for strategy execution, KPI governance, and performance management — built for executives, PMOs, and teams.",
-    "subtitleAr": "المنصة المؤسسية الموحدة لتنفيذ الاستراتيجية وحوكمة مؤشرات الأداء الرئيسية وإدارة الأداء — مصممة للقيادات التنفيذية ومكاتب الاستراتيجية والفرق.",
+    "subtitle": "60-90% of strategic plans fail due to the execution gap. Murtakaz bridges strategy and results—unified platform for KPI governance, and performance management built for executives, PMOs, and teams.",
+    "subtitleAr": "60-90% من الخطط الاستراتيجية تفشل بسبب فجوة التنفيذ. مرتكز يغلق هذه الفجوة—منصة موحدة لحوكمة مؤشرات الأداء وإدارة الأداء، مصممة للقيادات التنفيذية ومكاتب الاستراتيجية والفرق.",
     "cta": "Get Started",
     "ctaAr": "ابدأ تجربتك الآن",
     "image": "/images/hero-dashboard.svg"
@@ -78,8 +78,82 @@
       "description": "Full English and Arabic support with proper RTL layout. Every label, date, and number respects your locale.",
       "descriptionAr": "واجهة مؤسسية ثنائية اللغة بدعم أصيل لمعايير الكتابة من اليمين إلى اليسار. كل تسمية وتاريخ ورقم يتوافق تلقائياً مع إعدادات اللغة المختارة.",
       "icon": "language"
+    },
+    {
+      "id": "feat-7",
+      "title": "Industry-Standard Frameworks",
+      "titleAr": "أطر العمل المعتمدة عالمياً",
+      "description": "Built-in support for BSC (Balanced Scorecard), OKRs, EFQM, and Hoshin Kanri. Choose the methodology that fits your organization's culture.",
+      "descriptionAr": "دعم مدمج لبطاقة الأداء المتوازن (BSC)، وأهداف ونتائج رئيسية (OKRs)، ونموذج EFQM، وهوشين كانري. اختر المنهجية التي تناسب ثقافة مؤسستك.",
+      "icon": "layers"
+    },
+    {
+      "id": "feat-8",
+      "title": "RAG Health Scoring",
+      "titleAr": "نظام التصنيف اللوني للصحة المؤسسية",
+      "description": "Red-Amber-Green health indicators with weighted aggregation from individual KPIs to organizational health scores. See performance at a glance.",
+      "descriptionAr": "مؤشرات صحية حمراء-صفراء-خضراء مع تجميع مرجّح من مؤشرات الأداء الفردية إلى درجات الصحة المؤسسية. راقب الأداء بنظرة واحدة.",
+      "icon": "activity"
+    },
+    {
+      "id": "feat-9",
+      "title": "Saudi Vision 2030 Ready",
+      "titleAr": "جاهز لرؤية السعودية 2030",
+      "description": "Designed for organizations aligned with Saudi Vision 2030. Track Vision Realization Programs (VRPs) with quarterly reporting and national KPI alignment.",
+      "descriptionAr": "مصمم للجهات المتوافقة مع رؤية السعودية 2030. تتبع برامج تحقيق الرؤية (VRPs) مع تقارير ربع سنوية ومواءاة مع مؤشرات الأداء الوطنية.",
+      "icon": "flag"
     }
   ],
+  "workflow": {
+    "title": "From Vision to Execution",
+    "titleAr": "من الرؤية إلى التنفيذ",
+    "subtitle": "Connect every level of your organization with a clear hierarchy that bridges strategy and operations",
+    "subtitleAr": "اربط كل مستوى في مؤسستك بهيكل واضح يربط الاستراتيجية بالعمليات التشغيلية",
+    "steps": [
+      {
+        "id": "step-1",
+        "title": "Vision & Mission",
+        "titleAr": "الرؤية والرسالة",
+        "description": "Define where you want to be in 10 years",
+        "descriptionAr": "حدد أين تريد أن تكون بعد 10 سنوات"
+      },
+      {
+        "id": "step-2",
+        "title": "Strategic Pillars",
+        "titleAr": "الركائز الاستراتيجية",
+        "description": "3-5 focus areas that drive your strategy",
+        "descriptionAr": "3-5 مجالات تركز عليها استراتيجيتك"
+      },
+      {
+        "id": "step-3",
+        "title": "Goals & Objectives",
+        "titleAr": "الأهداف الاستراتيجية",
+        "description": "What must be achieved in each pillar",
+        "descriptionAr": "ما يجب تحقيقه في كل ركيزة"
+      },
+      {
+        "id": "step-4",
+        "title": "Initiatives & Projects",
+        "titleAr": "المبادرات والمشاريع",
+        "description": "Actions to achieve each goal",
+        "descriptionAr": "الإجراءات لتحقيق كل هدف"
+      },
+      {
+        "id": "step-5",
+        "title": "KPIs & Metrics",
+        "titleAr": "مؤشرات الأداء الرئيسية",
+        "description": "How you'll know you're making progress",
+        "descriptionAr": "كيف تعرف أنك تحرز تقدماً"
+      },
+      {
+        "id": "step-6",
+        "title": "Tasks & Execution",
+        "titleAr": "المهام والتنفيذ",
+        "description": "What each person does this week/month",
+        "descriptionAr": "ما يفعله كل فرد هذا الأسبوع/الشهر"
+      }
+    ]
+  },
   "benefits": {
     "title": "Why Choose Murtakaz?",
     "titleAr": "لماذا مرتكز؟",

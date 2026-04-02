@@ -738,6 +738,13 @@ export async function getInitiativeHealthInsights() {
       titleAr: true,
       status: true,
       ownerUser: { select: { id: true, name: true } },
+      targetValue: true,
+      parent: { select: { id: true, title: true, titleAr: true } },
+      values: {
+        orderBy: [{ createdAt: "desc" }],
+        take: 1,
+        select: { finalValue: true, calculatedValue: true, actualValue: true, achievementValue: true },
+      },
     },
   });
 
@@ -749,6 +756,36 @@ export async function getInitiativeHealthInsights() {
   const planned = initiatives.filter((i) => i.status === Status.PLANNED);
   const completed = initiatives.filter((i) => i.status === Status.COMPLETED);
 
+  function getVal(v: { finalValue: number | null; calculatedValue: number | null; actualValue: number | null } | undefined) {
+    if (!v) return null;
+    if (typeof v.finalValue === "number") return v.finalValue;
+    if (typeof v.calculatedValue === "number") return v.calculatedValue;
+    if (typeof v.actualValue === "number") return v.actualValue;
+    return null;
+  }
+
+  function mapInit(i: (typeof initiatives)[number]) {
+    const val = getVal(i.values?.[0]);
+    const target = typeof i.targetValue === "number" ? Number(i.targetValue) : null;
+    const achievement = i.values?.[0]?.achievementValue
+      ? Number(i.values[0].achievementValue)
+      : val !== null && target && target > 0
+        ? Math.round((val / target) * 100)
+        : null;
+    return {
+      id: String(i.id),
+      title: String(i.title),
+      titleAr: i.titleAr ? String(i.titleAr) : null,
+      owner: i.ownerUser?.name ? String(i.ownerUser.name) : "—",
+      status: String(i.status),
+      value: val,
+      target,
+      achievement,
+      pillarTitle: i.parent?.title ? String(i.parent.title) : null,
+      pillarTitleAr: i.parent?.titleAr ? String(i.parent.titleAr) : null,
+    };
+  }
+
   return {
     summary: {
       total: initiatives.length,
@@ -758,20 +795,8 @@ export async function getInitiativeHealthInsights() {
       completed: completed.length,
       kpis: initiativeKpiCounts,
     },
-    atRiskList: atRisk.map((i) => ({
-      id: String(i.id),
-      title: String(i.title),
-      titleAr: i.titleAr ? String(i.titleAr) : null,
-      owner: i.ownerUser?.name ? String(i.ownerUser.name) : "—",
-      status: String(i.status),
-    })),
-    allInitiatives: initiatives.map((i) => ({
-      id: String(i.id),
-      title: String(i.title),
-      titleAr: i.titleAr ? String(i.titleAr) : null,
-      owner: i.ownerUser?.name ? String(i.ownerUser.name) : "—",
-      status: String(i.status),
-    })),
+    atRiskList: atRisk.map(mapInit),
+    allInitiatives: initiatives.map(mapInit),
   };
 }
 
@@ -1011,6 +1036,156 @@ export async function getGovernanceInsights() {
       ageDays: Math.floor((now.getTime() - cr.createdAt.getTime()) / 86400000),
     })),
   };
+}
+
+export async function getStrategicPillarsOverview() {
+  const session = await requireOrgMember();
+  const orgId = session.user.orgId;
+
+  const pillars = await prisma.entity.findMany({
+    where: {
+      orgId,
+      deletedAt: null,
+      orgEntityType: { code: { equals: "pillar", mode: "insensitive" } },
+    },
+    orderBy: [{ title: "asc" }],
+    select: {
+      id: true,
+      key: true,
+      title: true,
+      titleAr: true,
+      status: true,
+      targetValue: true,
+      values: {
+        orderBy: [{ createdAt: "desc" }],
+        take: 1,
+        select: {
+          finalValue: true,
+          calculatedValue: true,
+          actualValue: true,
+          achievementValue: true,
+        },
+      },
+      children: {
+        where: { deletedAt: null },
+        orderBy: [{ title: "asc" }],
+        select: {
+          id: true,
+          key: true,
+          title: true,
+          titleAr: true,
+          status: true,
+          targetValue: true,
+          orgEntityType: { select: { code: true, name: true, nameAr: true } },
+          values: {
+            orderBy: [{ createdAt: "desc" }],
+            take: 1,
+            select: {
+              finalValue: true,
+              calculatedValue: true,
+              actualValue: true,
+              achievementValue: true,
+              status: true,
+            },
+          },
+          children: {
+            where: { deletedAt: null },
+            select: {
+              id: true,
+              key: true,
+              title: true,
+              titleAr: true,
+              targetValue: true,
+              orgEntityType: { select: { code: true } },
+              values: {
+                orderBy: [{ createdAt: "desc" }],
+                take: 1,
+                select: {
+                  finalValue: true,
+                  calculatedValue: true,
+                  actualValue: true,
+                  achievementValue: true,
+                  status: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+
+  function getValue(v: { finalValue: number | null; calculatedValue: number | null; actualValue: number | null } | undefined) {
+    if (!v) return null;
+    if (typeof v.finalValue === "number") return v.finalValue;
+    if (typeof v.calculatedValue === "number") return v.calculatedValue;
+    if (typeof v.actualValue === "number") return v.actualValue;
+    return null;
+  }
+
+  return pillars.map((p) => {
+    const pVal = getValue(p.values?.[0]);
+    const objectives = p.children
+      .filter((c) => c.orgEntityType.code.toLowerCase() === "objective")
+      .map((obj) => {
+        const objVal = getValue(obj.values?.[0]);
+        const kpis = obj.children
+          .filter((k) => k.orgEntityType?.code?.toLowerCase() === "kpi")
+          .map((k) => {
+            const kVal = getValue(k.values?.[0]);
+            return {
+              id: String(k.id),
+              key: k.key ? String(k.key) : null,
+              title: String(k.title),
+              titleAr: k.titleAr ? String(k.titleAr) : null,
+              value: kVal,
+              target: typeof k.targetValue === "number" ? Number(k.targetValue) : null,
+              achievement: k.values?.[0]?.achievementValue ?? (kVal !== null && typeof k.targetValue === "number" && k.targetValue !== 0 ? Math.round((kVal / Number(k.targetValue)) * 100) : null),
+              valueStatus: k.values?.[0]?.status ? String(k.values[0].status) : null,
+            };
+          });
+        return {
+          id: String(obj.id),
+          key: obj.key ? String(obj.key) : null,
+          title: String(obj.title),
+          titleAr: obj.titleAr ? String(obj.titleAr) : null,
+          status: String(obj.status),
+          value: objVal,
+          target: typeof obj.targetValue === "number" ? Number(obj.targetValue) : null,
+          kpis,
+          kpiCount: kpis.length,
+        };
+      });
+    const initiatives = p.children
+      .filter((c) => c.orgEntityType.code.toLowerCase() === "initiative")
+      .map((init) => {
+        const initVal = getValue(init.values?.[0]);
+        return {
+          id: String(init.id),
+          title: String(init.title),
+          titleAr: init.titleAr ? String(init.titleAr) : null,
+          value: initVal,
+          target: typeof init.targetValue === "number" ? Number(init.targetValue) : null,
+        };
+      });
+    const compositeKpis = p.children
+      .filter((c) => c.orgEntityType.code.toLowerCase() === "kpi");
+
+    return {
+      id: String(p.id),
+      key: p.key ? String(p.key) : null,
+      title: String(p.title),
+      titleAr: p.titleAr ? String(p.titleAr) : null,
+      status: String(p.status),
+      value: pVal,
+      target: typeof p.targetValue === "number" ? Number(p.targetValue) : null,
+      objectives,
+      objectiveCount: objectives.length,
+      kpiCount: objectives.reduce((sum, o) => sum + o.kpiCount, 0) + compositeKpis.length,
+      initiativeCount: initiatives.length,
+      initiatives,
+    };
+  });
 }
 
 export async function getPillarDashboardInsights() {

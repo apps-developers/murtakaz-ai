@@ -14,6 +14,8 @@ import { Input } from "@/components/ui/input";
 import { KpiGauge } from "@/components/charts/kpi-gauge";
 import { KpiRingCard } from "@/components/charts/kpi-ring-card";
 import { KpiLineCard } from "@/components/charts/kpi-line-card";
+import { RagBadge } from "@/components/rag-badge";
+import { MiniSparkline } from "@/components/charts/mini-sparkline";
 import { useAuth } from "@/providers/auth-provider";
 import { useLocale } from "@/providers/locale-provider";
 import { deleteOrgEntity, getOrgEntitiesByTypeCode } from "@/actions/entities";
@@ -679,13 +681,7 @@ export default function EntitiesByTypePage() {
                             </TableCell>
                             <TableCell className="tabular-nums" dir="ltr">
                               {achievement !== null ? (
-                                <span className={`font-medium ${
-                                  achievement >= 100 ? "text-emerald-600 dark:text-emerald-400" :
-                                  achievement >= 75 ? "text-amber-600 dark:text-amber-400" :
-                                  "text-rose-600 dark:text-rose-400"
-                                }`}>
-                                  {achievement}%
-                                </span>
+                                <RagBadge health={achievement >= 80 ? "GREEN" : achievement >= 60 ? "AMBER" : "RED"} label={`${achievement}%`} />
                               ) : "—"}
                             </TableCell>
                             <TableCell>
@@ -755,6 +751,12 @@ export default function EntitiesByTypePage() {
                       const valStatus = String(e.values?.[0]?.status ?? "");
                       const entStatus = String(e.status ?? "");
                       const period = String(e.periodType ?? "");
+                      const sparkPoints = (e.values ?? []).slice().reverse().map((v) => {
+                        if (typeof v.finalValue === "number") return v.finalValue;
+                        if (typeof v.calculatedValue === "number") return v.calculatedValue;
+                        if (typeof v.actualValue === "number") return v.actualValue;
+                        return 0;
+                      });
 
                       return (
                         <Card key={e.id} className="bg-card/50 backdrop-blur shadow-sm overflow-hidden transition-all hover:shadow-md hover:border-border/80">
@@ -851,9 +853,12 @@ export default function EntitiesByTypePage() {
 
                               <div className="flex items-center justify-between border-t border-border/50 pt-2 text-xs text-muted-foreground">
                                 <span className="truncate">{t("target")}: {gaugeTarget !== null ? formatNumber(gaugeTarget) : "—"}</span>
-                                <span dir="ltr" className="shrink-0 ms-2 font-medium tabular-nums">
-                                  {latest === null ? "—" : formatNumber(Math.round(latest * 10) / 10)}{unit ? ` ${unit}` : ""}
-                                </span>
+                                <div className="flex items-center gap-2 shrink-0 ms-2">
+                                  {sparkPoints.length >= 2 && <MiniSparkline points={sparkPoints} width={48} height={18} />}
+                                  <span dir="ltr" className="font-medium tabular-nums">
+                                    {latest === null ? "—" : formatNumber(Math.round(latest * 10) / 10)}{unit ? ` ${unit}` : ""}
+                                  </span>
+                                </div>
                               </div>
                             </CardContent>
                           </Link>

@@ -8,7 +8,8 @@ import { Button } from "@/components/ui/button";
 import { LanguageToggle } from "@/components/language-toggle";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { getMyOrganizationEntityTypes } from "@/actions/navigation";
-import { getMyNotificationCount, markNotificationsRead } from "@/actions/notifications";
+import { NotificationBell } from "@/components/notification-bell";
+import { getPendingApprovalCount } from "@/actions/approvals";
 import { getOrgLogo } from "@/actions/org-admin";
 import { useAuth } from "@/providers/auth-provider";
 import { type TranslationKey, useLocale } from "@/providers/locale-provider";
@@ -45,6 +46,7 @@ const navItems = [
   { href: "/overview", key: "home", icon: "tabler:layout-dashboard" },
   { href: "/pillars", key: "pillar", icon: "tabler:layers-subtract" },
   { href: "/objectives", key: "objective", icon: "tabler:flag-3" },
+  { href: "/strategy-map", key: "strategyMap", icon: "tabler:hierarchy-3" },
   { href: "/dashboards", key: "dashboards", icon: "tabler:layout-dashboard" },
   { href: "/reports", key: "reports", icon: "tabler:table" },
   { href: "/responsibilities", key: "responsibilities", icon: "tabler:user-check" },
@@ -134,6 +136,7 @@ function NavItemLink({
   sidebarExpanded,
   sidebarContentVisible,
   t,
+  badge,
 }: {
   item: NavItem;
   href: string;
@@ -143,6 +146,7 @@ function NavItemLink({
   sidebarExpanded: boolean;
   sidebarContentVisible: boolean;
   t: (key: TranslationKey) => string;
+  badge?: number;
 }) {
   const label = "label" in item ? item.label : t(item.key as TranslationKey);
 
@@ -167,12 +171,17 @@ function NavItemLink({
         />
         <span
           className={cn(
-            "whitespace-nowrap transition-all duration-200",
+            "whitespace-nowrap transition-all duration-200 flex-1",
             mobileContentVisible ? "opacity-100 translate-x-0" : "opacity-0 ltr:translate-x-2 rtl:-translate-x-2",
           )}
         >
           {label}
         </span>
+        {badge && badge > 0 ? (
+          <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1.5 text-[10px] font-bold text-white">
+            {badge > 99 ? "99+" : badge}
+          </span>
+        ) : null}
       </Link>
     );
   }
@@ -199,13 +208,21 @@ function NavItemLink({
       />
       <span
         className={cn(
-          "overflow-hidden whitespace-nowrap transition-all duration-300 motion-reduce:transition-none",
+          "overflow-hidden whitespace-nowrap transition-all duration-300 motion-reduce:transition-none flex-1",
           sidebarExpanded ? "max-w-[220px]" : "max-w-0",
           sidebarContentVisible ? "opacity-100 translate-x-0" : "opacity-0 ltr:-translate-x-2 rtl:translate-x-2",
         )}
       >
         {label}
       </span>
+      {badge && badge > 0 ? (
+        <span className={cn(
+          "flex items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white transition-all",
+          sidebarExpanded ? "h-5 min-w-5 px-1.5" : "absolute -top-0.5 -end-0.5 h-3.5 min-w-3.5 px-0.5 text-[8px]",
+        )}>
+          {badge > 99 ? "99+" : badge}
+        </span>
+      ) : null}
     </Link>
   );
 }
@@ -314,21 +331,25 @@ export function AppShell({ children, showLogo = true }: { children: React.ReactN
   }, [canonicalPath]);
 
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
-  const [orgEntityTypes, setOrgEntityTypes] = useState<Array<{ code: string; name: string; nameAr: string | null; sortOrder: number }>>([]);
-  const [unreadCount, setUnreadCount] = useState(0);
+  const [orgEntityTypes, setOrgEntityTypes] = useState<Array<{ code: string; name: string; nameAr: string | null; sortOrder: number }>>([]); 
+  const [pendingApprovalCount, setPendingApprovalCount] = useState(0);
 
   useEffect(() => {
     if (!showAppNav || !user || userRole === "SUPER_ADMIN") return;
-    let cancelled = false;
-    async function fetchCount() {
+    let cancelledAC = false;
+    void (async () => {
       try {
-        const count = await getMyNotificationCount();
-        if (!cancelled) setUnreadCount(count);
+        const c = await getPendingApprovalCount();
+        if (!cancelledAC) setPendingApprovalCount(c);
       } catch { /* ignore */ }
-    }
-    void fetchCount();
-    const interval = setInterval(() => void fetchCount(), 60_000);
-    return () => { cancelled = true; clearInterval(interval); };
+    })();
+    const acInterval = setInterval(async () => {
+      try {
+        const c = await getPendingApprovalCount();
+        if (!cancelledAC) setPendingApprovalCount(c);
+      } catch { /* ignore */ }
+    }, 60_000);
+    return () => { cancelledAC = true; clearInterval(acInterval); };
   }, [showAppNav, user, userRole]);
 
   useEffect(() => {
@@ -394,9 +415,8 @@ export function AppShell({ children, showLogo = true }: { children: React.ReactN
     const overviewItem = navItems.find((item) => item.href === "/overview");
     
     // Filter workflow items based on feature flags
-    const workflowItemHrefs = ["/reports", "/responsibilities"];
+    const workflowItemHrefs = ["/reports", "/responsibilities", "/strategy-map", "/approvals"];
     if (dashboardsEnabled) workflowItemHrefs.push("/dashboards");
-    // Approvals link is handled separately via notifications or can be added if needed
     
     const workflowItems = navItems.filter((item) =>
       workflowItemHrefs.includes(item.href),
@@ -480,6 +500,7 @@ export function AppShell({ children, showLogo = true }: { children: React.ReactN
                         sidebarExpanded={sidebarExpanded}
                         sidebarContentVisible={sidebarContentVisible}
                         t={t}
+                        badge={item.key === "approvals" ? pendingApprovalCount : undefined}
                       />
                     );
                   })}
@@ -595,6 +616,7 @@ export function AppShell({ children, showLogo = true }: { children: React.ReactN
                             sidebarExpanded={sidebarExpanded}
                             sidebarContentVisible={sidebarContentVisible}
                             t={t}
+                            badge={item.key === "approvals" ? pendingApprovalCount : undefined}
                           />
                         );
                       })}
@@ -681,23 +703,7 @@ export function AppShell({ children, showLogo = true }: { children: React.ReactN
                   </Button>
                 ) : null}
                 {showAppNav && notificationsEnabled && userRole !== "SUPER_ADMIN" ? (
-                  <Button
-                    variant="ghost"
-                    className="relative h-9 w-9 px-0 text-muted-foreground hover:bg-accent hover:text-foreground"
-                    aria-label={t("notifications")}
-                    onClick={() => {
-                      void markNotificationsRead().catch(() => {});
-                      setUnreadCount(0);
-                      router.push(`/${locale}/approvals`);
-                    }}
-                  >
-                    <Icon name="tabler:bell" className="h-5 w-5" />
-                    {unreadCount > 0 ? (
-                      <span className="absolute -top-0.5 -end-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
-                        {unreadCount > 9 ? "9+" : unreadCount}
-                      </span>
-                    ) : null}
-                  </Button>
+                  <NotificationBell locale={locale} />
                 ) : null}
                 {showAppNav ? (
                   <Button

@@ -7,8 +7,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { useLocale } from "@/providers/locale-provider";
-import { getEntityApprovals } from "@/actions/approvals";
+import { getEntityApprovals, approveEntityValue, rejectEntityValue } from "@/actions/approvals";
 import React, { useEffect, useMemo, useState, useCallback } from "react";
+import { Loader2 } from "lucide-react";
 import { AiReviewContextCard } from "@/components/ai/ai-review-context-card";
 import { useAiEnabled } from "@/lib/ai-features";
 
@@ -34,6 +35,8 @@ export default function ApprovalsPage() {
   const aiEnabled = useAiEnabled();
 
   const [filter, setFilter] = useState<"PENDING" | "APPROVED" | "ALL">("PENDING");
+  const [actionLoading, setActionLoading] = useState<Record<string, "approve" | "reject" | null>>({});
+  const [actionError, setActionError] = useState<Record<string, string | null>>({});
   const [rows, setRows] = useState<Awaited<ReturnType<typeof getEntityApprovals>>>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -95,6 +98,43 @@ export default function ApprovalsPage() {
       setAiLoading(prev => ({ ...prev, [rowId]: false }));
     }
   }, [aiReviewData, aiLoading, locale]);
+
+  const handleInlineApprove = useCallback(async (entityId: string, periodId: string) => {
+    setActionLoading(prev => ({ ...prev, [periodId]: "approve" }));
+    setActionError(prev => ({ ...prev, [periodId]: null }));
+    try {
+      const res = await approveEntityValue({ entityId, periodId });
+      if (!res.success) {
+        setActionError(prev => ({ ...prev, [periodId]: res.error || "Failed" }));
+        return;
+      }
+      // Refresh
+      const data = await getEntityApprovals(statusParam ? { status: statusParam } : undefined);
+      setRows(data);
+    } catch (e: unknown) {
+      setActionError(prev => ({ ...prev, [periodId]: e instanceof Error ? e.message : "Failed" }));
+    } finally {
+      setActionLoading(prev => ({ ...prev, [periodId]: null }));
+    }
+  }, [statusParam]);
+
+  const handleInlineReject = useCallback(async (entityId: string, periodId: string) => {
+    setActionLoading(prev => ({ ...prev, [periodId]: "reject" }));
+    setActionError(prev => ({ ...prev, [periodId]: null }));
+    try {
+      const res = await rejectEntityValue({ entityId, periodId });
+      if (!res.success) {
+        setActionError(prev => ({ ...prev, [periodId]: res.error || "Failed" }));
+        return;
+      }
+      const data = await getEntityApprovals(statusParam ? { status: statusParam } : undefined);
+      setRows(data);
+    } catch (e: unknown) {
+      setActionError(prev => ({ ...prev, [periodId]: e instanceof Error ? e.message : "Failed" }));
+    } finally {
+      setActionLoading(prev => ({ ...prev, [periodId]: null }));
+    }
+  }, [statusParam]);
 
   return (
     <div className="space-y-8">
@@ -228,8 +268,33 @@ export default function ApprovalsPage() {
                                   {t("aiReviewContext")}
                                 </button>
                               ) : null}
-                              <span className="text-muted-foreground">{kpiValueStatusLabel(String(row.status))}</span>
+                              {String(row.status) === "SUBMITTED" ? (
+                                <>
+                                  <Button
+                                    size="sm"
+                                    variant="destructive"
+                                    className="h-7 px-2 text-xs"
+                                    disabled={!!actionLoading[row.id]}
+                                    onClick={() => void handleInlineReject(row.entityId, row.id)}
+                                  >
+                                    {actionLoading[row.id] === "reject" ? <Loader2 className="h-3 w-3 animate-spin" /> : (locale === "ar" ? "رفض" : "Reject")}
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    className="h-7 px-2 text-xs"
+                                    disabled={!!actionLoading[row.id]}
+                                    onClick={() => void handleInlineApprove(row.entityId, row.id)}
+                                  >
+                                    {actionLoading[row.id] === "approve" ? <Loader2 className="h-3 w-3 animate-spin" /> : (locale === "ar" ? "اعتماد" : "Approve")}
+                                  </Button>
+                                </>
+                              ) : (
+                                <span className="text-muted-foreground">{kpiValueStatusLabel(String(row.status))}</span>
+                              )}
                             </div>
+                            {actionError[row.id] ? (
+                              <p className="mt-1 text-[10px] text-destructive">{actionError[row.id]}</p>
+                            ) : null}
                           </TableCell>
                         </TableRow>
                         {aiEnabled && isAiRowExpanded ? (

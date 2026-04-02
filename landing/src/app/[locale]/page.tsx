@@ -25,6 +25,9 @@ function iconForFeature(icon: string) {
   if (icon === "dashboard") return "tabler:layout-dashboard";
   if (icon === "alert") return "tabler:alert-triangle";
   if (icon === "language") return "tabler:language";
+  if (icon === "layers") return "tabler:layers";
+  if (icon === "activity") return "tabler:activity";
+  if (icon === "flag") return "tabler:flag";
   return "tabler:sparkles";
 }
 
@@ -308,6 +311,61 @@ export default function LandingPage() {
               </div>
             </m.div>
           ))}
+        </m.div>
+      </section>
+
+      {/* Strategy Hierarchy Workflow Section */}
+      <section id="workflow" className="space-y-12 scroll-mt-28">
+        <m.div variants={cardVariants}>
+          <SectionHeading
+            isArabic={isArabic}
+            title={isArabic ? landing.workflow.titleAr : landing.workflow.title}
+            subtitle={isArabic ? landing.workflow.subtitleAr : landing.workflow.subtitle}
+            centered
+          />
+        </m.div>
+
+        <m.div
+          className="relative"
+          variants={gridVariants}
+          initial={shouldReduceMotion ? false : "hidden"}
+          whileInView={shouldReduceMotion ? undefined : "show"}
+          viewport={{ once: true, amount: 0.15 }}
+        >
+          {/* Connection line */}
+          <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-primary/30 to-transparent hidden lg:block" />
+          
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+            {landing.workflow.steps.map((step, index) => (
+              <m.div
+                key={step.id}
+                variants={cardVariants}
+                whileHover={shouldReduceMotion ? undefined : { y: -8, scale: 1.02 }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+              >
+                <div className="group relative h-full rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm transition-all hover:border-primary/30 hover:bg-card/60">
+                  {/* Step number */}
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground text-sm font-bold shadow-lg">
+                    {index + 1}
+                  </div>
+                  
+                  <div className="pt-4 space-y-3">
+                    <div className={cn("space-y-1", isArabic && "text-right")}>
+                      <h3 className="text-base font-bold text-foreground">{isArabic ? step.titleAr : step.title}</h3>
+                      <p className="text-sm text-muted-foreground leading-relaxed">{isArabic ? step.descriptionAr : step.description}</p>
+                    </div>
+                  </div>
+                  
+                  {/* Arrow indicator for all but last item */}
+                  {index < landing.workflow.steps.length - 1 && (
+                    <div className="hidden lg:flex absolute -right-3 top-1/2 -translate-y-1/2 z-10 h-6 w-6 items-center justify-center rounded-full bg-primary/10 text-primary">
+                      <Icon name="tabler:arrow-right" className={cn("h-4 w-4", isArabic && "rotate-180")} />
+                    </div>
+                  )}
+                </div>
+              </m.div>
+            ))}
+          </div>
         </m.div>
       </section>
 

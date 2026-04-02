@@ -6,14 +6,14 @@ import { cn } from "@/lib/utils";
 import { useLocale } from "@/providers/locale-provider";
 
 const healthStyles: Record<Health, string> = {
-  GREEN: "bg-emerald-500/15 text-emerald-100 border-emerald-500/25",
-  AMBER: "bg-amber-500/15 text-amber-100 border-amber-500/25",
-  RED: "bg-rose-500/15 text-rose-100 border-rose-500/25",
+  GREEN: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/25",
+  AMBER: "bg-amber-500/15 text-amber-700 dark:text-amber-400 border-amber-500/25",
+  RED: "bg-rose-500/15 text-rose-700 dark:text-rose-400 border-rose-500/25",
 };
 
-export function RagBadge({ health, className }: { health: Health; className?: string }) {
+export function RagBadge({ health, className, label: labelOverride }: { health: Health; className?: string; label?: string }) {
   const { t } = useLocale();
-  const label = health === "GREEN" ? t("onTrack") : health === "AMBER" ? t("atRisk") : t("offTrack");
+  const label = labelOverride ?? (health === "GREEN" ? t("onTrack") : health === "AMBER" ? t("atRisk") : t("offTrack"));
   return (
     <Badge variant="outline" className={cn("border px-2.5 py-1 text-xs font-semibold", healthStyles[health], className)}>
       {label}
@@ -41,10 +41,10 @@ export function ApprovalBadge({
   const { t } = useLocale();
   const styles =
     status === "PENDING"
-      ? "border-amber-500/25 bg-amber-500/15 text-amber-100"
+      ? "border-amber-500/25 bg-amber-500/15 text-amber-700 dark:text-amber-400"
       : status === "APPROVED"
-        ? "border-emerald-500/25 bg-emerald-500/15 text-emerald-100"
-        : "border-rose-500/25 bg-rose-500/15 text-rose-100";
+        ? "border-emerald-500/25 bg-emerald-500/15 text-emerald-700 dark:text-emerald-400"
+        : "border-rose-500/25 bg-rose-500/15 text-rose-700 dark:text-rose-400";
 
   return (
     <Badge variant="outline" className={cn("border px-2.5 py-1 text-xs font-semibold", styles, className)}>
