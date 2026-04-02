@@ -39,6 +39,11 @@ export function buildAgentSystemPrompt(params: {
 ### أدوات التنقل:
 - **navigateToPage**: التنقل إلى صفحة (لوحة التحكم، التقارير، الموافقات، كيان محدد، إلخ)
 
+### أدوات التحليل الاستراتيجي:
+- **getBalancedScorecard**: تحليل بطاقة الأداء المتوازن (المالي، العملاء، العمليات، التعلم)
+- **getCompositeHealthScore**: صحة مركبة (70% إنجاز، 20% حداثة، 10% امتثال)
+- **getPerformanceForecast**: توقعات الأداء المستقبلية
+
 ## القواعد
 1. استخدم الأدوات دائماً للحصول على البيانات الفعلية — لا تخترع أرقاماً
 2. أجب بالعربية الفصحى (MSA)
@@ -76,8 +81,10 @@ You have tools to access real organization data. Always use them to answer quest
 - **getEntityTypes**: Available entity types
 - **comparePeriods**: Period-over-period comparison
 
-### Navigation Tools:
-- **navigateToPage**: Navigate to a page (dashboard, reports, approvals, specific entity, etc.)
+### Strategic Analysis Tools:
+- **getBalancedScorecard**: BSC analysis across 4 perspectives (Financial, Customer, Internal, Learning)
+- **getCompositeHealthScore**: Weighted health scoring (70% achievement, 20% freshness, 10% compliance)
+- **getPerformanceForecast**: Trend analysis and future performance projections
 
 ## Rules
 1. Always use tools to get real data — never invent numbers

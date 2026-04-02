@@ -718,6 +718,7 @@
   "save": "Save",
   "saving": "Saving...",
   "search": "Search",
+  "searchDemoPlaceholder": "Search projects…",
   "searchAndAddKpisDesc": "Search and add KPIs, then assign them in one action.",
   "searchAndManageUsersDesc": "Search and manage system users.",
   "settings": "Settings",

@@ -43,10 +43,10 @@ export const getOrgConfig = unstable_cache(
     const defaults = getDefaultConfig();
 
     return {
-      theme: (config?.theme as CustomerTheme) || defaults.theme,
-      branding: (config?.branding as BrandingConfig) || defaults.branding,
-      layout: (config?.layout as LayoutConfig) || defaults.layout,
-      navigation: (config?.navigation as NavSectionConfig[]) || defaults.navigation,
+      theme: (config?.theme as unknown as CustomerTheme) || defaults.theme,
+      branding: (config?.branding as unknown as BrandingConfig) || defaults.branding,
+      layout: (config?.layout as unknown as LayoutConfig) || defaults.layout,
+      navigation: (config?.navigation as unknown as NavSectionConfig[]) || defaults.navigation,
       features: featuresMap,
       customCSS: config?.customCSS || undefined,
     };
@@ -65,7 +65,7 @@ export const getOrgTheme = unstable_cache(
       select: { theme: true },
     });
 
-    return (config?.theme as CustomerTheme) || getDefaultConfig().theme;
+    return (config?.theme as unknown as CustomerTheme) || getDefaultConfig().theme;
   },
   ['org-theme'],
   { revalidate: CACHE_TTL, tags: ['org-theme'] }
@@ -81,7 +81,7 @@ export const getOrgBranding = unstable_cache(
       select: { branding: true },
     });
 
-    return (config?.branding as BrandingConfig) || getDefaultConfig().branding;
+    return (config?.branding as unknown as BrandingConfig) || getDefaultConfig().branding;
   },
   ['org-branding'],
   { revalidate: CACHE_TTL, tags: ['org-branding'] }
@@ -98,11 +98,11 @@ export const getOrgLayout = unstable_cache(
     });
 
     const defaults = getDefaultConfig();
-    const layout = (config?.layout as LayoutConfig) || defaults.layout;
+    const layout = (config?.layout as unknown as LayoutConfig) || defaults.layout;
 
     // Merge navigation into layout if available
     if (config?.navigation) {
-      layout.sidebar.sections = config.navigation as NavSectionConfig[];
+      layout.sidebar.sections = config.navigation as unknown as NavSectionConfig[];
     }
 
     return layout;
@@ -146,7 +146,7 @@ export async function isFeatureEnabled(
 ): Promise<boolean> {
   const flag = await prisma.orgFeatureFlag.findUnique({
     where: {
-      organizationId_featureKey: {
+      org_feature_flag_unique: {
         organizationId: orgId,
         featureKey,
       },
@@ -203,7 +203,7 @@ export async function updateFeatureFlag(
 ): Promise<void> {
   await prisma.orgFeatureFlag.upsert({
     where: {
-      organizationId_featureKey: {
+      org_feature_flag_unique: {
         organizationId: orgId,
         featureKey,
       },
@@ -212,11 +212,11 @@ export async function updateFeatureFlag(
       organizationId: orgId,
       featureKey,
       enabled,
-      config: config || {},
+      config: (config || {}) as unknown as NonNullable<unknown>,
     },
     update: {
       enabled,
-      config: config || {},
+      config: (config || {}) as unknown as NonNullable<unknown>,
     },
   });
 
@@ -235,7 +235,7 @@ export async function updateFeatureFlags(
   const operations = Object.entries(flags).map(([featureKey, { enabled, config }]) =>
     prisma.orgFeatureFlag.upsert({
       where: {
-        organizationId_featureKey: {
+        org_feature_flag_unique: {
           organizationId: orgId,
           featureKey,
         },
@@ -244,11 +244,11 @@ export async function updateFeatureFlags(
         organizationId: orgId,
         featureKey,
         enabled,
-        config: config || {},
+        config: (config || {}) as unknown as NonNullable<unknown>,
       },
       update: {
         enabled,
-        config: config || {},
+        config: (config || {}) as unknown as NonNullable<unknown>,
       },
     })
   );
@@ -270,10 +270,10 @@ export async function initializeOrgConfig(orgId: string): Promise<void> {
   await prisma.organizationConfig.create({
     data: {
       organizationId: orgId,
-      theme: defaults.theme,
-      branding: defaults.branding,
-      layout: defaults.layout,
-      navigation: defaults.navigation,
+      theme: defaults.theme as unknown as NonNullable<unknown>,
+      branding: defaults.branding as unknown as NonNullable<unknown>,
+      layout: defaults.layout as unknown as NonNullable<unknown>,
+      navigation: defaults.navigation as unknown as NonNullable<unknown>,
     },
   });
 
@@ -282,7 +282,7 @@ export async function initializeOrgConfig(orgId: string): Promise<void> {
     organizationId: orgId,
     featureKey: key,
     enabled: value.enabled,
-    config: value.config || {},
+    config: (value.config as unknown as NonNullable<unknown>) || ({} as unknown as NonNullable<unknown>),
   }));
 
   await prisma.orgFeatureFlag.createMany({

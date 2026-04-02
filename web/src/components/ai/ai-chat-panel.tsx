@@ -85,7 +85,7 @@ function getToolDisplay(
         label: isRunning ? tr("Analyzing organization", "جاري تحليل الجهة") : tr("Organization summary ready", "ملخص الجهة جاهز"),
         detail: tr("Health, approvals, stale KPIs", "الصحة والموافقات والمؤشرات المتأخرة"),
       };
-    case "getKpiList":
+    case "getEntityList":
       return {
         icon: "tabler:list-details",
         label: isRunning ? tr("Collecting KPI list", "جاري جمع قائمة المؤشرات") : tr("KPI list ready", "قائمة المؤشرات جاهزة"),
@@ -96,14 +96,16 @@ function getToolDisplay(
               ? String(args.statusFilter)
               : tr("Filtered KPI view", "عرض المؤشرات المفلتر"),
       };
-    case "getKpiDetail":
+    case "getEntityDetail":
       return {
         icon: "tabler:chart-line",
         label: isRunning ? tr("Inspecting KPI", "جاري فحص المؤشر") : tr("KPI detail ready", "تفاصيل المؤشر جاهزة"),
         detail:
-          typeof args.kpiTitle === "string" && args.kpiTitle.length > 0
-            ? String(args.kpiTitle)
-            : tr("Detailed KPI analysis", "تحليل مفصل للمؤشر"),
+          typeof args.entityTitle === "string" && args.entityTitle.length > 0
+            ? String(args.entityTitle)
+            : typeof args.entityId === "string" && args.entityId.length > 0
+              ? String(args.entityId)
+              : tr("Detailed analysis", "تحليل مفصل"),
       };
     case "getPendingApprovals":
       return {
@@ -111,7 +113,7 @@ function getToolDisplay(
         label: isRunning ? tr("Checking approvals", "جاري فحص الموافقات") : tr("Approvals queue ready", "قائمة الموافقات جاهزة"),
         detail: tr("Submission review queue", "قائمة مراجعة التقديمات"),
       };
-    case "getStaleKpis":
+    case "getStaleEntities":
       return {
         icon: "tabler:alert-triangle",
         label: isRunning ? tr("Checking stale KPIs", "جاري فحص المؤشرات المتأخرة") : tr("Stale KPI list ready", "قائمة المؤشرات المتأخرة جاهزة"),
@@ -140,6 +142,24 @@ function getToolDisplay(
         icon: "tabler:hierarchy-3",
         label: isRunning ? tr("Loading structure", "جاري تحميل الهيكل") : tr("Structure ready", "الهيكل جاهز"),
         detail: tr("Organization hierarchy", "الهيكل التنظيمي"),
+      };
+    case "getBalancedScorecard":
+      return {
+        icon: "tabler:chart-dots",
+        label: isRunning ? tr("Analyzing BSC perspectives", "جاري تحليل منظورات BSC") : tr("BSC analysis ready", "تحليل BSC جاهز"),
+        detail: tr("Financial, Customer, Internal, Learning", "المالي، العملاء، العمليات، التعلم"),
+      };
+    case "getCompositeHealthScore":
+      return {
+        icon: "tabler:heart-rate-monitor",
+        label: isRunning ? tr("Calculating health score", "جاري حساب درجة الصحة") : tr("Health score ready", "درجة الصحة جاهزة"),
+        detail: tr("Achievement + Freshness + Compliance", "الإنجاز + الحداثة + الامتثال"),
+      };
+    case "getPerformanceForecast":
+      return {
+        icon: "tabler:trending-up",
+        label: isRunning ? tr("Forecasting performance", "جاري التنبؤ بالأداء") : tr("Forecast ready", "التوقع جاهز"),
+        detail: tr("Trend analysis and projections", "تحليل الاتجاه والتوقعات"),
       };
     default:
       return {
@@ -222,7 +242,7 @@ function ToolResultCard({ toolName, result }: { toolName: string; result: unknow
       red: number;
       overallHealth: number;
       pendingApprovals: number;
-      staleKpisCount: number;
+      staleEntitiesCount: number;
     };
     const total = d.totalEntities;
     const greenPct = total > 0 ? (d.green / total) * 100 : 0;
@@ -269,7 +289,7 @@ function ToolResultCard({ toolName, result }: { toolName: string; result: unknow
         <div className="mt-4 grid grid-cols-3 gap-2">
           <MetricPill label={tr("Total", "الإجمالي")} value={String(total)} />
           <MetricPill label={tr("Pending", "معلقة")} value={String(d.pendingApprovals)} />
-          <MetricPill label={tr("Stale", "متأخرة")} value={String(d.staleKpisCount)} />
+          <MetricPill label={tr("Stale", "متأخرة")} value={String(d.staleEntitiesCount)} />
         </div>
       </div>
     );
@@ -286,7 +306,7 @@ function ToolResultCard({ toolName, result }: { toolName: string; result: unknow
     );
   }
 
-  if (toolName === "getKpiList" && Array.isArray(result)) {
+  if (toolName === "getEntityList" && Array.isArray(result)) {
     const kpis = result as Array<{
       title: string;
       titleAr?: string;
@@ -424,8 +444,8 @@ function ToolResultCard({ toolName, result }: { toolName: string; result: unknow
     );
   }
 
-  if (toolName === "getStaleKpis" && Array.isArray(data.kpis)) {
-    const items = data.kpis as Array<{ title: string; titleAr?: string; daysSinceUpdate: number | null; hasNoValues: boolean }>;
+  if (toolName === "getStaleEntities" && Array.isArray(data.entities)) {
+    const items = data.entities as Array<{ title: string; titleAr?: string; daysSinceUpdate: number | null; hasNoValues: boolean }>;
     if (items.length === 0) return null;
 
     return (
@@ -450,6 +470,150 @@ function ToolResultCard({ toolName, result }: { toolName: string; result: unknow
             </div>
           ))}
         </div>
+      </div>
+    );
+  }
+
+  if (toolName === "getBalancedScorecard" && data.perspectives) {
+    const perspectives = data.perspectives as {
+      financial: { health: number; count: number };
+      customer: { health: number; count: number };
+      internal: { health: number; count: number };
+      learning: { health: number; count: number };
+    };
+    const overall = data.overallBscScore as number;
+
+    const getColor = (score: number) => {
+      if (score >= 80) return "text-emerald-600 dark:text-emerald-400";
+      if (score >= 60) return "text-amber-600 dark:text-amber-400";
+      return "text-red-600 dark:text-red-400";
+    };
+
+    const getBg = (score: number) => {
+      if (score >= 80) return "bg-emerald-500";
+      if (score >= 60) return "bg-amber-400";
+      return "bg-red-500";
+    };
+
+    return (
+      <div className="rounded-2xl border border-border/70 bg-card/70 p-4 shadow-sm">
+        <div className="mb-4 flex items-center justify-between">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+              {tr("Balanced Scorecard", "بطاقة الأداء المتوازن")}
+            </p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {tr("4 Perspectives Analysis", "تحليل المنظورات الأربعة")}
+            </p>
+          </div>
+          <div className={cn("text-2xl font-bold", getColor(overall))}>
+            {overall}%
+          </div>
+        </div>
+        <div className="space-y-3">
+          {[
+            { key: "financial", label: tr("Financial", "المالي"), icon: "💰", data: perspectives.financial },
+            { key: "customer", label: tr("Customer", "العملاء"), icon: "👥", data: perspectives.customer },
+            { key: "internal", label: tr("Internal", "العمليات"), icon: "⚙️", data: perspectives.internal },
+            { key: "learning", label: tr("Learning", "التعلم"), icon: "📚", data: perspectives.learning },
+          ].map((p) => (
+            <div key={p.key} className="flex items-center gap-3">
+              <span className="text-lg">{p.icon}</span>
+              <span className="w-20 text-xs text-muted-foreground">{p.label}</span>
+              <div className="h-2 flex-1 overflow-hidden rounded-full bg-muted/80">
+                <div className={cn("h-full rounded-full", getBg(p.data.health))} style={{ width: `${p.data.health}%` }} />
+              </div>
+              <span className={cn("w-8 text-right text-sm font-semibold", getColor(p.data.health))}>
+                {p.data.health}%
+              </span>
+              <span className="text-xs text-muted-foreground">({p.data.count})</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (toolName === "getCompositeHealthScore" && data.organizationScore) {
+    const score = data.organizationScore as {
+      composite: number;
+      achievement: number;
+      freshness: number;
+      compliance: number;
+    };
+    const byCategory = data.byCategory as { healthy: number; atRisk: number; critical: number };
+
+    const getColor = (s: number) => {
+      if (s >= 80) return "text-emerald-600 dark:text-emerald-400";
+      if (s >= 60) return "text-amber-600 dark:text-amber-400";
+      return "text-red-600 dark:text-red-400";
+    };
+
+    return (
+      <div className="rounded-2xl border border-border/70 bg-card/70 p-4 shadow-sm">
+        <div className="mb-4 flex items-center justify-between">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+              {tr("Composite Health Score", "درجة الصحة المركبة")}
+            </p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {tr("Achievement + Freshness + Compliance", "الإنجاز + الحداثة + الامتثال")}
+            </p>
+          </div>
+          <div className={cn("text-2xl font-bold", getColor(score.composite))}>
+            {score.composite}%
+          </div>
+        </div>
+        <div className="mb-4 grid grid-cols-3 gap-2">
+          <MetricPill label={tr("Achievement", "الإنجاز")} value={`${score.achievement}%`} />
+          <MetricPill label={tr("Freshness", "الحداثة")} value={`${score.freshness}%`} />
+          <MetricPill label={tr("Compliance", "الامتثال")} value={`${score.compliance}%`} />
+        </div>
+        <div className="flex gap-2 text-xs">
+          <MetricChip tone="emerald" value={`${byCategory.healthy} ✓`} />
+          <MetricChip tone="red" value={`${byCategory.atRisk + byCategory.critical} ⚠`} />
+        </div>
+      </div>
+    );
+  }
+
+  if (toolName === "getPerformanceForecast" && data.found) {
+    const forecast = data.forecast as Array<{ monthOffset: number; projectedAchievement: number }> | undefined;
+    const current = data.currentAchievement ?? data.currentAverage;
+    const trend = data.trendDirection as string | undefined;
+
+    const getTrendIcon = () => {
+      if (trend === "improving") return "📈";
+      if (trend === "declining") return "📉";
+      return "➡️";
+    };
+
+    return (
+      <div className="rounded-2xl border border-border/70 bg-card/70 p-4 shadow-sm">
+        <div className="mb-3 flex items-center justify-between">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+              {tr("Performance Forecast", "توقع الأداء")}
+            </p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {data.scope === "organization" ? tr("Organization-wide", "على مستوى المؤسسة") : tr("Entity-specific", "لمؤشر محدد")}
+            </p>
+          </div>
+          <span className="text-2xl">{getTrendIcon()}</span>
+        </div>
+        {forecast && forecast.length > 0 && (
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-sm">
+              <span className="text-muted-foreground">{tr("Current:", "الحالي:")}</span>
+              <span className="font-semibold">{current as number}%</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm">
+              <span className="text-muted-foreground">{tr("Projected:", "المتوقع:")}</span>
+              <span className="font-semibold text-primary">{forecast[forecast.length - 1]?.projectedAchievement}%</span>
+              <span className="text-xs text-muted-foreground">({tr("in 3 months", "بعد 3 أشهر")})</span>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
@@ -504,11 +668,14 @@ function ToolStatusRow({
   const display = getToolDisplay(toolName, (args ?? {}) as Record<string, unknown>, isRunning, tr);
   const hasRichResult = Boolean(result) && (
     toolName === "getOrgOverview" ||
-    toolName === "getKpiList" ||
+    toolName === "getEntityList" ||
     toolName === "getPendingApprovals" ||
     toolName === "comparePeriods" ||
-    toolName === "getStaleKpis" ||
-    toolName === "navigateToPage"
+    toolName === "getStaleEntities" ||
+    toolName === "navigateToPage" ||
+    toolName === "getBalancedScorecard" ||
+    toolName === "getCompositeHealthScore" ||
+    toolName === "getPerformanceForecast"
   );
 
   return (

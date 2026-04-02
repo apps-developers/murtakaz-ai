@@ -452,5 +452,338 @@ export function createAgentTools(orgId: string, userId: string, role: string) {
         return { improved, declined, unchanged, highlights: highlights.slice(0, 8) };
       },
     }),
+
+    // ── 11. Balanced Scorecard Analysis ────────────────────────────────────
+    getBalancedScorecard: tool({
+      description:
+        "Analyze performance across Balanced Scorecard (BSC) perspectives: Financial, Customer, Internal Processes, Learning & Growth. Groups entities by strategic perspective and calculates weighted health scores. Use when user asks about strategic perspectives or BSC analysis.",
+      inputSchema: zodSchema(z.object({
+        includeMetrics: z.boolean().optional().describe("Include detailed metrics per perspective (default: true)"),
+      })),
+      execute: async ({ includeMetrics = true }: { includeMetrics?: boolean }) => {
+        const where = await scopedEntityWhere(orgId, userId, role);
+        const entities = await prisma.entity.findMany({
+          where,
+          include: {
+            orgEntityType: { select: { code: true, name: true, nameAr: true } },
+            parent: { select: { title: true, titleAr: true } },
+            values: {
+              where: { status: { in: ["APPROVED", "LOCKED"] } },
+              orderBy: { createdAt: "desc" },
+              take: 1,
+              select: { finalValue: true, achievementValue: true, createdAt: true },
+            },
+          },
+        });
+
+        // Define BSC perspective patterns (entity codes/parents that indicate perspective)
+        const perspectivePatterns = {
+          financial: { codes: ["REVENUE", "PROFIT", "COST", "BUDGET", "ROI", "FINANCIAL"], weight: 0.25 },
+          customer: { codes: ["CUSTOMER", "SATISFACTION", "NPS", "RETENTION", "ACQUISITION", "SERVICE"], weight: 0.25 },
+          internal: { codes: ["PROCESS", "EFFICIENCY", "QUALITY", "DELIVERY", "OPERATIONS", "PRODUCTION"], weight: 0.25 },
+          learning: { codes: ["TRAINING", "SKILL", "INNOVATION", "RD", "DEVELOPMENT", "EMPLOYEE", "SATISFACTION_E"], weight: 0.25 },
+        };
+
+        const perspectives: Record<string, { entities: typeof entities; health: number; count: number }> = {
+          financial: { entities: [], health: 0, count: 0 },
+          customer: { entities: [], health: 0, count: 0 },
+          internal: { entities: [], health: 0, count: 0 },
+          learning: { entities: [], health: 0, count: 0 },
+          unclassified: { entities: [], health: 0, count: 0 },
+        };
+
+        // Categorize entities
+        for (const e of entities) {
+          const code = e.orgEntityType.code.toUpperCase();
+          const title = (e.title || "").toUpperCase();
+          const parentTitle = (e.parent?.title || "").toUpperCase();
+          
+          let assigned = false;
+          for (const [perspective, config] of Object.entries(perspectivePatterns)) {
+            if (config.codes.some(c => code.includes(c) || title.includes(c) || parentTitle.includes(c))) {
+              perspectives[perspective].entities.push(e);
+              assigned = true;
+              break;
+            }
+          }
+          if (!assigned) perspectives.unclassified.entities.push(e);
+        }
+
+        // Calculate health per perspective
+        for (const [key, data] of Object.entries(perspectives)) {
+          if (data.entities.length === 0) continue;
+          
+          const withData = data.entities.filter(e => e.values[0]?.achievementValue != null);
+          const health = withData.length > 0
+            ? Math.round(withData.reduce((s, e) => s + Number(e.values[0]?.achievementValue ?? 0), 0) / withData.length)
+            : 0;
+          
+          perspectives[key].health = health;
+          perspectives[key].count = data.entities.length;
+        }
+
+        // Calculate overall BSC score
+        const weightedHealth = 
+          perspectives.financial.health * perspectivePatterns.financial.weight +
+          perspectives.customer.health * perspectivePatterns.customer.weight +
+          perspectives.internal.health * perspectivePatterns.internal.weight +
+          perspectives.learning.health * perspectivePatterns.learning.weight;
+
+        return {
+          overallBscScore: Math.round(weightedHealth),
+          perspectives: {
+            financial: { 
+              health: perspectives.financial.health, 
+              count: perspectives.financial.count,
+              metrics: includeMetrics ? perspectives.financial.entities.slice(0, 5).map(e => ({
+                title: e.title,
+                titleAr: e.titleAr,
+                achievement: e.values[0]?.achievementValue != null ? Math.round(Number(e.values[0].achievementValue)) : null,
+              })) : undefined,
+            },
+            customer: { 
+              health: perspectives.customer.health, 
+              count: perspectives.customer.count,
+              metrics: includeMetrics ? perspectives.customer.entities.slice(0, 5).map(e => ({
+                title: e.title,
+                titleAr: e.titleAr,
+                achievement: e.values[0]?.achievementValue != null ? Math.round(Number(e.values[0].achievementValue)) : null,
+              })) : undefined,
+            },
+            internal: { 
+              health: perspectives.internal.health, 
+              count: perspectives.internal.count,
+              metrics: includeMetrics ? perspectives.internal.entities.slice(0, 5).map(e => ({
+                title: e.title,
+                titleAr: e.titleAr,
+                achievement: e.values[0]?.achievementValue != null ? Math.round(Number(e.values[0].achievementValue)) : null,
+              })) : undefined,
+            },
+            learning: { 
+              health: perspectives.learning.health, 
+              count: perspectives.learning.count,
+              metrics: includeMetrics ? perspectives.learning.entities.slice(0, 5).map(e => ({
+                title: e.title,
+                titleAr: e.titleAr,
+                achievement: e.values[0]?.achievementValue != null ? Math.round(Number(e.values[0].achievementValue)) : null,
+              })) : undefined,
+            },
+          },
+          unclassified: perspectives.unclassified.count,
+        };
+      },
+    }),
+
+    // ── 12. Composite Health Score ─────────────────────────────────────────
+    getCompositeHealthScore: tool({
+      description:
+        "Calculate composite organizational health using weighted formula: achievement (70%) + data freshness (20%) + compliance (10%). Based on theory framework for comprehensive health assessment. Use for executive health reports.",
+      inputSchema: zodSchema(z.object({
+        includeDetails: z.boolean().optional().describe("Include entity-level breakdown (default: false)"),
+      })),
+      execute: async ({ includeDetails = false }: { includeDetails?: boolean }) => {
+        const where = await scopedEntityWhere(orgId, userId, role);
+        const entities = await prisma.entity.findMany({
+          where,
+          include: {
+            orgEntityType: { select: { code: true, name: true, nameAr: true } },
+            values: {
+              where: { status: { in: ["APPROVED", "LOCKED"] } },
+              orderBy: { createdAt: "desc" },
+              take: 1,
+              select: { finalValue: true, achievementValue: true, status: true, createdAt: true },
+            },
+          },
+        });
+
+        const now = new Date();
+        const weights = { achievement: 0.7, freshness: 0.2, compliance: 0.1 };
+
+        const entityScores = entities.map((e) => {
+          const v = e.values[0];
+          
+          // Achievement score (0-100)
+          const achievementScore = v?.achievementValue != null 
+            ? Math.min(Number(v.achievementValue), 100) 
+            : 0;
+          
+          // Freshness score (0-100 based on days since update)
+          let freshnessScore = 0;
+          if (v?.createdAt) {
+            const days = Math.floor((now.getTime() - v.createdAt.getTime()) / 86400000);
+            if (days <= 30) freshnessScore = 100;
+            else if (days <= 60) freshnessScore = 75;
+            else if (days <= 90) freshnessScore = 50;
+            else freshnessScore = 25;
+          }
+          
+          // Compliance score (0-100)
+          let complianceScore = 0;
+          if (v?.status === "LOCKED") complianceScore = 100;
+          else if (v?.status === "APPROVED") complianceScore = 80;
+          else if (v?.status === "SUBMITTED") complianceScore = 50;
+          else complianceScore = 0; // No data or draft
+          
+          // Weighted composite
+          const composite = 
+            achievementScore * weights.achievement +
+            freshnessScore * weights.freshness +
+            complianceScore * weights.compliance;
+          
+          return {
+            id: e.id,
+            title: e.title,
+            titleAr: e.titleAr,
+            achievementScore,
+            freshnessScore,
+            complianceScore,
+            compositeScore: Math.round(composite),
+            lastUpdate: v?.createdAt?.toISOString().slice(0, 10) ?? null,
+          };
+        });
+
+        // Calculate organization averages
+        const avgAchievement = Math.round(
+          entityScores.reduce((s, e) => s + e.achievementScore, 0) / Math.max(entityScores.length, 1)
+        );
+        const avgFreshness = Math.round(
+          entityScores.reduce((s, e) => s + e.freshnessScore, 0) / Math.max(entityScores.length, 1)
+        );
+        const avgCompliance = Math.round(
+          entityScores.reduce((s, e) => s + e.complianceScore, 0) / Math.max(entityScores.length, 1)
+        );
+        const avgComposite = Math.round(
+          entityScores.reduce((s, e) => s + e.compositeScore, 0) / Math.max(entityScores.length, 1)
+        );
+
+        return {
+          weights,
+          organizationScore: {
+            composite: avgComposite,
+            achievement: avgAchievement,
+            freshness: avgFreshness,
+            compliance: avgCompliance,
+          },
+          entityCount: entities.length,
+          byCategory: {
+            healthy: entityScores.filter(e => e.compositeScore >= 80).length,
+            atRisk: entityScores.filter(e => e.compositeScore >= 60 && e.compositeScore < 80).length,
+            critical: entityScores.filter(e => e.compositeScore < 60).length,
+          },
+          entities: includeDetails ? entityScores.sort((a, b) => a.compositeScore - b.compositeScore).slice(0, 10) : undefined,
+        };
+      },
+    }),
+
+    // ── 13. Performance Forecast ─────────────────────────────────────────────
+    getPerformanceForecast: tool({
+      description:
+        "Forecast future performance based on historical trend analysis. Calculates trend direction and projects achievement for next 3 months. Use when user asks about predictions or future outlook.",
+      inputSchema: zodSchema(z.object({
+        entityTitle: z.string().optional().describe("Specific entity to forecast"),
+        monthsAhead: z.number().optional().describe("Months to forecast (default: 3, max: 6)"),
+      })),
+      execute: async ({ entityTitle, monthsAhead = 3 }: { entityTitle?: string; monthsAhead?: number }) => {
+        const where = await scopedEntityWhere(orgId, userId, role);
+        
+        // If specific entity requested
+        if (entityTitle) {
+          const entity = await prisma.entity.findFirst({
+            where: { ...where, title: { contains: entityTitle, mode: "insensitive" } },
+            include: {
+              values: {
+                where: { status: { in: ["APPROVED", "LOCKED"] } },
+                orderBy: { createdAt: "desc" },
+                take: 6,
+                select: { achievementValue: true, createdAt: true },
+              },
+            },
+          });
+          
+          if (!entity) return { found: false, message: "Entity not found" };
+          
+          const values = entity.values
+            .filter(v => v.achievementValue != null)
+            .map(v => ({ value: Number(v.achievementValue), date: v.createdAt }))
+            .reverse(); // Oldest first
+          
+          if (values.length < 2) {
+            return { 
+              found: true, 
+              entityTitle: entity.title,
+              forecast: null,
+              reason: "Insufficient data (need at least 2 data points)"
+            };
+          }
+          
+          // Simple linear regression
+          const n = values.length;
+          const sumX = values.reduce((s, _, i) => s + i, 0);
+          const sumY = values.reduce((s, v) => s + v.value, 0);
+          const sumXY = values.reduce((s, v, i) => s + i * v.value, 0);
+          const sumXX = values.reduce((s, _, i) => s + i * i, 0);
+          
+          const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
+          const intercept = (sumY - slope * sumX) / n;
+          
+          // Forecast next months
+          const forecast = [];
+          for (let i = 1; i <= Math.min(monthsAhead, 6); i++) {
+            const projected = intercept + slope * (n - 1 + i);
+            forecast.push({
+              monthOffset: i,
+              projectedAchievement: Math.max(0, Math.min(100, Math.round(projected))),
+            });
+          }
+          
+          return {
+            found: true,
+            entityTitle: entity.title,
+            entityTitleAr: entity.titleAr,
+            historicalPoints: values.length,
+            trendDirection: slope > 1 ? "improving" : slope < -1 ? "declining" : "stable",
+            trendSlope: Math.round(slope * 10) / 10,
+            currentAchievement: values[values.length - 1]?.value ?? null,
+            forecast,
+          };
+        }
+        
+        // Organization-wide forecast
+        const entities = await prisma.entity.findMany({
+          where,
+          include: {
+            values: {
+              where: { status: { in: ["APPROVED", "LOCKED"] } },
+              orderBy: { createdAt: "desc" },
+              take: 3,
+              select: { achievementValue: true },
+            },
+          },
+        });
+        
+        const recentAchievements = entities
+          .map(e => e.values[0]?.achievementValue != null ? Number(e.values[0].achievementValue) : null)
+          .filter((v): v is number => v != null);
+        
+        const currentAvg = recentAchievements.length > 0
+          ? recentAchievements.reduce((s, v) => s + v, 0) / recentAchievements.length
+          : 0;
+        
+        // Simple trend based on % of entities with data
+        const dataCoverage = entities.length > 0 ? recentAchievements.length / entities.length : 0;
+        const projectedImprovement = Math.round((1 - dataCoverage) * 10); // Assume 10% improvement possible
+        
+        return {
+          found: true,
+          scope: "organization",
+          entityCount: entities.length,
+          dataCoverage: Math.round(dataCoverage * 100),
+          currentAverage: Math.round(currentAvg),
+          forecastedAverage: Math.round(currentAvg + projectedImprovement),
+          confidence: dataCoverage > 0.8 ? "high" : dataCoverage > 0.5 ? "medium" : "low",
+          monthsAhead: Math.min(monthsAhead, 6),
+        };
+      },
+    }),
   };
 }

@@ -722,6 +722,7 @@
   "save": "حفظ",
   "saving": "جارٍ الحفظ...",
   "search": "بحث",
+  "searchDemoPlaceholder": "البحث في المشاريع…",
   "searchAndAddKpisDesc": "ابحث وأضف مؤشرات أداء رئيسية، ثم قم بإسنادها دفعة واحدة.",
   "searchAndManageUsersDesc": "البحث وإدارة مستخدمي النظام.",
   "settings": "الإعدادات",

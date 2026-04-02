@@ -32,6 +32,7 @@ type OrganizationRow = {
   kpiApprovalLevel: KpiApprovalLevel;
   ragGreenMin: number;
   ragAmberMin: number;
+  colorTheme: string | null;
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date | null;
