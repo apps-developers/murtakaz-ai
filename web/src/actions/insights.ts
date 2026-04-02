@@ -304,6 +304,120 @@ export async function getOverviewInsights() {
   };
 }
 
+function getPreviousPeriodRange(periodType: string, now: Date): { start: Date; end: Date } | null {
+  const y = now.getUTCFullYear();
+  const m = now.getUTCMonth();
+
+  if (periodType === "MONTHLY") {
+    const end = new Date(Date.UTC(y, m, 1));
+    const start = new Date(Date.UTC(y, m - 1, 1));
+    return { start, end };
+  }
+  if (periodType === "QUARTERLY") {
+    const currentQ = Math.floor(m / 3);
+    const end = new Date(Date.UTC(y, currentQ * 3, 1));
+    const start = new Date(Date.UTC(y, currentQ * 3 - 3, 1));
+    return { start, end };
+  }
+  if (periodType === "YEARLY") {
+    const end = new Date(Date.UTC(y, 0, 1));
+    const start = new Date(Date.UTC(y - 1, 0, 1));
+    return { start, end };
+  }
+  return null;
+}
+
+export async function getOverdueKpis() {
+  const session = await requireOrgMember();
+  const orgId = session.user.orgId;
+  const userId = session.user.id;
+  const role = (session.user as { role?: string }).role;
+  const isAdmin = role === "ADMIN";
+  const now = new Date();
+
+  const kpis = await prisma.entity.findMany({
+    where: {
+      orgId,
+      deletedAt: null,
+      orgEntityType: { code: { equals: "KPI", mode: "insensitive" } },
+      periodType: { not: null },
+      ...(!isAdmin
+        ? {
+            OR: [
+              { ownerUserId: userId },
+              { assignments: { some: { userId } } },
+            ],
+          }
+        : {}),
+    },
+    select: {
+      id: true,
+      title: true,
+      titleAr: true,
+      periodType: true,
+      ownerUser: { select: { id: true, name: true } },
+      values: {
+        orderBy: [{ createdAt: "desc" }],
+        take: 1,
+        select: { createdAt: true, status: true },
+      },
+    },
+  });
+
+  const overdueList: Array<{
+    id: string;
+    title: string;
+    titleAr: string | null;
+    periodType: string;
+    periodLabel: string;
+    ownerName: string | null;
+    daysPastDeadline: number;
+  }> = [];
+
+  for (const kpi of kpis) {
+    const pt = kpi.periodType;
+    if (!pt) continue;
+
+    const range = getPreviousPeriodRange(pt, now);
+    if (!range) continue;
+
+    const latestValue = kpi.values?.[0] ?? null;
+    const hasValueInPeriod =
+      latestValue?.createdAt && new Date(latestValue.createdAt) >= range.start;
+
+    if (hasValueInPeriod) continue;
+
+    const daysPast = Math.floor(
+      (now.getTime() - range.end.getTime()) / (1000 * 60 * 60 * 24),
+    );
+
+    const periodLabel =
+      pt === "MONTHLY"
+        ? `${range.start.getUTCFullYear()}-${String(range.start.getUTCMonth() + 1).padStart(2, "0")}`
+        : pt === "QUARTERLY"
+          ? `Q${Math.floor(range.start.getUTCMonth() / 3) + 1} ${range.start.getUTCFullYear()}`
+          : `${range.start.getUTCFullYear()}`;
+
+    overdueList.push({
+      id: String(kpi.id),
+      title: String(kpi.title),
+      titleAr: kpi.titleAr ? String(kpi.titleAr) : null,
+      periodType: String(pt),
+      periodLabel,
+      ownerName: kpi.ownerUser?.name ? String(kpi.ownerUser.name) : null,
+      daysPastDeadline: daysPast,
+    });
+  }
+
+  overdueList.sort((a, b) => b.daysPastDeadline - a.daysPastDeadline);
+
+  return {
+    isAdmin,
+    overdueKpis: overdueList.slice(0, 10),
+    totalOverdue: overdueList.length,
+  };
+}
+
 export async function getDashboardInsights() {
   const session = await requireOrgMember();
   const orgId = session.user.orgId;

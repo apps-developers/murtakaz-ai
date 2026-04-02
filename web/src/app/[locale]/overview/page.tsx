@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { useLocale } from "@/providers/locale-provider";
-import { getOverviewInsights } from "@/actions/insights";
+import { getOverviewInsights, getOverdueKpis } from "@/actions/insights";
 import { getFirstEntityTypeCode } from "@/actions/navigation";
 import { AiGenerateSummaryModal } from "@/components/ai/ai-generate-summary-modal";
 import { useAiEnabled, useAdvancedFeaturesEnabled } from "@/lib/ai-features";
@@ -31,6 +31,7 @@ export default function OverviewPage() {
   const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<Awaited<ReturnType<typeof getOverviewInsights>> | null>(null);
   const [firstEntityTypeCode, setFirstEntityTypeCode] = useState<string | null>(null);
+  const [overdueData, setOverdueData] = useState<Awaited<ReturnType<typeof getOverdueKpis>> | null>(null);
 
   useEffect(() => {
     let mounted = true;
@@ -38,13 +39,15 @@ export default function OverviewPage() {
     setError(null);
     void (async () => {
       try {
-        const [res, entityTypeCode] = await Promise.all([
+        const [res, entityTypeCode, overdue] = await Promise.all([
           getOverviewInsights(),
           getFirstEntityTypeCode(),
+          getOverdueKpis(),
         ]);
         if (!mounted) return;
         setData(res);
         setFirstEntityTypeCode(entityTypeCode);
+        setOverdueData(overdue);
       } catch (e: unknown) {
         if (!mounted) return;
         setError(e instanceof Error ? e.message : t("failedToLoad"));
@@ -115,6 +118,75 @@ export default function OverviewPage() {
             <CardTitle className="text-base">{t("dashboardFailedToLoad")}</CardTitle>
             <CardDescription className="text-muted-foreground">{error}</CardDescription>
           </CardHeader>
+        </Card>
+      ) : null}
+
+      {overdueData && overdueData.totalOverdue > 0 ? (
+        <Card className="border-red-500/30 bg-gradient-to-r from-red-500/10 via-card to-card backdrop-blur shadow-sm">
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="rounded-lg bg-red-500/15 p-2.5">
+                  <Icon name="tabler:alert-triangle" className="h-5 w-5 text-red-500" />
+                </div>
+                <div>
+                  <CardTitle className="text-base text-red-700 dark:text-red-400">
+                    {t("overdueKpiUpdates")}
+                  </CardTitle>
+                  <CardDescription className="mt-0.5 text-red-600/70 dark:text-red-400/70">
+                    {overdueData.isAdmin
+                      ? t("overdueKpiBannerDesc").replace("{count}", String(overdueData.totalOverdue))
+                      : t("overdueKpiBannerUserDesc").replace("{count}", String(overdueData.totalOverdue))}
+                  </CardDescription>
+                </div>
+              </div>
+              <Badge variant="outline" className="border-red-500/25 bg-red-500/10 text-red-700 dark:text-red-400 text-sm">
+                {overdueData.totalOverdue}
+              </Badge>
+            </div>
+          </CardHeader>
+          <CardContent className="pt-0">
+            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+              {overdueData.overdueKpis.map((kpi) => (
+                <Link
+                  key={kpi.id}
+                  href={`/${locale}/entities/kpi/${kpi.id}`}
+                  className="group flex items-start gap-3 rounded-lg border border-red-500/15 bg-background/50 p-3 transition-all hover:border-red-500/30 hover:shadow-sm"
+                >
+                  <div className="flex-1 min-w-0 space-y-1">
+                    <p className="text-sm font-medium truncate group-hover:underline underline-offset-4 decoration-red-500/40">
+                      {df(kpi.title, kpi.titleAr)}
+                    </p>
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                      <span>{t("overdueKpiPeriod").replace("{period}", kpi.periodLabel)}</span>
+                      <span>•</span>
+                      <span className="text-red-600 dark:text-red-400 font-medium">
+                        {t("overdueKpiDaysPast").replace("{days}", String(kpi.daysPastDeadline))}
+                      </span>
+                    </div>
+                    {overdueData.isAdmin && (
+                      <p className="text-xs text-muted-foreground">
+                        {kpi.ownerName
+                          ? t("overdueKpiOwner").replace("{name}", kpi.ownerName)
+                          : t("overdueKpiUnassigned")}
+                      </p>
+                    )}
+                  </div>
+                  <Icon name="tabler:chevron-right" className="h-4 w-4 text-muted-foreground mt-0.5 rtl:rotate-180" />
+                </Link>
+              ))}
+            </div>
+            {overdueData.totalOverdue > overdueData.overdueKpis.length && firstEntityTypeCode ? (
+              <div className="mt-3 text-center">
+                <Button asChild variant="ghost" size="sm" className="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300">
+                  <Link href={`/${locale}/entities/kpi`}>
+                    {t("overdueKpiViewAll")}
+                    <Icon name="tabler:arrow-right" className="ms-2 h-4 w-4" />
+                  </Link>
+                </Button>
+              </div>
+            ) : null}
+          </CardContent>
         </Card>
       ) : null}
 
