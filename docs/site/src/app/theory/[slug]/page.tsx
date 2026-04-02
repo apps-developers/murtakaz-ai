@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: TheoryPageProps) {
   };
 
   return {
-    title: `${titles[slug] || slug} - الخلفية النظرية - رافد KPI`,
+    title: `${titles[slug] || slug} - الخلفية النظرية - مرتكز KPI`,
   };
 }
 

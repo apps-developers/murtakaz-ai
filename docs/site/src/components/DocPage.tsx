@@ -127,7 +127,7 @@ export function DocPage({ title, content }: DocPageProps) {
 
           {/* Footer */}
           <footer className="mt-16 border-t pt-8 text-sm text-slate-600 no-print">
-            <p>دليل استخدام منصة رافد KPI © 2025</p>
+            <p>دليل استخدام منصة مرتكز KPI © 2025</p>
           </footer>
         </div>
       </main>

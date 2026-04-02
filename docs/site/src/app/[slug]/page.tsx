@@ -57,7 +57,7 @@ export async function generateMetadata({ params }: DocPageProps) {
   };
 
   return {
-    title: `${titles[slug] || slug} - دليل رافد KPI`,
+    title: `${titles[slug] || slug} - دليل مرتكز KPI`,
   };
 }
 

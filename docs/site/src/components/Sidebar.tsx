@@ -65,7 +65,7 @@ export function Sidebar({ className }: SidebarProps) {
       <div className="no-print fixed top-0 right-0 left-0 z-40 flex items-center justify-between border-b bg-white px-4 py-3 lg:hidden">
         <Link href="/" className="flex items-center gap-2 font-semibold text-slate-900">
           <BookOpen className="h-5 w-5" />
-          <span>دليل رافد KPI</span>
+          <span>دليل مرتكز KPI</span>
         </Link>
         <div className="flex items-center gap-2">
           <button
@@ -106,7 +106,7 @@ export function Sidebar({ className }: SidebarProps) {
           <div className="border-b px-4 py-4">
             <Link href="/" className="flex items-center gap-2 font-bold text-lg text-slate-900">
               <BookOpen className="h-6 w-6 text-blue-600" />
-              <span>دليل رافد KPI</span>
+              <span>دليل مرتكز KPI</span>
             </Link>
             <p className="mt-1 text-sm text-slate-600">منصة إدارة الأداء المؤسسي</p>
           </div>
