@@ -472,6 +472,18 @@ export async function getOrgEntitiesByTypeCode(input: z.infer<typeof getOrgEntit
         reviewDecision: true,
         updatedAt: true,
         createdAt: true,
+        parentId: true,
+        parent: {
+          select: {
+            id: true,
+            key: true,
+            title: true,
+            titleAr: true,
+            orgEntityType: {
+              select: { code: true, name: true, nameAr: true },
+            },
+          },
+        },
         values: {
           orderBy: [{ createdAt: "desc" }],
           take: 1,

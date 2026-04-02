@@ -63,7 +63,7 @@ export default function EntitiesByTypePage() {
   const [filterValueStatus, setFilterValueStatus] = useState<string>("ALL");
   const [sortBy, setSortBy] = useState<"name" | "value" | "status" | "updated">("name");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
-  const [groupBy, setGroupBy] = useState<"none" | "period" | "status" | "valueStatus">("none");
+  const [groupBy, setGroupBy] = useState<"none" | "period" | "status" | "valueStatus" | "parent">("none");
   const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set());
 
   function toggleGroup(key: string) {
@@ -193,11 +193,15 @@ export default function EntitiesByTypePage() {
       if (groupBy === "period") key = String(r.periodType ?? "__none__");
       else if (groupBy === "status") key = String(r.status ?? "__none__");
       else if (groupBy === "valueStatus") key = String(r.values?.[0]?.status ?? "NO_DATA");
+      else if (groupBy === "parent") {
+        // Group by parent title (or "No Parent" if none)
+        key = r.parent ? df(r.parent.title, r.parent.titleAr) : tr("No Parent", "بدون أب");
+      }
       if (!map.has(key)) map.set(key, []);
       map.get(key)!.push(r);
     }
     return Array.from(map.entries()).map(([key, items]) => ({ key, label: key, items }));
-  }, [processedRows, groupBy]);
+  }, [processedRows, groupBy, df, tr]);
 
   function periodLabel(code: string) {
     if (code === "MONTHLY") return t("periodMonthly");
@@ -221,6 +225,7 @@ export default function EntitiesByTypePage() {
       if (groupKey === "NO_DATA") return t("noData");
       return kpiValueStatusLabel(groupKey);
     }
+    if (groupBy === "parent") return groupKey;
     return groupKey;
   }
 
@@ -553,7 +558,7 @@ export default function EntitiesByTypePage() {
                   {t("groupBy")}
                   {groupBy !== "none" && (
                     <span className="ms-1 font-semibold">
-                      · {groupBy === "period" ? t("groupByPeriod") : groupBy === "status" ? t("groupByStatus") : t("groupByValueStatus")}
+                      · {groupBy === "period" ? t("groupByPeriod") : groupBy === "status" ? t("groupByStatus") : groupBy === "parent" ? tr("By Parent", "حسب الأب") : t("groupByValueStatus")}
                     </span>
                   )}
                   <ChevronDown className="h-3 w-3 opacity-60" />
@@ -562,9 +567,9 @@ export default function EntitiesByTypePage() {
               <DropdownMenuContent align="start" className="min-w-[160px]">
                 <DropdownMenuLabel className="text-xs">{t("groupBy")}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                {(["none", "period", "status", "valueStatus"] as const).map((g) => (
+                {(["none", "period", "status", "valueStatus", "parent"] as const).map((g) => (
                   <DropdownMenuItem key={g} onClick={() => setGroupBy(g)} className={groupBy === g ? "font-semibold" : ""}>
-                    {g === "none" ? t("groupByNone") : g === "period" ? t("groupByPeriod") : g === "status" ? t("groupByStatus") : t("groupByValueStatus")}
+                    {g === "none" ? t("groupByNone") : g === "period" ? t("groupByPeriod") : g === "status" ? t("groupByStatus") : g === "parent" ? tr("By Parent", "حسب الأب") : t("groupByValueStatus")}
                   </DropdownMenuItem>
                 ))}
               </DropdownMenuContent>
@@ -615,6 +620,7 @@ export default function EntitiesByTypePage() {
                     <TableHeader>
                       <TableRow className="border-border hover:bg-transparent">
                         <TableHead className="text-muted-foreground">{t("entity")}</TableHead>
+                        <TableHead className="text-muted-foreground">{tr("Parent", "الأب")}</TableHead>
                         <TableHead className="text-muted-foreground">{t("status")}</TableHead>
                         <TableHead className="text-muted-foreground">{t("periodFilter")}</TableHead>
                         <TableHead className="text-muted-foreground">{t("value")}</TableHead>
@@ -642,6 +648,18 @@ export default function EntitiesByTypePage() {
                                 {df(e.title, e.titleAr)}
                               </Link>
                               {e.key ? <p className="mt-0.5 text-xs text-muted-foreground">{e.key}</p> : null}
+                            </TableCell>
+                            <TableCell>
+                              {e.parent ? (
+                                <Link
+                                  href={`/${locale}/entities/${e.parent.orgEntityType?.code?.toLowerCase() ?? "pillar"}/${e.parent.id}`}
+                                  className="text-xs text-primary hover:underline"
+                                >
+                                  {df(e.parent.title, e.parent.titleAr)}
+                                </Link>
+                              ) : (
+                                <span className="text-xs text-muted-foreground">—</span>
+                              )}
                             </TableCell>
                             <TableCell>
                               {entStatus ? (
@@ -748,6 +766,23 @@ export default function EntitiesByTypePage() {
                                     {df(e.title, e.titleAr)}
                                   </CardTitle>
                                   <div className="mt-1.5 flex flex-wrap items-center gap-1">
+                                    {/* Parent breadcrumb */}
+                                    {e.parent && (
+                                      <>
+                                        <button
+                                          type="button"
+                                          onClick={(ev) => {
+                                            ev.stopPropagation();
+                                            ev.preventDefault();
+                                            router.push(`/${locale}/entities/${e.parent?.orgEntityType?.code?.toLowerCase() ?? "pillar"}/${e.parent?.id}`);
+                                          }}
+                                          className="text-[10px] text-primary hover:underline truncate max-w-[150px] text-start"
+                                        >
+                                          {df(e.parent.title, e.parent.titleAr)}
+                                        </button>
+                                        <span className="text-[10px] text-muted-foreground">›</span>
+                                      </>
+                                    )}
                                     <span className="truncate text-xs text-muted-foreground">{typeLabel}</span>
                                     {period && (
                                       <span className="inline-flex items-center rounded-md border border-border/60 bg-muted/40 px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">

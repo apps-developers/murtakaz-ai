@@ -4,12 +4,13 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { BookOpen, ChevronLeft, ChevronRight, FileText, Home, Menu, Printer, X } from "lucide-react";
+import { BookOpen, ChevronLeft, ChevronRight, FileText, GraduationCap, Home, Menu, Printer, X } from "lucide-react";
 
 interface NavItem {
   title: string;
   href: string;
   file: string;
+  isTheory?: boolean;
 }
 
 const navItems: NavItem[] = [
@@ -32,6 +33,14 @@ const navItems: NavItem[] = [
   { title: "المؤسسة", href: "/16-organization", file: "16-organization.md" },
   { title: "سير عمل الموافقات", href: "/17-approval-workflow", file: "17-approval-workflow.md" },
   { title: "المساعد الذكي (AI)", href: "/18-ai-assistant", file: "18-ai-assistant.md" },
+];
+
+const theoryItems: NavItem[] = [
+  { title: "أسس تنفيذ الاستراتيجية", href: "/theory/01-strategy-execution-foundations", file: "01-strategy-execution-foundations.md", isTheory: true },
+  { title: "تصميم مؤشرات الأداء", href: "/theory/02-kpi-design-and-measurement", file: "02-kpi-design-and-measurement.md", isTheory: true },
+  { title: "أطر إدارة الأداء", href: "/theory/03-performance-management-frameworks", file: "03-performance-management-frameworks.md", isTheory: true },
+  { title: "الحوكمة والاعتمادات", href: "/theory/04-governance-and-approvals", file: "04-governance-and-approvals.md", isTheory: true },
+  { title: "الصحة المؤسسية وRAG", href: "/theory/05-organizational-health-and-rag", file: "05-organizational-health-and-rag.md", isTheory: true },
 ];
 
 interface SidebarProps {
@@ -103,7 +112,7 @@ export function Sidebar({ className }: SidebarProps) {
           </div>
 
           {/* Navigation */}
-          <nav className="flex-1 px-3 py-4">
+          <nav className="flex-1 px-3 py-4 overflow-y-auto">
             <ul className="space-y-1">
               {navItems.map((item) => (
                 <li key={item.href}>
@@ -127,6 +136,34 @@ export function Sidebar({ className }: SidebarProps) {
                 </li>
               ))}
             </ul>
+
+            {/* Theory Docs Section */}
+            <div className="mt-6 pt-4 border-t border-slate-200">
+              <div className="px-3 mb-2">
+                <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                  الخلفية النظرية
+                </span>
+              </div>
+              <ul className="space-y-1">
+                {theoryItems.map((item) => (
+                  <li key={item.href}>
+                    <Link
+                      href={item.href}
+                      onClick={() => setMobileOpen(false)}
+                      className={cn(
+                        "flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors",
+                        pathname === item.href
+                          ? "bg-amber-50 text-amber-700 font-medium"
+                          : "text-slate-700 hover:bg-slate-100"
+                      )}
+                    >
+                      <GraduationCap className="h-4 w-4" />
+                      <span>{item.title}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </nav>
 
           {/* Footer */}

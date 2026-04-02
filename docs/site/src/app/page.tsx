@@ -1,5 +1,5 @@
 import { Sidebar } from "@/components/Sidebar";
-import { BookOpen, FileText, ChevronLeft } from "lucide-react";
+import { BookOpen, FileText, ChevronLeft, GraduationCap } from "lucide-react";
 import Link from "next/link";
 
 const docs = [
@@ -21,6 +21,14 @@ const docs = [
   { title: "المؤسسة", href: "/16-organization", desc: "إعدادات وإدارة المؤسسة" },
   { title: "سير عمل الموافقات", href: "/17-approval-workflow", desc: "دليل شامل لسير عمل الاعتماد والحوكمة" },
   { title: "المساعد الذكي (AI)", href: "/18-ai-assistant", desc: "كيفية استخدام الذكاء الاصطناعي في النظام" },
+];
+
+const theoryDocs = [
+  { title: "أسس تنفيذ الاستراتيجية", href: "/theory/01-strategy-execution-foundations", desc: "فجوة الاستراتيجية، التسلسل الهرمي، دورة الحياة" },
+  { title: "تصميم مؤشرات الأداء", href: "/theory/02-kpi-design-and-measurement", desc: "إطار SMART، مكونات المؤشر، القيادي vs المتأخر" },
+  { title: "أطر إدارة الأداء", href: "/theory/03-performance-management-frameworks", desc: "BSC، OKRs، EFQM، خرائط الاستراتيجية" },
+  { title: "الحوكمة والاعتمادات", href: "/theory/04-governance-and-approvals", desc: "RBAC، سجل التدقيق، جودة البيانات" },
+  { title: "الصحة المؤسسية وRAG", href: "/theory/05-organizational-health-and-rag", desc: "نظام التصنيف اللوني، التجميع المرجّح" },
 ];
 
 export default function HomePage() {
@@ -74,6 +82,35 @@ export default function HomePage() {
                     <p className="mt-1 text-sm text-slate-600">{doc.desc}</p>
                   </div>
                   <ChevronLeft className="h-5 w-5 shrink-0 text-slate-400 group-hover:text-blue-600" />
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* Theory Documentation Section */}
+          <div className="mb-12">
+            <div className="mb-6 flex items-center gap-2">
+              <GraduationCap className="h-6 w-6 text-amber-600" />
+              <h2 className="text-2xl font-bold text-slate-900">الخلفية النظرية</h2>
+            </div>
+            <p className="mb-4 text-slate-600">
+              مفاهيم وأسس نظرية لفهم مجال إدارة الأداء المؤسسي وكيفية عمل منصة رافد KPI
+            </p>
+            <div className="grid gap-4 sm:grid-cols-2">
+              {theoryDocs.map((doc) => (
+                <Link
+                  key={doc.href}
+                  href={doc.href}
+                  className="group flex items-start gap-3 rounded-lg border bg-white p-4 transition-colors hover:border-amber-300 hover:bg-amber-50"
+                >
+                  <GraduationCap className="mt-0.5 h-5 w-5 shrink-0 text-amber-600" />
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-slate-900 group-hover:text-amber-700">
+                      {doc.title}
+                    </h3>
+                    <p className="mt-1 text-sm text-slate-600">{doc.desc}</p>
+                  </div>
+                  <ChevronLeft className="h-5 w-5 shrink-0 text-slate-400 group-hover:text-amber-600" />
                 </Link>
               ))}
             </div>
