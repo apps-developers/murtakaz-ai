@@ -47,10 +47,10 @@ export default function HomePage() {
               <BookOpen className="h-8 w-8" />
             </div>
             <h1 className="mb-4 text-4xl font-bold text-slate-900">
-              دليل مستخدم مرتكز KPI
+              دليل مستخدم  المؤشرات KPI
             </h1>
             <p className="mx-auto max-w-2xl text-lg text-slate-600">
-              دليل شامل لاستخدام منصة مرتكز KPI لإدارة الأداء المؤسسي وتنفيذ الاستراتيجية
+              دليل شامل لاستخدام منصة  المؤشرات KPI لإدارة الأداء المؤسسي وتنفيذ الاستراتيجية
             </p>
           </div>
 
@@ -94,7 +94,7 @@ export default function HomePage() {
               <h2 className="text-2xl font-bold text-slate-900">الخلفية النظرية</h2>
             </div>
             <p className="mb-4 text-slate-600">
-              مفاهيم وأسس نظرية لفهم مجال إدارة الأداء المؤسسي وكيفية عمل منصة مرتكز KPI
+              مفاهيم وأسس نظرية لفهم مجال إدارة الأداء المؤسسي وكيفية عمل منصة  المؤشرات KPI
             </p>
             <div className="grid gap-4 sm:grid-cols-2">
               {theoryDocs.map((doc) => (
@@ -137,7 +137,7 @@ export default function HomePage() {
 
           {/* Footer */}
           <footer className="border-t pt-8 text-center text-sm text-slate-600 no-print">
-            <p>دليل استخدام منصة مرتكز KPI © 2025</p>
+            <p>دليل استخدام منصة  المؤشرات KPI © 2025</p>
             <p className="mt-1">جميع الحقوق محفوظة</p>
           </footer>
         </div>

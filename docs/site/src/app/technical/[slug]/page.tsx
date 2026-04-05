@@ -37,7 +37,7 @@ export async function generateMetadata({ params }: TechDocPageProps) {
   };
 
   return {
-    title: `${titles[slug] || slug} - التوثيق التقني - دليل مرتكز KPI`,
+    title: `${titles[slug] || slug} - التوثيق التقني - دليل  المؤشرات KPI`,
   };
 }
 

@@ -1,7 +1,7 @@
 {
   "company": {
     "name": "Murtakaz",
-    "nameAr": "مرتكز",
+    "nameAr": " المؤشرات",
     "description": "Empowering organizations to execute strategy with precision.",
     "descriptionAr": "تمكين المؤسسات من تنفيذ الاستراتيجية بدقة."
   },
@@ -19,7 +19,7 @@
       "title": "Company",
       "titleAr": "الشركة",
       "items": [
-        { "label": "About Us", "labelAr": "عن مرتكز", "href": "/about" },
+        { "label": "About Us", "labelAr": "عن  المؤشرات", "href": "/about" },
         { "label": "Contact", "labelAr": "تواصل معنا", "href": "/contact" },
         { "label": "Careers", "labelAr": "الوظائف", "href": "/careers" }
       ]
@@ -34,5 +34,5 @@
     }
   ],
   "copyright": "© 2024 Murtakaz. All rights reserved.",
-  "copyrightAr": "© 2024 مرتكز. جميع الحقوق محفوظة."
+  "copyrightAr": "© 2024  المؤشرات. جميع الحقوق محفوظة."
 }

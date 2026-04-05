@@ -96,7 +96,7 @@ flowchart LR
     style D fill:#e8f5e9
 ```
 
-في مرتكز KPI، يُطبَّق هذا من خلال إعداد `kpiApprovalLevel`:
+في  المؤشرات KPI، يُطبَّق هذا من خلال إعداد `kpiApprovalLevel`:
 - إذا كان `kpiApprovalLevel = MANAGER`: يعتمد مستخدم مختلف بدور المدير
 - إذا كان `kpiApprovalLevel = EXECUTIVE`: يعتمد تنفيذي جميع إرسالات المديرين
 - إذا كان `kpiApprovalLevel = ADMIN`: مسؤول المؤسسة هو المعتمِد النهائي
