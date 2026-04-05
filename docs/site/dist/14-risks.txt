@@ -1,0 +1,256 @@
+1:"$Sreact.fragment"
+2:I[15244,[],""]
+3:I[43866,[],""]
+5:I[86213,[],"OutletBoundary"]
+7:I[86213,[],"MetadataBoundary"]
+9:I[86213,[],"ViewportBoundary"]
+b:I[34835,[],""]
+:HL["/_next/static/css/145dcfbb7bdfe18e.css","style"]
+0:{"P":null,"b":"s5eJIx2mAXYXJg6cEVOhC","p":"","c":["","14-risks"],"i":false,"f":[[["",{"children":[["slug","14-risks","d"],{"children":["__PAGE__",{}]}]},"$undefined","$undefined",true],["",["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/145dcfbb7bdfe18e.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]],["$","html",null,{"lang":"ar","dir":"rtl","children":["$","body",null,{"className":"min-h-screen bg-white font-sans antialiased","children":["$","$L2",null,{"parallelRouterKey":"children","segmentPath":["children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[],[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]]],"forbidden":"$undefined","unauthorized":"$undefined"}]}]}]]}],{"children":[["slug","14-risks","d"],["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","segmentPath":["children","$0:f:0:1:2:children:0","children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":["__PAGE__",["$","$1","c",{"children":["$L4",null,["$","$L5",null,{"children":"$L6"}]]}],{},null,false]},null,false]},null,false],["$","$1","h",{"children":[null,["$","$1","Jq-n_Hv1AV_kBSGMysoiI",{"children":[["$","$L7",null,{"children":"$L8"}],["$","$L9",null,{"children":"$La"}],null]}]]}],false]],"m":"$undefined","G":["$b","$undefined"],"s":false,"S":true}
+a:[["$","meta","0",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]
+8:[["$","meta","0",{"charSet":"utf-8"}],["$","title","1",{"children":"المخاطر - دليل  المؤشرات KPI"}],["$","meta","2",{"name":"description","content":"دليل استخدام منصة  المؤشرات KPI لإدارة الأداء المؤسسي"}]]
+6:null
+c:I[84424,["2049","static/chunks/2049-4807d1f153ee14dd.js","9791","static/chunks/9791-20fac1a27f6e22c4.js","161","static/chunks/161-783ba81db49a7d9b.js","7182","static/chunks/app/%5Bslug%5D/page-c70e347b1eb63951.js"],"DocPage"]
+d:T1ddb,# المخاطر — إدارة سجل المخاطر
+
+<div dir="rtl">
+
+تُستخدم صفحة **المخاطر** (`/<locale>/risks`) لعرض وإدارة المخاطر المؤسسية. تُعد إدارة المخاطر جزءاً أساسياً من الحوكمة الاستراتيجية.
+
+---
+
+## الوصول إلى المخاطر
+
+1. انقر على **المخاطر** في الشريط الجانبي.
+2. أو انتقل مباشرةً إلى:
+
+```
+/<locale>/risks
+```
+
+---
+
+## سجل المخاطر
+
+تعرض الصفحة جدولاً بجميع المخاطر المسجلة في المؤسسة:
+
+| العمود | الوصف |
+|--------|-------|
+| **المخاطر** | عنوان المخاطر (بالعربية أو الإنجليزية) |
+| **الحالة** | حالة المخاطر (OPEN، MITIGATED، CLOSED) |
+| **الرمز** | معرّف فريد للمخاطر (Code) |
+| **الوصف** | وصف مختصر للمخاطر |
+
+---
+
+## البحث والتصفية
+
+- استخدم مربع **البحث** للتصفية حسب عنوان المخاطر.
+- يتم تحديث النتائج تلقائياً أثناء الكتابة.
+
+---
+
+## صفحة تفاصيل المخاطر
+
+انقر على عنوان أي مخاطر لفتح صفحة التفاصيل:
+
+```
+/<locale>/entities/risk/<riskId>
+```
+
+### المعلومات الرئيسية
+
+| الحقل | الوصف |
+|-------|-------|
+| **العنوان** | عنوان المخاطر |
+| **الوصف** | وصف تفصيلي للمخاطر |
+| **الحالة** | OPEN / MITIGATED / CLOSED |
+| **مستوى الخطورة** | HIGH / MEDIUM / LOW |
+| **المالك** | المسؤول عن إدارة المخاطر |
+| **تاريخ الاكتشاف** | تاريخ تسجيل المخاطر |
+
+### التبويبات
+
+#### دورة حياة المخاطر
+
+```mermaid
+stateDiagram-v2
+    [*] --> OPEN : اكتشاف المخاطر
+    OPEN --> MITIGATED : تنفيذ إجراءات تخفيف
+    OPEN --> ESCALATED : تصعيد للإدارة
+    ESCALATED --> OPEN : إرجاع
+    MITIGATED --> CLOSED : تقييم ناجح
+    MITIGATED --> OPEN : إعادة فتح
+    OPEN --> CLOSED : قبول المخاطر
+    CLOSED --> [*] : أرشفة
+    
+    note right of OPEN
+        🔴 نشط
+        يتطلب متابعة
+    end note
+    
+    note right of MITIGATED
+        🟡 مخفف
+        إجراءات مطبقة
+    end note
+    
+    note right of CLOSED
+        🟢 مغلق
+        لا يتطلب إجراء
+    end note
+```
+
+#### 2. الإجراءات التخفيفية
+- قائمة الإجراءات المتخذة للتخفيف من المخاطر
+- حالة كل إجراء
+- المسؤول عن التنفيذ
+
+#### 3. القيم
+- القياسات المرتبطة بالمخاطر
+- مؤشرات التحذير المبكر
+
+#### 4. التكليفات
+- المستخدمون المُكلَّفون بمتابعة المخاطر
+
+#### 5. المرفقات
+- المستندات المرتبطة (خطط الطوارئ، التحليلات)
+
+### مصفوفة الخطورة والاحتمالية
+
+```mermaid
+flowchart TB
+    subgraph "مصفوفة تقييم المخاطر"
+        direction TB
+        
+        subgraph "عالي التأثير"
+            direction LR
+            Q2[🟡 إدارة نشطة<br/>منخفض الاحتمال] 
+            Q4[🔴 أولوية قصوى<br/>عالي الاحتمال]
+        end
+        
+        subgraph "منخفض التأثير"
+            direction LR
+            Q3[🟢 رقابة بسيطة<br/>منخفض الاحتمال]
+            Q1[🔵 متابعة دورية<br/>عالي الاحتمال]
+        end
+    end
+    
+    style Q1 fill:#60a5fa,stroke:#3b82f6,color:#fff
+    style Q2 fill:#fbbf24,stroke:#f59e0b,color:#1e3a8a
+    style Q3 fill:#4ade80,stroke:#22c55e,color:#fff
+    style Q4 fill:#f87171,stroke:#ef4444,color:#fff
+```
+
+| الربع | الاحتمال | التأثير | الإجراء |
+|-------|----------|---------|---------|
+| **🔴 أولوية قصوى** | عالي | عالي | تدخل فوري |
+| **🟡 إدارة نشطة** | منخفض | عالي | مراقبة مكثفة |
+| **🔵 متابعة دورية** | عالي | منخفض | مراجعة دورية |
+| **🟢 رقابة بسيطة** | منخفض | منخفض | رقابة عادية |
+
+1. انتقل إلى صفحة الكيانات ← المخاطر.
+2. انقر على **+ مخاطر جديدة**.
+3. أدخل البيانات:
+   - **العنوان** (مطلوب)
+   - **الوصف** (مطلوب)
+   - **الحالة** (مطلوب): OPEN / MITIGATED / CLOSED
+   - **مستوى الخطورة** (مطلوب): HIGH / MEDIUM / LOW
+   - **مالك المخاطر** (مطلوب)
+4. انقر على **حفظ**.
+
+---
+
+## تحديث حالة المخاطر
+
+### إغلاق مخاطر
+
+1. افتح صفحة تفاصيل المخاطر.
+2. انقر على **إغلاق**.
+3. أضف ملاحظات الإغلاق.
+4. احفظ التغييرات.
+
+### تدفق التصعيد
+
+```mermaid
+flowchart TD
+    M[المدير] -->|اكتشاف مخاطر عالية| A[تسجيل المخاطر]
+    A --> B{تقييم الخطورة}
+    
+    B -->|HIGH| C[تصعيد تلقائي]
+    B -->|MEDIUM| D[متابعة المدير]
+    B -->|LOW| E[متابعة دورية]
+    
+    C --> F[إشعار للتنفيذي]
+    C --> G[إشعار للمسؤول]
+    
+    F --> H[قرار التصعيد]
+    G --> H
+    
+    H -->|قبول| I[تكليف فريق الحل]
+    H -->|رفض| J[إرجاع للمدير]
+```
+
+1. افتح صفحة تفاصيل المخاطر.
+2. انقر على **تصعيد**.
+3. يتم إرسال إشعار إلى المستوى الإداري الأعلى.
+
+---
+
+### ربط المخاطر بالاستراتيجية
+
+```mermaid
+flowchart TB
+    subgraph "المخاطر"
+        R[المخاطر المؤسسية]
+    end
+    
+    subgraph "العناصر الاستراتيجية"
+        P[المشاريع]
+        KPI[مؤشرات الأداء]
+        OBJ[الأهداف]
+    end
+    
+    R -->|تأثير على| P
+    R -->|مؤشر تحذير| KPI
+    R -->|يعيق تحقيق| OBJ
+    
+    P -.->|يولد| R
+    KPI -.->|يكشف| R
+```
+
+يمكن ربط المخاطر بـ:
+- **المشاريع** — مخاطر محددة للمشروع
+- **مؤشرات الأداء** — مؤشرات تحذيرية
+- **الأهداف** — تأثير على تحقيق الهدف
+
+---
+
+## لوحة متابعة المخاطر
+
+انتقل إلى `/<locale>/dashboards/risk-escalation` لعرض:
+- المخاطر الحرجة المفتوحة
+- المخاطر المصعَّدة
+- متوسط أيام عدم الحل
+- توزيع المخاطر حسب الخطورة
+
+---
+
+## صلاحيات حسب الدور
+
+| الدور | رؤية المخاطر | إنشاء/تعديل/حذف | التصعيد |
+|-------|---------------|-----------------|---------|
+| **SUPER_ADMIN** | جميع المخاطر | ✓ كامل | ✓ |
+| **ADMIN** | جميع المخاطر | ✓ كامل | ✓ |
+| **EXECUTIVE** | جميع المخاطر | ✗ للقراءة فقط | ✓ |
+| **MANAGER** | المخاطر المُكلَّف بها | ✗ للقراءة فقط | ✗ |
+
+---
+
+## نصائح مفيدة
+- راجع سجل المخاطر دورياً للتأكد من تحديث الحالات.
+- استخدم مستوى الخطورة "HIGH" للمخاطر التي تتطلب اهتماماً فورياً.
+- وثّق الإجراءات التخفيفية لتتبع الفعالية.
+- ربط المخاطر بالمشاريع ذات الصلة يساعد في فهم السياق.
+
+</div>
+4:["$","$Lc",null,{"title":"المخاطر","content":"$d"}]

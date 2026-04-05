@@ -1,0 +1,238 @@
+1:"$Sreact.fragment"
+2:I[15244,[],""]
+3:I[43866,[],""]
+5:I[86213,[],"OutletBoundary"]
+7:I[86213,[],"MetadataBoundary"]
+9:I[86213,[],"ViewportBoundary"]
+b:I[34835,[],""]
+:HL["/_next/static/css/145dcfbb7bdfe18e.css","style"]
+0:{"P":null,"b":"s5eJIx2mAXYXJg6cEVOhC","p":"","c":["","06-approvals"],"i":false,"f":[[["",{"children":[["slug","06-approvals","d"],{"children":["__PAGE__",{}]}]},"$undefined","$undefined",true],["",["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/145dcfbb7bdfe18e.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]],["$","html",null,{"lang":"ar","dir":"rtl","children":["$","body",null,{"className":"min-h-screen bg-white font-sans antialiased","children":["$","$L2",null,{"parallelRouterKey":"children","segmentPath":["children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[],[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]]],"forbidden":"$undefined","unauthorized":"$undefined"}]}]}]]}],{"children":[["slug","06-approvals","d"],["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","segmentPath":["children","$0:f:0:1:2:children:0","children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":["__PAGE__",["$","$1","c",{"children":["$L4",null,["$","$L5",null,{"children":"$L6"}]]}],{},null,false]},null,false]},null,false],["$","$1","h",{"children":[null,["$","$1","J_ahdnCLp9DmImbQK7k4u",{"children":[["$","$L7",null,{"children":"$L8"}],["$","$L9",null,{"children":"$La"}],null]}]]}],false]],"m":"$undefined","G":["$b","$undefined"],"s":false,"S":true}
+a:[["$","meta","0",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]
+8:[["$","meta","0",{"charSet":"utf-8"}],["$","title","1",{"children":"الاعتمادات - دليل  المؤشرات KPI"}],["$","meta","2",{"name":"description","content":"دليل استخدام منصة  المؤشرات KPI لإدارة الأداء المؤسسي"}]]
+6:null
+c:I[84424,["2049","static/chunks/2049-4807d1f153ee14dd.js","9791","static/chunks/9791-20fac1a27f6e22c4.js","161","static/chunks/161-783ba81db49a7d9b.js","7182","static/chunks/app/%5Bslug%5D/page-c70e347b1eb63951.js"],"DocPage"]
+d:T244b,# الاعتمادات
+
+<div dir="rtl">
+
+صفحة **الاعتمادات** (`/<locale>/approvals`) هي المكان الذي يراجع فيه المستخدمون المخوَّلون قيم مؤشرات الأداء المُرسَلة ويتخذون قراراتهم بشأنها. تُعدّ هذه المرحلة خطوة حوكمة جوهرية تضمن دقة البيانات قبل أن تصبح جزءاً من السجل الرسمي.
+
+---
+
+## من يستخدم صفحة الاعتمادات؟
+
+| الدور | الإجراء |
+|-------|--------|
+| **مسؤول المؤسسة (ADMIN)** | يمكنه اعتماد أو رفض أي قيمة مُرسَلة |
+| **التنفيذي (EXECUTIVE)** | يمكنه الاعتماد/الرفض إذا كان إعداد `kpiApprovalLevel = EXECUTIVE` |
+| **المدير (MANAGER)** | يمكنه الاعتماد/الرفض إذا كان إعداد `kpiApprovalLevel = MANAGER` |
+
+> لا يعتمد المُرسِلون (الذين أدخلوا البيانات) إرسالاتهم بأنفسهم. يجب أن يصدر الاعتماد من مستخدم مخوَّل آخر.
+
+### سير عمل الاعتماد
+
+```mermaid
+sequenceDiagram
+    participant M as المدير/الموظف
+    participant S as النظام
+    participant A as المعتمد
+    participant D as قاعدة البيانات
+
+    M->>S: إرسال قيمة مؤشر أداء
+    S->>D: حفظ بحالة SUBMITTED
+    S->>A: إشعار بقيمة جديدة للاعتماد
+    A->>S: مراجعة القيمة
+    alt اعتماد
+        A->>D: تحديث الحالة إلى APPROVED
+        S->>M: إشعار بالاعتماد
+    else رفض
+        A->>D: تحديث الحالة إلى REJECTED
+        S->>M: إشعار بالرفض مع سبب
+        M->>S: إعادة إدخال القيمة
+    end
+```
+
+### مخطم حالات الاعتماد
+
+```mermaid
+stateDiagram-v2
+    [*] --> PENDING : إرسال القيمة
+    
+    PENDING --> UNDER_REVIEW : مراجعة المعتمد
+    UNDER_REVIEW --> APPROVED : قرار بالاعتماد
+    UNDER_REVIEW --> REJECTED : قرار بالرفض
+    
+    REJECTED --> PENDING : إعادة الإرسال
+    
+    APPROVED --> LOCKED : قفل تلقائي
+    LOCKED --> [*] : أرشفة
+    
+    note right of PENDING
+        📥 في طابور الاعتمادات
+        🔴 تنتظر المراجعة
+        👁️ مرئية للمعتمدين فقط
+    end note
+    
+    note right of UNDER_REVIEW
+        👤 المعتمد يُراجع
+        ⏳ فترة المراجعة
+        💬 قد تتضمن ملاحظات
+    end note
+    
+    note right of APPROVED
+        ✅ معتمدة نهائيًا
+        📊 تُستخدم في التقارير
+        🎯 تؤثر على النتائج
+    end note
+```
+
+### تدفق قرار الاعتماد
+
+```mermaid
+flowchart TD
+    A[قيمة مُرسَلة] --> B{المعتمد يراجع}
+    
+    B -->|القيمة صحيحة| C{قرار الاعتماد}
+    B -->|القيمة خاطئة| D{قرار الرفض}
+    
+    C -->|✅ اعتماد| E[تحديث الحالة إلى APPROVED]
+    C -->|⏳ تأجيل| F[البقاء في الانتظار]
+    
+    D -->|❌ رفض مع سبب| G[إضافة تعليق]
+    D -->|📝 رفض للتعديل| H[إعادة للمسودة]
+    
+    G --> I[إشعار المُرسل بالرفض]
+    H --> I
+    
+    E --> J[إشعار المُرسل بالاعتماد]
+    
+    I --> K[المستخدم يُعيد الإدخال]
+    K --> L[تصحيح القيمة]
+    L --> M[إعادة الإرسال]
+    M --> A
+    
+    J --> N[القيمة معتمدة]
+    F --> O[الانتظار لمراجعة لاحقة]
+```
+
+---
+
+## الوصول إلى طابور الاعتمادات
+
+1. انقر على **الاعتمادات** في الشريط الجانبي.
+2. تفتح الصفحة على فلتر **المعلَّق** افتراضياً، وتعرض جميع القيم التي تنتظر قراراً.
+
+---
+
+## تصفية الطابور
+
+ثلاثة أزرار تصفية في أعلى القائمة:
+
+| الفلتر | يعرض |
+|--------|-------|
+| **معلَّق** | القيم بحالة `SUBMITTED` — تنتظر قراراً |
+| **معتمَد** | القيم التي اعتُمدت بالفعل |
+| **الكل** | جميع القيم بصرف النظر عن حالتها |
+
+---
+
+## قراءة جدول الاعتمادات
+
+يعرض كل صف في الجدول:
+
+| العمود | الوصف |
+|--------|-------|
+| **الكيان** | اسم مؤشر الأداء/الكيان الذي تنتمي إليه القيمة. يُظهر نوع الكيان ورمزه تحت الاسم. انقر على الاسم للانتقال إلى صفحة تفاصيل الكيان. |
+| **الفترة** | تاريخ/وقت إنشاء إدخال القيمة |
+| **القيمة** | القيمة النهائية المحسوبة (`finalValue` ← `calculatedValue` ← `actualValue`، أيها متاح) |
+| **أرسلها** | المستخدم الذي أرسل القيمة |
+| **وقت الإرسال** | تاريخ ووقت الإرسال |
+| **الحالة** | شارة الحالة الحالية (`SUBMITTED`، `APPROVED`، إلخ) |
+
+---
+
+## اعتماد قيمة
+
+1. من صفحة الاعتمادات، انقر على **اسم الكيان** في الصف الذي تريد مراجعته.
+2. يفتح هذا الإجراء صفحة تفاصيل الكيان على تبويب **القيم**.
+3. حدّد إدخال القيمة المُرسَلة (الحالة = `SUBMITTED`).
+4. انقر على **اعتماد**.
+5. أكّد الإجراء.
+
+تتغير حالة القيمة من `SUBMITTED` ← `APPROVED` ← `LOCKED`.
+
+> بمجرد القفل، تصبح القيمة جزءاً من السجل الدائم ولا يمكن تغييرها.
+
+---
+
+## رفض قيمة
+
+1. انتقل إلى إدخال القيمة المُرسَلة (كما في الخطوات أعلاه).
+2. انقر على **رفض**.
+3. أضف **تعليقاً** اختيارياً يوضح سبب الرفض.
+4. أكّد الإجراء.
+
+تُعاد حالة القيمة (إلى `DRAFT` أو تُحذف)، ويمكن للمُرسِل تصحيحها وإعادة إرسالها.
+
+---
+
+## سجل تدقيق الاعتمادات
+
+يُسجَّل كل اعتماد أو رفض مع:
+- هوية المعتمِد
+- الطابع الزمني للقرار
+- أي تعليق مُقدَّم
+
+يُحفظ سجل التدقيق هذا بشكل دائم ويمكن مراجعته من تاريخ تبويب القيم للكيان.
+
+---
+
+## تهيئة مستوى الاعتماد
+
+يُحدِّد **مستوى اعتماد مؤشرات الأداء** للمؤسسة الجهة المعتمِدة المحدَّدة. يضبطه المسؤول:
+
+| المستوى | دور المعتمِد |
+|---------|------------|
+| `MANAGER` | يجب أن يعتمد مستخدم بدور المدير |
+| `EXECUTIVE` | يجب أن يعتمد مستخدم بدور التنفيذي |
+| `ADMIN` | يجب أن يعتمد مستخدم بدور مسؤول المؤسسة |
+
+لتغيير هذا الإعداد، انتقل إلى **الإدارة** ← **إعدادات المؤسسة**.
+
+---
+
+## الإشعارات
+
+يرسل النظام **إشعارات داخل التطبيق تلقائياً** — دون الحاجة إلى أي إعداد.
+
+### أيقونة الجرس (شريط الرأس)
+
+تظهر أيقونة الجرس (🔔) في شريط الرأس العلوي لجميع المستخدمين (باستثناء SUPER_ADMIN). عند وجود إشعارات غير مقروءة، تظهر شارة حمراء تُظهِر العدد (حتى "9+").
+
+| الحدث | من يتلقى الإشعار |
+|------|-------------------|
+| **إرسال قيمة** | جميع المستخدمين ذوي الدور المخوَّل بالاعتماد (بحسب `kpiApprovalLevel`) |
+| **اعتماد قيمة** | المستخدم الذي أرسل القيمة أصلاً |
+| **رفض قيمة** | المستخدم الذي أرسل القيمة أصلاً |
+
+### مسح الإشعارات
+
+عند النقر على أيقونة الجرس:
+1. تُمسح جميع الإشعارات غير المقروءة كمقروءة.
+2. ينتقل المستخدم تلقائياً إلى صفحة **الاعتمادات**.
+
+يتجدد عدد الإشعارات تلقائياً كل **60 ثانية** طالما كان التطبيق مفتوحاً.
+
+---
+
+## استكشاف الأخطاء وإصلاحها
+
+| المشكلة | الحل |
+|---------|------|
+| صفحة الاعتمادات فارغة رغم وجود قيم مُرسَلة | تحقق من دورك — قد لا تكون أنت مستوى الاعتماد المحدَّد |
+| لا تظهر أزرار الاعتماد/الرفض | انتقل إلى صفحة تفاصيل الكيان ← تبويب القيم، وليس قائمة الاعتمادات |
+| اعتُمدت قيمة بالخطأ | تواصل مع المسؤول للمراجعة — القيم المقفلة تستلزم تدخل المسؤول |
+| ينمو الطابور دون معالجة | حدّد المعتمِد المحدَّد وتأكد من أن لديه وصولاً ومعرفة بذلك |
+
+</div>
+4:["$","$Lc",null,{"title":"الاعتمادات","content":"$d"}]

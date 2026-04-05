@@ -1,0 +1,363 @@
+1:"$Sreact.fragment"
+2:I[15244,[],""]
+3:I[43866,[],""]
+5:I[86213,[],"OutletBoundary"]
+7:I[86213,[],"MetadataBoundary"]
+9:I[86213,[],"ViewportBoundary"]
+b:I[34835,[],""]
+:HL["/_next/static/css/145dcfbb7bdfe18e.css","style"]
+0:{"P":null,"b":"s5eJIx2mAXYXJg6cEVOhC","p":"","c":["","technical","02-architecture"],"i":false,"f":[[["",{"children":["technical",{"children":[["slug","02-architecture","d"],{"children":["__PAGE__",{}]}]}]},"$undefined","$undefined",true],["",["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/145dcfbb7bdfe18e.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]],["$","html",null,{"lang":"ar","dir":"rtl","children":["$","body",null,{"className":"min-h-screen bg-white font-sans antialiased","children":["$","$L2",null,{"parallelRouterKey":"children","segmentPath":["children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[],[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]]],"forbidden":"$undefined","unauthorized":"$undefined"}]}]}]]}],{"children":["technical",["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","segmentPath":["children","technical","children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":[["slug","02-architecture","d"],["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","segmentPath":["children","technical","children","$0:f:0:1:2:children:2:children:0","children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":["__PAGE__",["$","$1","c",{"children":["$L4",null,["$","$L5",null,{"children":"$L6"}]]}],{},null,false]},null,false]},null,false]},null,false],["$","$1","h",{"children":[null,["$","$1","LiwvnXByUZ81_noznUxAo",{"children":[["$","$L7",null,{"children":"$L8"}],["$","$L9",null,{"children":"$La"}],null]}]]}],false]],"m":"$undefined","G":["$b","$undefined"],"s":false,"S":true}
+a:[["$","meta","0",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]
+8:[["$","meta","0",{"charSet":"utf-8"}],["$","title","1",{"children":"معمارية النظام - التوثيق التقني - دليل  المؤشرات KPI"}],["$","meta","2",{"name":"description","content":"دليل استخدام منصة  المؤشرات KPI لإدارة الأداء المؤسسي"}]]
+6:null
+c:I[84424,["2049","static/chunks/2049-4807d1f153ee14dd.js","9791","static/chunks/9791-20fac1a27f6e22c4.js","161","static/chunks/161-783ba81db49a7d9b.js","7478","static/chunks/app/technical/%5Bslug%5D/page-85b876ce7d2fbc21.js"],"DocPage"]
+d:T2c05,# معمارية النظام
+
+<div dir="rtl">
+
+وصف المعمارية العالية المستوى لمنصة  المؤشرات KPI.
+
+---
+
+## نظرة عامة
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                        العميل (Client)                        │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐        │
+│  │   المتصفح    │  │   الجوال     │  │   التطبيق    │        │
+│  │   (Browser)  │  │   (Mobile)   │  │   (App)      │        │
+│  └──────────────┘  └──────────────┘  └──────────────┘        │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼ HTTPS
+┌─────────────────────────────────────────────────────────────┐
+│                    بوابة API (API Gateway)                    │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐        │
+│  │   Next.js    │  │   Middleware │  │   Rate Limit │        │
+│  │    Edge      │  │   (Auth/RBAC)│  │   (Redis)    │        │
+│  └──────────────┘  └──────────────┘  └──────────────┘        │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                   خدمات التطبيق (App Services)                 │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐        │
+│  │  Server      │  │   Business   │  │   Data       │        │
+│  │  Components  │  │   Logic      │  │   Access     │        │
+│  └──────────────┘  └──────────────┘  └──────────────┘        │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                   طبقة البيانات (Data Layer)                 │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐        │
+│  │  PostgreSQL  │  │   Prisma     │  │   Cache      │        │
+│  │  (Primary)   │  │   ORM        │  │   (Redis)    │        │
+│  └──────────────┘  └──────────────┘  └──────────────┘        │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## التوجيه والتنقل (Frontend & Routing)
+
+### بنية المسارات
+
+```
+web/src/app/[locale]/
+├── page.tsx                    # الصفحة الرئيسية
+├── layout.tsx                  # التخطيط الرئيسي
+├── auth/
+│   └── login/page.tsx          # تسجيل الدخول
+├── overview/page.tsx           # النظرة العامة
+├── entities/
+│   ├── [type]/page.tsx         # قائمة الكيانات
+│   └── [type]/[id]/page.tsx    # تفاصيل الكيان
+├── dashboards/
+│   └── [type]/page.tsx         # لوحات المتابعة
+├── reports/page.tsx            # التقارير
+├── admin/page.tsx              # الإدارة
+└── api/                        # API routes
+    ├── session/
+    └── ...
+```
+
+### التدويل (Localization)
+
+- **Locale segment**: `/ar` للعربية، `/en` للإنجليزية
+- **RTL/LTR**: معالجة الاتجاه تلقائياً
+- **Translation files**: في `web/messages/`
+
+---
+
+## تدفق المصادقة (Auth Flow)
+
+### النموذج الحالي (Demo)
+
+```mermaid
+sequenceDiagram
+    participant U as المستخدم
+    participant A as App
+    participant API as API
+    participant DB as Database
+
+    U->>A: اختيار شخصية
+    A->>API: POST /api/session/login
+    API->>DB: إنشاء جلسة
+    API-->>A: تعيين cookie
+    A-->>U: إعادة توجيه
+    
+    U->>A: طلب محمي
+    A->>API: التحقق من cookie
+    API->>DB: التحقق من الجلسة
+    API-->>A: الوصول المسموح
+```
+
+### النموذج المستهدف (Production)
+
+```mermaid
+sequenceDiagram
+    participant U as المستخدم
+    participant A as App
+    participant NA as NextAuth
+    participant IdP as Identity Provider
+    participant DB as Database
+
+    U->>A: تسجيل الدخول
+    A->>NA: بدء المصادقة
+    NA->>IdP: تحويل إلى مزود الهوية
+    IdP-->>U: تسجيل الدخول
+    U-->>IdP: بيانات الاعتماد
+    IdP-->>NA: رمز الوصول
+    NA->>DB: إنشاء/تحديث المستخدم
+    NA-->>A: JWT/cookie
+    A-->>U: تسجيل الدخول ناجح
+```
+
+---
+
+## تدفق البيانات (Data Flow)
+
+### القراءة
+
+```
+الواجهة الأمامية
+    ↓
+Server Component
+    ↓
+Prisma Client
+    ↓
+PostgreSQL
+    ↓
+JSON Response
+```
+
+### الكتابة
+
+```
+الواجهة الأمامية
+    ↓
+Server Action
+    ↓
+Zod Validation
+    ↓
+RBAC Check
+    ↓
+Prisma Client
+    ↓
+PostgreSQL
+    ↓
+Revalidate Cache
+```
+
+---
+
+## نموذج البيانات المستهدف
+
+### العلاقات الأساسية
+
+```mermaid
+erDiagram
+    ORGANIZATION ||--o{ USER : has
+    ORGANIZATION ||--o{ ENTITY_TYPE : defines
+    ORGANIZATION ||--o{ ENTITY : owns
+    
+    USER ||--o{ ENTITY : owns
+    USER ||--o{ KPI_VALUE : enters
+    
+    ENTITY_TYPE ||--o{ ENTITY : instances
+    
+    ENTITY ||--o{ KPI_VALUE : has
+    ENTITY ||--o{ ENTITY_ASSIGNMENT : assigned_to
+    
+    USER ||--o{ ENTITY_ASSIGNMENT : assigned
+    
+    ENTITY ||--o{ RISK : has
+    ENTITY ||--o{ MILESTONE : has
+```
+
+### الكيانات الرئيسية
+
+| الكيان | الوصف |
+|--------|-------|
+| **Organization** | المؤسسة/المستأجر |
+| **User** | المستخدم مع دور وإدارة |
+| **EntityType** | نوع الكيان (قابل للتهيئة) |
+| **Entity** | كيان استراتيجي (KPI، مشروع، إلخ) |
+| **KpiValue** | قيمة مؤشر أداء لفترة |
+| **EntityAssignment** | تكليف مستخدم بكيان |
+| **Risk** | مخاطرة مرتبطة بكيان |
+| **Milestone** | معلم لمشروع |
+
+---
+
+## طبقات الأمان
+
+### 1. Middleware (البوابة)
+
+```typescript
+// middleware.ts
+export function middleware(request: NextRequest) {
+  // التحقق من المصادقة
+  // التحقق من RBAC
+  // التوجيه حسب اللغة
+}
+```
+
+### 2. Server Actions (منطق الأعمال)
+
+```typescript
+// actions.ts
+"use server"
+
+export async function createEntity(data: EntityInput) {
+  // 1. التحقق من الجلسة
+  // 2. التحقق من RBAC
+  // 3. التحقق من صحة البيانات (Zod)
+  // 4. تنفيذ العملية
+  // 5. تسجيل التدقيق
+}
+```
+
+### 3. Database (الطبقة الأخيرة)
+
+- قيود العلاقات (Foreign keys)
+- قيود الصلاحيات (RLS)
+- تدقيق التغييرات (Audit triggers)
+
+---
+
+## إدارة الحالة (State Management)
+
+### Server Components (المفضل)
+
+```typescript
+// البيانات تُجلب على الخادم
+async function Dashboard() {
+  const data = await prisma.entity.findMany()
+  return <DashboardView data={data} />
+}
+```
+
+### Client Components (للتفاعل فقط)
+
+```typescript
+"use client"
+
+// React Query / SWR للبيانات
+// useState للحالة المحلية
+// useContext للحالة المشتركة
+```
+
+---
+
+## التخزين المؤقت (Caching)
+
+### مستويات التخزين المؤقت
+
+| المستوى | التقنية | الاستخدام |
+|---------|---------|----------|
+| Browser | Service Worker | تخزين الأصول |
+| CDN | Edge | صفحات ثابتة |
+| Application | React Cache | نتائج API |
+| Database | Query Cache | استعلامات متكررة |
+
+### إعادة التحقق (Revalidation)
+
+```typescript
+// ISR للصفحات
+export const revalidate = 3600 // 1 ساعة
+
+// إعادة التحقق عند الطلب
+revalidatePath('/dashboards/executive')
+revalidateTag('kpis')
+```
+
+---
+
+## المراقبة والتتبع
+
+### السجلات (Logging)
+
+```typescript
+// Structured logging
+logger.info({
+  event: 'kpi_value_submitted',
+  userId: session.user.id,
+  entityId: entity.id,
+  value: data.value,
+  timestamp: new Date()
+})
+```
+
+### المقاييس (Metrics)
+
+| المقياس | الوصف |
+|---------|-------|
+| Request duration | مدة الطلب |
+| Error rate | معدل الأخطاء |
+| Active users | المستخدمين النشطين |
+| DB query time | وقت استعلام قاعدة البيانات |
+
+---
+
+## تدفق النشر (Deployment Flow)
+
+```
+المطور
+   ↓ git push
+GitHub
+   ↓ webhook
+CI/CD Pipeline
+   ├─ اختبارات الوحدة
+   ├─ اختبارات التكامل
+   ├─ فحص الأمان
+   ├─ بناء الصورة
+   ↓
+Production Server
+   ├─ ترحيل قاعدة البيانات
+   ├─ نشر التطبيق
+   └─ فحص الصحة
+```
+
+---
+
+## التوسع المستقبلي
+
+### المرحلة 2
+
+- [ ] تكامل Redis للتخزين المؤقت
+- [ ] WebSockets للإشعارات الفورية
+- [ ] OpenTelemetry للمراقبة
+- [ ] ميزات الذكاء الاصطناعي المتقدمة
+
+### المرحلة 3
+
+- [ ] تطبيق الجوال
+- [ ] تكاملات خارجية (ERP، CRM)
+- [ ] تحليلات تنبؤية
+- [ ] تعدد المستأجرين الكامل
+
+</div>
+4:["$","$Lc",null,{"title":"معمارية النظام","content":"$d"}]

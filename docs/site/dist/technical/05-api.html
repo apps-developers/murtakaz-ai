@@ -1,0 +1,547 @@
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="/_next/static/css/145dcfbb7bdfe18e.css" data-precedence="next"/><link rel="preload" as="script" fetchPriority="low" href="/_next/static/chunks/webpack-d2ea48b7c8b42936.js"/><script src="/_next/static/chunks/4bd1b696-a3b9e41acf183884.js" async=""></script><script src="/_next/static/chunks/1517-5078ad7f5e23299c.js" async=""></script><script src="/_next/static/chunks/main-app-4320a2f1ad29e83b.js" async=""></script><script src="/_next/static/chunks/2049-4807d1f153ee14dd.js" async=""></script><script src="/_next/static/chunks/9791-20fac1a27f6e22c4.js" async=""></script><script src="/_next/static/chunks/161-783ba81db49a7d9b.js" async=""></script><script src="/_next/static/chunks/app/technical/%5Bslug%5D/page-85b876ce7d2fbc21.js" async=""></script><title>وثائق API - التوثيق التقني - دليل  المؤشرات KPI</title><meta name="description" content="دليل استخدام منصة  المؤشرات KPI لإدارة الأداء المؤسسي"/><script src="/_next/static/chunks/polyfills-42372ed130431b0a.js" noModule=""></script></head><body class="min-h-screen bg-white font-sans antialiased"><div class="flex min-h-screen"><div class="no-print fixed top-0 right-0 left-0 z-40 flex items-center justify-between border-b bg-white px-4 py-3 lg:hidden"><a class="flex items-center gap-2 font-semibold text-slate-900" href="/"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open h-5 w-5"><path d="M12 7v14"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path></svg><span>دليل  المؤشرات KPI</span></a><div class="flex items-center gap-2"><button class="rounded-md p-2 hover:bg-slate-100" aria-label="Print"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-printer h-5 w-5"><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><path d="M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6"></path><rect x="6" y="14" width="12" height="8" rx="1"></rect></svg></button><button class="rounded-md p-2 hover:bg-slate-100" aria-label="Toggle menu"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu h-5 w-5"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button></div></div><aside class="fixed inset-y-0 right-0 z-50 w-72 transform overflow-y-auto border-l bg-white transition-transform duration-200 ease-in-out lg:translate-x-0 lg:transform-none translate-x-full"><div class="no-print flex h-full flex-col"><div class="border-b px-4 py-4"><a class="flex items-center gap-2 font-bold text-lg text-slate-900" href="/"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open h-6 w-6 text-blue-600"><path d="M12 7v14"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path></svg><span>دليل  المؤشرات KPI</span></a><p class="mt-1 text-sm text-slate-600">منصة إدارة الأداء المؤسسي</p></div><nav class="flex-1 px-3 py-4 overflow-y-auto"><ul class="space-y-1"><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-house h-4 w-4"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"></path><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg><span>الرئيسية</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/00-quick-reference"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>المرجع السريع</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/01-getting-started"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>البدء والدخول</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/09-glossary"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>المسرد</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/02-roles-and-permissions"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>الأدوار والصلاحيات</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/04-entities-and-kpis"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>الكيانات ومؤشرات الأداء</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/22-formulas-guide"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>دليل الصيغ الحسابية</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/03-overview-page"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>صفحة النظرة العامة</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/05-entering-kpi-values"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>إدخال قيم مؤشرات الأداء</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/17-approval-workflow"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>سير عمل الموافقات</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/06-approvals"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>الاعتمادات</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/10-reports"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>التقارير والتحليلات</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/07-dashboards"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>لوحات المتابعة</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/16-organization"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>المؤسسة</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/12-departments"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>الإدارات</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/15-pillars-and-objectives"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>الركائز والأهداف</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/13-projects"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>المشاريع</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/14-risks"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>المخاطر</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/11-responsibilities"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>المسؤوليات</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/18-ai-assistant"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>المساعد الذكي (AI)</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/20-data-management"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>إدارة البيانات</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/19-app-pages"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>صفحات التطبيق</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/21-user-journeys"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>رحلات المستخدم</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/08-admin-guide"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>دليل المسؤول</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/23-troubleshooting"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>استكشاف الأخطاء</span></a></li></ul><div class="mt-6 pt-4 border-t border-slate-200"><div class="px-3 mb-2"><span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">الخلفية النظرية</span></div><ul class="space-y-1"><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/theory/01-strategy-execution-foundations"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-graduation-cap h-4 w-4"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"></path><path d="M22 10v6"></path><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"></path></svg><span>أسس تنفيذ الاستراتيجية</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/theory/02-kpi-design-and-measurement"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-graduation-cap h-4 w-4"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"></path><path d="M22 10v6"></path><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"></path></svg><span>تصميم مؤشرات الأداء</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/theory/03-performance-management-frameworks"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-graduation-cap h-4 w-4"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"></path><path d="M22 10v6"></path><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"></path></svg><span>أطر إدارة الأداء</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/theory/04-governance-and-approvals"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-graduation-cap h-4 w-4"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"></path><path d="M22 10v6"></path><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"></path></svg><span>الحوكمة والاعتمادات</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/theory/05-organizational-health-and-rag"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-graduation-cap h-4 w-4"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"></path><path d="M22 10v6"></path><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"></path></svg><span>الصحة المؤسسية وRAG</span></a></li></ul></div><div class="mt-6 pt-4 border-t border-slate-200"><div class="px-3 mb-2"><span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">التوثيق التقني</span></div><ul class="space-y-1"><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/technical/01-tech-stack"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>نظرة على التقنية</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/technical/02-architecture"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>معمارية النظام</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/technical/03-development"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>دليل التطوير</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/technical/04-deployment"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>دليل النشر</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors bg-emerald-50 text-emerald-700 font-medium" href="/technical/05-api"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>وثائق API</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/technical/06-data-model"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>نموذج البيانات</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/technical/07-operations"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>دليل التشغيل</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/technical/08-troubleshooting"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>استكشاف الأخطاء</span></a></li></ul></div></nav><div class="border-t p-4"><button class="flex w-full items-center justify-center gap-2 rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-printer h-4 w-4"><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><path d="M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6"></path><rect x="6" y="14" width="12" height="8" rx="1"></rect></svg><span>طباعة الصفحة</span></button><div class="mt-4 flex items-center justify-between text-sm"><span></span><a class="flex items-center gap-1 text-slate-600 hover:text-slate-900" href="/"><span class="truncate max-w-[80px]">الرئيسية</span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left h-4 w-4"><path d="m15 18-6-6 6-6"></path></svg></a></div></div></div></aside><main class="flex-1 lg:mr-72"><div class="h-14 lg:hidden"></div><div class="mx-auto max-w-4xl px-4 py-8 lg:px-8 lg:py-12"><div class="mb-8 border-b pb-6"><h1 class="text-3xl font-bold text-slate-900">وثائق API</h1></div><div class="prose prose-slate max-w-none prose-headings:text-slate-900 prose-h1:text-3xl prose-h2:text-2xl prose-h2:border-b prose-h2:pb-2 prose-h2:mt-8 prose-h3:text-xl prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline prose-code:bg-slate-100 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm prose-pre:bg-slate-100 prose-pre:p-4 prose-pre:rounded-md prose-table:border-collapse prose-table:w-full prose-th:border prose-th:border-slate-300 prose-th:bg-slate-50 prose-th:p-3 prose-th:text-right prose-td:border prose-td:border-slate-300 prose-td:p-3 prose-hr:border-slate-300 prose-hr:my-6"><h1>وثائق API</h1>
+<div dir="rtl">
+<div node="[object Object]">وثائق API لمنصة  المؤشرات KPI.</div>
+<hr/>
+<h2>نظرة عامة</h2>
+<div node="[object Object]"><strong>عنوان الأساسي (Base URL):</strong></div>
+<pre><code class="bg-slate-100 px-1.5 py-0.5 rounded text-sm font-mono" node="[object Object]">https://api.murtakaz.com
+</code></pre>
+<div node="[object Object]"><strong>للتطوير المحلي:</strong></div>
+<pre><code class="bg-slate-100 px-1.5 py-0.5 rounded text-sm font-mono" node="[object Object]">http://localhost:3000/api
+</code></pre>
+<div node="[object Object]"><strong>تنسيق الاستجابة:</strong></div>
+<div node="[object Object]">جميع الاستجابات بصيغة JSON.</div>
+<pre><pre class="bg-slate-100 rounded-md p-4 overflow-x-auto my-4 block" node="[object Object]"><code class="text-sm font-mono">{
+  &quot;success&quot;: true,
+  &quot;data&quot;: { ... },
+  &quot;message&quot;: &quot;Operation completed successfully&quot;
+}
+</code></pre></pre>
+<hr/>
+<h2>المصادقة</h2>
+<h3>JWT Token</h3>
+<div node="[object Object]">يتم إرسال الرمز في ترويسة الطلب:</div>
+<pre><pre class="bg-slate-100 rounded-md p-4 overflow-x-auto my-4 block" node="[object Object]"><code class="text-sm font-mono">Authorization: Bearer &lt;token&gt;
+</code></pre></pre>
+<h3>Cookie-based (Current)</h3>
+<pre><pre class="bg-slate-100 rounded-md p-4 overflow-x-auto my-4 block" node="[object Object]"><code class="text-sm font-mono">Cookie: murtakaz_session=&lt;session_id&gt;
+</code></pre></pre>
+<hr/>
+<h2>نقاط النهاية (Endpoints)</h2>
+<h3>المصادقة</h3>
+<h4>تسجيل الدخول</h4>
+<pre><pre class="bg-slate-100 rounded-md p-4 overflow-x-auto my-4 block" node="[object Object]"><code class="text-sm font-mono">POST /api/auth/login
+Content-Type: application/json
+</code></pre></pre>
+<div node="[object Object]"><strong>الطلب:</strong></div>
+<pre><pre class="bg-slate-100 rounded-md p-4 overflow-x-auto my-4 block" node="[object Object]"><code class="text-sm font-mono">{
+  &quot;email&quot;: &quot;user@example.com&quot;,
+  &quot;password&quot;: &quot;securePassword123&quot;
+}
+</code></pre></pre>
+<div node="[object Object]"><strong>الاستجابة الناجحة (200):</strong></div>
+<pre><pre class="bg-slate-100 rounded-md p-4 overflow-x-auto my-4 block" node="[object Object]"><code class="text-sm font-mono">{
+  &quot;success&quot;: true,
+  &quot;user&quot;: {
+    &quot;id&quot;: &quot;usr_123&quot;,
+    &quot;name&quot;: &quot;أحمد محمد&quot;,
+    &quot;email&quot;: &quot;user@example.com&quot;,
+    &quot;role&quot;: &quot;MANAGER&quot;,
+    &quot;department&quot;: &quot;dep_456&quot;
+  },
+  &quot;token&quot;: &quot;eyJhbGciOiJIUzI1NiIs...&quot;
+}
+</code></pre></pre>
+<div node="[object Object]"><strong>الاستجابة الفاشلة (401):</strong></div>
+<pre><pre class="bg-slate-100 rounded-md p-4 overflow-x-auto my-4 block" node="[object Object]"><code class="text-sm font-mono">{
+  &quot;success&quot;: false,
+  &quot;error&quot;: &quot;Invalid credentials&quot;
+}
+</code></pre></pre>
+<hr/>
+<h4>تسجيل الخروج</h4>
+<pre><pre class="bg-slate-100 rounded-md p-4 overflow-x-auto my-4 block" node="[object Object]"><code class="text-sm font-mono">POST /api/auth/logout
+</code></pre></pre>
+<div node="[object Object]"><strong>الاستجابة (200):</strong></div>
+<pre><pre class="bg-slate-100 rounded-md p-4 overflow-x-auto my-4 block" node="[object Object]"><code class="text-sm font-mono">{
+  &quot;success&quot;: true,
+  &quot;message&quot;: &quot;Logged out successfully&quot;
+}
+</code></pre></pre>
+<hr/>
+<h3>الجلسة</h3>
+<h4>الحصول على الجلسة الحالية</h4>
+<pre><pre class="bg-slate-100 rounded-md p-4 overflow-x-auto my-4 block" node="[object Object]"><code class="text-sm font-mono">GET /api/session
+</code></pre></pre>
+<div node="[object Object]"><strong>الاستجابة (200):</strong></div>
+<pre><pre class="bg-slate-100 rounded-md p-4 overflow-x-auto my-4 block" node="[object Object]"><code class="text-sm font-mono">{
+  &quot;success&quot;: true,
+  &quot;user&quot;: {
+    &quot;id&quot;: &quot;usr_123&quot;,
+    &quot;name&quot;: &quot;أحمد محمد&quot;,
+    &quot;email&quot;: &quot;user@example.com&quot;,
+    &quot;role&quot;: &quot;MANAGER&quot;
+  }
+}
+</code></pre></pre>
+<div node="[object Object]"><strong>الاستجابة عند عدم تسجيل الدخول (401):</strong></div>
+<pre><pre class="bg-slate-100 rounded-md p-4 overflow-x-auto my-4 block" node="[object Object]"><code class="text-sm font-mono">{
+  &quot;success&quot;: false,
+  &quot;error&quot;: &quot;Not authenticated&quot;
+}
+</code></pre></pre>
+<hr/>
+<h3>الكيانات (Entities)</h3>
+<h4>قائمة الكيانات</h4>
+<pre><pre class="bg-slate-100 rounded-md p-4 overflow-x-auto my-4 block" node="[object Object]"><code class="text-sm font-mono">GET /api/entities?type=kpi&amp;status=active&amp;page=1&amp;limit=20
+</code></pre></pre>
+<div node="[object Object]"><strong>المعاملات (Query Parameters):</strong></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="overflow-x-auto my-6 rounded-lg border border-slate-200 shadow-sm"><table class="w-full border-collapse"><thead class="bg-slate-50 border-b border-slate-200"><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><th class="px-4 py-3 text-right font-semibold text-slate-700 text-sm">المعامل</th><th class="px-4 py-3 text-right font-semibold text-slate-700 text-sm">النوع</th><th class="px-4 py-3 text-right font-semibold text-slate-700 text-sm">الوصف</th></tr></thead><tbody><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm"><code class="bg-slate-100 px-1.5 py-0.5 rounded text-sm font-mono" node="[object Object]">type</code></td><td class="px-4 py-3 text-slate-600 text-sm">string</td><td class="px-4 py-3 text-slate-600 text-sm">نوع الكيان (kpi, project, initiative)</td></tr><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm"><code class="bg-slate-100 px-1.5 py-0.5 rounded text-sm font-mono" node="[object Object]">status</code></td><td class="px-4 py-3 text-slate-600 text-sm">string</td><td class="px-4 py-3 text-slate-600 text-sm">الحالة (active, planned, completed)</td></tr><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm"><code class="bg-slate-100 px-1.5 py-0.5 rounded text-sm font-mono" node="[object Object]">owner</code></td><td class="px-4 py-3 text-slate-600 text-sm">string</td><td class="px-4 py-3 text-slate-600 text-sm">معرّف المالك</td></tr><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm"><code class="bg-slate-100 px-1.5 py-0.5 rounded text-sm font-mono" node="[object Object]">page</code></td><td class="px-4 py-3 text-slate-600 text-sm">integer</td><td class="px-4 py-3 text-slate-600 text-sm">رقم الصفحة (default: 1)</td></tr><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm"><code class="bg-slate-100 px-1.5 py-0.5 rounded text-sm font-mono" node="[object Object]">limit</code></td><td class="px-4 py-3 text-slate-600 text-sm">integer</td><td class="px-4 py-3 text-slate-600 text-sm">عدد النتائج (default: 20, max: 100)</td></tr><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm"><code class="bg-slate-100 px-1.5 py-0.5 rounded text-sm font-mono" node="[object Object]">search</code></td><td class="px-4 py-3 text-slate-600 text-sm">string</td><td class="px-4 py-3 text-slate-600 text-sm">بحث نصي</td></tr></tbody></table></div>
+<div node="[object Object]"><strong>الاستجابة (200):</strong></div>
+<pre><pre class="bg-slate-100 rounded-md p-4 overflow-x-auto my-4 block" node="[object Object]"><code class="text-sm font-mono">{
+  &quot;success&quot;: true,
+  &quot;data&quot;: {
+    &quot;items&quot;: [
+      {
+        &quot;id&quot;: &quot;ent_789&quot;,
+        &quot;title&quot;: &quot;نسبة رضا العملاء&quot;,
+        &quot;titleAr&quot;: &quot;نسبة رضا العملاء&quot;,
+        &quot;code&quot;: &quot;kpi_satisfaction&quot;,
+        &quot;type&quot;: &quot;kpi&quot;,
+        &quot;status&quot;: &quot;active&quot;,
+        &quot;owner&quot;: { &quot;id&quot;: &quot;usr_123&quot;, &quot;name&quot;: &quot;أحمد محمد&quot; },
+        &quot;target&quot;: 95,
+        &quot;current&quot;: 87,
+        &quot;unit&quot;: &quot;%&quot;,
+        &quot;achievement&quot;: 91.5
+      }
+    ],
+    &quot;pagination&quot;: {
+      &quot;page&quot;: 1,
+      &quot;limit&quot;: 20,
+      &quot;total&quot;: 156,
+      &quot;pages&quot;: 8
+    }
+  }
+}
+</code></pre></pre>
+<hr/>
+<h4>تفاصيل كيان</h4>
+<pre><pre class="bg-slate-100 rounded-md p-4 overflow-x-auto my-4 block" node="[object Object]"><code class="text-sm font-mono">GET /api/entities/:id
+</code></pre></pre>
+<div node="[object Object]"><strong>الاستجابة (200):</strong></div>
+<pre><pre class="bg-slate-100 rounded-md p-4 overflow-x-auto my-4 block" node="[object Object]"><code class="text-sm font-mono">{
+  &quot;success&quot;: true,
+  &quot;data&quot;: {
+    &quot;id&quot;: &quot;ent_789&quot;,
+    &quot;title&quot;: &quot;نسبة رضا العملاء&quot;,
+    &quot;titleAr&quot;: &quot;نسبة رضا العملاء&quot;,
+    &quot;code&quot;: &quot;kpi_satisfaction&quot;,
+    &quot;description&quot;: &quot;مؤشر قياس رضا العملاء عن الخدمات&quot;,
+    &quot;type&quot;: &quot;kpi&quot;,
+    &quot;status&quot;: &quot;active&quot;,
+    &quot;owner&quot;: { &quot;id&quot;: &quot;usr_123&quot;, &quot;name&quot;: &quot;أحمد محمد&quot; },
+    &quot;target&quot;: 95,
+    &quot;unit&quot;: &quot;%&quot;,
+    &quot;direction&quot;: &quot;INCREASE_IS_GOOD&quot;,
+    &quot;period&quot;: &quot;MONTHLY&quot;,
+    &quot;formula&quot;: &quot;get(&#x27;survey_score&#x27;) / get(&#x27;total_responses&#x27;) * 100&quot;,
+    &quot;variables&quot;: [
+      { &quot;code&quot;: &quot;survey_score&quot;, &quot;name&quot;: &quot;مجموع الدرجات&quot;, &quot;type&quot;: &quot;NUMBER&quot; }
+    ],
+    &quot;values&quot;: [
+      {
+        &quot;id&quot;: &quot;val_001&quot;,
+        &quot;period&quot;: &quot;2025-01&quot;,
+        &quot;value&quot;: 87,
+        &quot;status&quot;: &quot;approved&quot;,
+        &quot;enteredBy&quot;: &quot;usr_123&quot;,
+        &quot;enteredAt&quot;: &quot;2025-01-15T10:30:00Z&quot;
+      }
+    ]
+  }
+}
+</code></pre></pre>
+<hr/>
+<h4>إنشاء كيان</h4>
+<pre><pre class="bg-slate-100 rounded-md p-4 overflow-x-auto my-4 block" node="[object Object]"><code class="text-sm font-mono">POST /api/entities
+Content-Type: application/json
+</code></pre></pre>
+<div node="[object Object]"><strong>الطلب:</strong></div>
+<pre><pre class="bg-slate-100 rounded-md p-4 overflow-x-auto my-4 block" node="[object Object]"><code class="text-sm font-mono">{
+  &quot;title&quot;: &quot;مؤشر الأداء الجديد&quot;,
+  &quot;titleAr&quot;: &quot;مؤشر الأداء الجديد&quot;,
+  &quot;code&quot;: &quot;kpi_new&quot;,
+  &quot;type&quot;: &quot;kpi&quot;,
+  &quot;ownerId&quot;: &quot;usr_123&quot;,
+  &quot;target&quot;: 100,
+  &quot;unit&quot;: &quot;%&quot;,
+  &quot;direction&quot;: &quot;INCREASE_IS_GOOD&quot;,
+  &quot;period&quot;: &quot;MONTHLY&quot;
+}
+</code></pre></pre>
+<div node="[object Object]"><strong>الاستجابة (201):</strong></div>
+<pre><pre class="bg-slate-100 rounded-md p-4 overflow-x-auto my-4 block" node="[object Object]"><code class="text-sm font-mono">{
+  &quot;success&quot;: true,
+  &quot;data&quot;: {
+    &quot;id&quot;: &quot;ent_999&quot;,
+    &quot;title&quot;: &quot;مؤشر الأداء الجديد&quot;,
+    &quot;createdAt&quot;: &quot;2025-01-15T10:30:00Z&quot;
+  }
+}
+</code></pre></pre>
+<hr/>
+<h4>تحديث كيان</h4>
+<pre><pre class="bg-slate-100 rounded-md p-4 overflow-x-auto my-4 block" node="[object Object]"><code class="text-sm font-mono">PATCH /api/entities/:id
+Content-Type: application/json
+</code></pre></pre>
+<div node="[object Object]"><strong>الطلب:</strong></div>
+<pre><pre class="bg-slate-100 rounded-md p-4 overflow-x-auto my-4 block" node="[object Object]"><code class="text-sm font-mono">{
+  &quot;title&quot;: &quot;العنوان المحدث&quot;,
+  &quot;target&quot;: 95
+}
+</code></pre></pre>
+<div node="[object Object]"><strong>الاستجابة (200):</strong></div>
+<pre><pre class="bg-slate-100 rounded-md p-4 overflow-x-auto my-4 block" node="[object Object]"><code class="text-sm font-mono">{
+  &quot;success&quot;: true,
+  &quot;data&quot;: {
+    &quot;id&quot;: &quot;ent_789&quot;,
+    &quot;title&quot;: &quot;العنوان المحدث&quot;,
+    &quot;updatedAt&quot;: &quot;2025-01-15T11:00:00Z&quot;
+  }
+}
+</code></pre></pre>
+<hr/>
+<h4>حذف كيان</h4>
+<pre><pre class="bg-slate-100 rounded-md p-4 overflow-x-auto my-4 block" node="[object Object]"><code class="text-sm font-mono">DELETE /api/entities/:id
+</code></pre></pre>
+<div node="[object Object]"><strong>الاستجابة (200):</strong></div>
+<pre><pre class="bg-slate-100 rounded-md p-4 overflow-x-auto my-4 block" node="[object Object]"><code class="text-sm font-mono">{
+  &quot;success&quot;: true,
+  &quot;message&quot;: &quot;Entity deleted successfully&quot;
+}
+</code></pre></pre>
+<hr/>
+<h3>قيم مؤشرات الأداء</h3>
+<h4>إدخال قيمة</h4>
+<pre><pre class="bg-slate-100 rounded-md p-4 overflow-x-auto my-4 block" node="[object Object]"><code class="text-sm font-mono">POST /api/entities/:id/values
+Content-Type: application/json
+</code></pre></pre>
+<div node="[object Object]"><strong>الطلب:</strong></div>
+<pre><pre class="bg-slate-100 rounded-md p-4 overflow-x-auto my-4 block" node="[object Object]"><code class="text-sm font-mono">{
+  &quot;period&quot;: &quot;2025-01&quot;,
+  &quot;value&quot;: 87.5,
+  &quot;variables&quot;: {
+    &quot;survey_score&quot;: 875,
+    &quot;total_responses&quot;: 1000
+  },
+  &quot;notes&quot;: &quot;ملاحظات عن الفترة&quot;
+}
+</code></pre></pre>
+<div node="[object Object]"><strong>الاستجابة (201):</strong></div>
+<pre><pre class="bg-slate-100 rounded-md p-4 overflow-x-auto my-4 block" node="[object Object]"><code class="text-sm font-mono">{
+  &quot;success&quot;: true,
+  &quot;data&quot;: {
+    &quot;id&quot;: &quot;val_002&quot;,
+    &quot;period&quot;: &quot;2025-01&quot;,
+    &quot;value&quot;: 87.5,
+    &quot;calculatedValue&quot;: 87.5,
+    &quot;status&quot;: &quot;draft&quot;,
+    &quot;createdAt&quot;: &quot;2025-01-15T10:30:00Z&quot;
+  }
+}
+</code></pre></pre>
+<hr/>
+<h4>إرسال للاعتماد</h4>
+<pre><pre class="bg-slate-100 rounded-md p-4 overflow-x-auto my-4 block" node="[object Object]"><code class="text-sm font-mono">POST /api/values/:id/submit
+</code></pre></pre>
+<div node="[object Object]"><strong>الاستجابة (200):</strong></div>
+<pre><pre class="bg-slate-100 rounded-md p-4 overflow-x-auto my-4 block" node="[object Object]"><code class="text-sm font-mono">{
+  &quot;success&quot;: true,
+  &quot;data&quot;: {
+    &quot;id&quot;: &quot;val_002&quot;,
+    &quot;status&quot;: &quot;submitted&quot;,
+    &quot;submittedAt&quot;: &quot;2025-01-15T11:00:00Z&quot;
+  }
+}
+</code></pre></pre>
+<hr/>
+<h4>اعتماد قيمة</h4>
+<pre><pre class="bg-slate-100 rounded-md p-4 overflow-x-auto my-4 block" node="[object Object]"><code class="text-sm font-mono">POST /api/values/:id/approve
+Content-Type: application/json
+</code></pre></pre>
+<div node="[object Object]"><strong>الطلب:</strong></div>
+<pre><pre class="bg-slate-100 rounded-md p-4 overflow-x-auto my-4 block" node="[object Object]"><code class="text-sm font-mono">{
+  &quot;comment&quot;: &quot;تم المراجعة والاعتماد&quot;
+}
+</code></pre></pre>
+<div node="[object Object]"><strong>الاستجابة (200):</strong></div>
+<pre><pre class="bg-slate-100 rounded-md p-4 overflow-x-auto my-4 block" node="[object Object]"><code class="text-sm font-mono">{
+  &quot;success&quot;: true,
+  &quot;data&quot;: {
+    &quot;id&quot;: &quot;val_002&quot;,
+    &quot;status&quot;: &quot;approved&quot;,
+    &quot;approvedBy&quot;: &quot;usr_456&quot;,
+    &quot;approvedAt&quot;: &quot;2025-01-15T14:00:00Z&quot;,
+    &quot;comment&quot;: &quot;تم المراجعة والاعتماد&quot;
+  }
+}
+</code></pre></pre>
+<hr/>
+<h3>لوحات المتابعة</h3>
+<h4>الحصول على بيانات لوحة</h4>
+<pre><pre class="bg-slate-100 rounded-md p-4 overflow-x-auto my-4 block" node="[object Object]"><code class="text-sm font-mono">GET /api/dashboards/:type
+</code></pre></pre>
+<div node="[object Object]"><strong>المعاملات:</strong></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="overflow-x-auto my-6 rounded-lg border border-slate-200 shadow-sm"><table class="w-full border-collapse"><thead class="bg-slate-50 border-b border-slate-200"><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><th class="px-4 py-3 text-right font-semibold text-slate-700 text-sm">المعامل</th><th class="px-4 py-3 text-right font-semibold text-slate-700 text-sm">النوع</th><th class="px-4 py-3 text-right font-semibold text-slate-700 text-sm">الوصف</th></tr></thead><tbody><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm"><code class="bg-slate-100 px-1.5 py-0.5 rounded text-sm font-mono" node="[object Object]">from</code></td><td class="px-4 py-3 text-slate-600 text-sm">date</td><td class="px-4 py-3 text-slate-600 text-sm">تاريخ البداية</td></tr><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm"><code class="bg-slate-100 px-1.5 py-0.5 rounded text-sm font-mono" node="[object Object]">to</code></td><td class="px-4 py-3 text-slate-600 text-sm">date</td><td class="px-4 py-3 text-slate-600 text-sm">تاريخ النهاية</td></tr><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm"><code class="bg-slate-100 px-1.5 py-0.5 rounded text-sm font-mono" node="[object Object]">department</code></td><td class="px-4 py-3 text-slate-600 text-sm">string</td><td class="px-4 py-3 text-slate-600 text-sm">تصفية حسب الإدارة</td></tr></tbody></table></div>
+<div node="[object Object]"><strong>الاستجابة (200):</strong></div>
+<pre><pre class="bg-slate-100 rounded-md p-4 overflow-x-auto my-4 block" node="[object Object]"><code class="text-sm font-mono">{
+  &quot;success&quot;: true,
+  &quot;data&quot;: {
+    &quot;kpis&quot;: {
+      &quot;total&quot;: 45,
+      &quot;onTrack&quot;: 35,
+      &quot;atRisk&quot;: 8,
+      &quot;offTrack&quot;: 2
+    },
+    &quot;health&quot;: 85.5,
+    &quot;trends&quot;: [
+      { &quot;month&quot;: &quot;2025-01&quot;, &quot;value&quot;: 87 },
+      { &quot;month&quot;: &quot;2024-12&quot;, &quot;value&quot;: 84 },
+      { &quot;month&quot;: &quot;2024-11&quot;, &quot;value&quot;: 82 }
+    ]
+  }
+}
+</code></pre></pre>
+<hr/>
+<h3>المستخدمين</h3>
+<h4>قائمة المستخدمين</h4>
+<pre><pre class="bg-slate-100 rounded-md p-4 overflow-x-auto my-4 block" node="[object Object]"><code class="text-sm font-mono">GET /api/users?page=1&amp;limit=20&amp;department=dep_456
+</code></pre></pre>
+<div node="[object Object]"><strong>الاستجابة (200):</strong></div>
+<pre><pre class="bg-slate-100 rounded-md p-4 overflow-x-auto my-4 block" node="[object Object]"><code class="text-sm font-mono">{
+  &quot;success&quot;: true,
+  &quot;data&quot;: {
+    &quot;items&quot;: [
+      {
+        &quot;id&quot;: &quot;usr_123&quot;,
+        &quot;name&quot;: &quot;أحمد محمد&quot;,
+        &quot;email&quot;: &quot;ahmed@example.com&quot;,
+        &quot;role&quot;: &quot;MANAGER&quot;,
+        &quot;department&quot;: { &quot;id&quot;: &quot;dep_456&quot;, &quot;name&quot;: &quot;الجودة&quot; },
+        &quot;status&quot;: &quot;active&quot;
+      }
+    ],
+    &quot;pagination&quot;: { ... }
+  }
+}
+</code></pre></pre>
+<hr/>
+<h2>رموز الحالة (Status Codes)</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="overflow-x-auto my-6 rounded-lg border border-slate-200 shadow-sm"><table class="w-full border-collapse"><thead class="bg-slate-50 border-b border-slate-200"><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><th class="px-4 py-3 text-right font-semibold text-slate-700 text-sm">الرمز</th><th class="px-4 py-3 text-right font-semibold text-slate-700 text-sm">المعنى</th><th class="px-4 py-3 text-right font-semibold text-slate-700 text-sm">الوصف</th></tr></thead><tbody><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm">200</td><td class="px-4 py-3 text-slate-600 text-sm">OK</td><td class="px-4 py-3 text-slate-600 text-sm">الطلب ناجح</td></tr><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm">201</td><td class="px-4 py-3 text-slate-600 text-sm">Created</td><td class="px-4 py-3 text-slate-600 text-sm">تم الإنشاء بنجاح</td></tr><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm">400</td><td class="px-4 py-3 text-slate-600 text-sm">Bad Request</td><td class="px-4 py-3 text-slate-600 text-sm">طلب غير صالح</td></tr><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm">401</td><td class="px-4 py-3 text-slate-600 text-sm">Unauthorized</td><td class="px-4 py-3 text-slate-600 text-sm">غير مصرح</td></tr><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm">403</td><td class="px-4 py-3 text-slate-600 text-sm">Forbidden</td><td class="px-4 py-3 text-slate-600 text-sm">مرفوض (ليس لديك الصلاحية)</td></tr><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm">404</td><td class="px-4 py-3 text-slate-600 text-sm">Not Found</td><td class="px-4 py-3 text-slate-600 text-sm">المورد غير موجود</td></tr><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm">422</td><td class="px-4 py-3 text-slate-600 text-sm">Unprocessable Entity</td><td class="px-4 py-3 text-slate-600 text-sm">بيانات غير صالحة</td></tr><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm">500</td><td class="px-4 py-3 text-slate-600 text-sm">Internal Server Error</td><td class="px-4 py-3 text-slate-600 text-sm">خطأ في الخادم</td></tr></tbody></table></div>
+<hr/>
+<h2>معالجة الأخطاء</h2>
+<h3>صيغة الخطأ الموحدة</h3>
+<pre><pre class="bg-slate-100 rounded-md p-4 overflow-x-auto my-4 block" node="[object Object]"><code class="text-sm font-mono">{
+  &quot;success&quot;: false,
+  &quot;error&quot;: {
+    &quot;code&quot;: &quot;VALIDATION_ERROR&quot;,
+    &quot;message&quot;: &quot;Invalid input data&quot;,
+    &quot;details&quot;: [
+      { &quot;field&quot;: &quot;email&quot;, &quot;message&quot;: &quot;Invalid email format&quot; }
+    ]
+  }
+}
+</code></pre></pre>
+<h3>رموز أخطاء شائعة</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="overflow-x-auto my-6 rounded-lg border border-slate-200 shadow-sm"><table class="w-full border-collapse"><thead class="bg-slate-50 border-b border-slate-200"><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><th class="px-4 py-3 text-right font-semibold text-slate-700 text-sm">الرمز</th><th class="px-4 py-3 text-right font-semibold text-slate-700 text-sm">الوصف</th><th class="px-4 py-3 text-right font-semibold text-slate-700 text-sm">الحل</th></tr></thead><tbody><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm"><code class="bg-slate-100 px-1.5 py-0.5 rounded text-sm font-mono" node="[object Object]">UNAUTHORIZED</code></td><td class="px-4 py-3 text-slate-600 text-sm">غير مصرح</td><td class="px-4 py-3 text-slate-600 text-sm">تسجيل الدخول</td></tr><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm"><code class="bg-slate-100 px-1.5 py-0.5 rounded text-sm font-mono" node="[object Object]">FORBIDDEN</code></td><td class="px-4 py-3 text-slate-600 text-sm">مرفوض</td><td class="px-4 py-3 text-slate-600 text-sm">التحقق من الصلاحيات</td></tr><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm"><code class="bg-slate-100 px-1.5 py-0.5 rounded text-sm font-mono" node="[object Object]">NOT_FOUND</code></td><td class="px-4 py-3 text-slate-600 text-sm">غير موجود</td><td class="px-4 py-3 text-slate-600 text-sm">التحقق من المعرّف</td></tr><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm"><code class="bg-slate-100 px-1.5 py-0.5 rounded text-sm font-mono" node="[object Object]">VALIDATION_ERROR</code></td><td class="px-4 py-3 text-slate-600 text-sm">خطأ في التحقق</td><td class="px-4 py-3 text-slate-600 text-sm">التحقق من البيانات</td></tr><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm"><code class="bg-slate-100 px-1.5 py-0.5 rounded text-sm font-mono" node="[object Object]">DUPLICATE</code></td><td class="px-4 py-3 text-slate-600 text-sm">تكرار</td><td class="px-4 py-3 text-slate-600 text-sm">قيمة موجودة مسبقاً</td></tr><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm"><code class="bg-slate-100 px-1.5 py-0.5 rounded text-sm font-mono" node="[object Object]">RATE_LIMIT</code></td><td class="px-4 py-3 text-slate-600 text-sm">تجاوز الحد</td><td class="px-4 py-3 text-slate-600 text-sm">الانتظار والمحاولة لاحقاً</td></tr></tbody></table></div>
+<hr/>
+<h2>الحدود والقيود</h2>
+<h3>Rate Limiting</h3>
+<ul>
+<li><strong>القياسي</strong>: 100 طلب/دقيقة</li>
+<li><strong>المصادق</strong>: 1000 طلب/دقيقة</li>
+<li><strong>المسؤول</strong>: 5000 طلب/دقيقة</li>
+</ul>
+<h3>حجم الطلب</h3>
+<ul>
+<li><strong>JSON</strong>: 1 MB كحد أقصى</li>
+<li><strong>الملفات</strong>: 10 MB كحد أقصى</li>
+</ul>
+<hr/>
+<h2>أمثلة بالـ cURL</h2>
+<h3>تسجيل الدخول</h3>
+<pre><pre class="bg-slate-100 rounded-md p-4 overflow-x-auto my-4 block" node="[object Object]"><code class="text-sm font-mono">curl -X POST https://api.murtakaz.com/api/auth/login \
+  -H &quot;Content-Type: application/json&quot; \
+  -d &#x27;{&quot;email&quot;:&quot;user@example.com&quot;,&quot;password&quot;:&quot;password&quot;}&#x27;
+</code></pre></pre>
+<h3>الحصول على الكيانات</h3>
+<pre><pre class="bg-slate-100 rounded-md p-4 overflow-x-auto my-4 block" node="[object Object]"><code class="text-sm font-mono">curl https://api.murtakaz.com/api/entities?type=kpi \
+  -H &quot;Authorization: Bearer $TOKEN&quot;
+</code></pre></pre>
+<h3>إنشاء كيان</h3>
+<pre><pre class="bg-slate-100 rounded-md p-4 overflow-x-auto my-4 block" node="[object Object]"><code class="text-sm font-mono">curl -X POST https://api.murtakaz.com/api/entities \
+  -H &quot;Authorization: Bearer $TOKEN&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d &#x27;{
+    &quot;title&quot;: &quot;مؤشر جديد&quot;,
+    &quot;code&quot;: &quot;kpi_new&quot;,
+    &quot;type&quot;: &quot;kpi&quot;
+  }&#x27;
+</code></pre></pre>
+</div></div><footer class="mt-16 border-t pt-8 text-sm text-slate-600 no-print"><p>دليل استخدام منصة  المؤشرات KPI © 2025</p></footer></div></main></div><script src="/_next/static/chunks/webpack-d2ea48b7c8b42936.js" async=""></script><script>(self.__next_f=self.__next_f||[]).push([0])</script><script>self.__next_f.push([1,"1:\"$Sreact.fragment\"\n2:I[15244,[],\"\"]\n3:I[43866,[],\"\"]\n5:I[86213,[],\"OutletBoundary\"]\n7:I[86213,[],\"MetadataBoundary\"]\n9:I[86213,[],\"ViewportBoundary\"]\nb:I[34835,[],\"\"]\n:HL[\"/_next/static/css/145dcfbb7bdfe18e.css\",\"style\"]\n"])</script><script>self.__next_f.push([1,"0:{\"P\":null,\"b\":\"s5eJIx2mAXYXJg6cEVOhC\",\"p\":\"\",\"c\":[\"\",\"technical\",\"05-api\"],\"i\":false,\"f\":[[[\"\",{\"children\":[\"technical\",{\"children\":[[\"slug\",\"05-api\",\"d\"],{\"children\":[\"__PAGE__\",{}]}]}]},\"$undefined\",\"$undefined\",true],[\"\",[\"$\",\"$1\",\"c\",{\"children\":[[[\"$\",\"link\",\"0\",{\"rel\":\"stylesheet\",\"href\":\"/_next/static/css/145dcfbb7bdfe18e.css\",\"precedence\":\"next\",\"crossOrigin\":\"$undefined\",\"nonce\":\"$undefined\"}]],[\"$\",\"html\",null,{\"lang\":\"ar\",\"dir\":\"rtl\",\"children\":[\"$\",\"body\",null,{\"className\":\"min-h-screen bg-white font-sans antialiased\",\"children\":[\"$\",\"$L2\",null,{\"parallelRouterKey\":\"children\",\"segmentPath\":[\"children\"],\"error\":\"$undefined\",\"errorStyles\":\"$undefined\",\"errorScripts\":\"$undefined\",\"template\":[\"$\",\"$L3\",null,{}],\"templateStyles\":\"$undefined\",\"templateScripts\":\"$undefined\",\"notFound\":[[],[[\"$\",\"title\",null,{\"children\":\"404: This page could not be found.\"}],[\"$\",\"div\",null,{\"style\":{\"fontFamily\":\"system-ui,\\\"Segoe UI\\\",Roboto,Helvetica,Arial,sans-serif,\\\"Apple Color Emoji\\\",\\\"Segoe UI Emoji\\\"\",\"height\":\"100vh\",\"textAlign\":\"center\",\"display\":\"flex\",\"flexDirection\":\"column\",\"alignItems\":\"center\",\"justifyContent\":\"center\"},\"children\":[\"$\",\"div\",null,{\"children\":[[\"$\",\"style\",null,{\"dangerouslySetInnerHTML\":{\"__html\":\"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}\"}}],[\"$\",\"h1\",null,{\"className\":\"next-error-h1\",\"style\":{\"display\":\"inline-block\",\"margin\":\"0 20px 0 0\",\"padding\":\"0 23px 0 0\",\"fontSize\":24,\"fontWeight\":500,\"verticalAlign\":\"top\",\"lineHeight\":\"49px\"},\"children\":404}],[\"$\",\"div\",null,{\"style\":{\"display\":\"inline-block\"},\"children\":[\"$\",\"h2\",null,{\"style\":{\"fontSize\":14,\"fontWeight\":400,\"lineHeight\":\"49px\",\"margin\":0},\"children\":\"This page could not be found.\"}]}]]}]}]]],\"forbidden\":\"$undefined\",\"unauthorized\":\"$undefined\"}]}]}]]}],{\"children\":[\"technical\",[\"$\",\"$1\",\"c\",{\"children\":[null,[\"$\",\"$L2\",null,{\"parallelRouterKey\":\"children\",\"segmentPath\":[\"children\",\"technical\",\"children\"],\"error\":\"$undefined\",\"errorStyles\":\"$undefined\",\"errorScripts\":\"$undefined\",\"template\":[\"$\",\"$L3\",null,{}],\"templateStyles\":\"$undefined\",\"templateScripts\":\"$undefined\",\"notFound\":\"$undefined\",\"forbidden\":\"$undefined\",\"unauthorized\":\"$undefined\"}]]}],{\"children\":[[\"slug\",\"05-api\",\"d\"],[\"$\",\"$1\",\"c\",{\"children\":[null,[\"$\",\"$L2\",null,{\"parallelRouterKey\":\"children\",\"segmentPath\":[\"children\",\"technical\",\"children\",\"$0:f:0:1:2:children:2:children:0\",\"children\"],\"error\":\"$undefined\",\"errorStyles\":\"$undefined\",\"errorScripts\":\"$undefined\",\"template\":[\"$\",\"$L3\",null,{}],\"templateStyles\":\"$undefined\",\"templateScripts\":\"$undefined\",\"notFound\":\"$undefined\",\"forbidden\":\"$undefined\",\"unauthorized\":\"$undefined\"}]]}],{\"children\":[\"__PAGE__\",[\"$\",\"$1\",\"c\",{\"children\":[\"$L4\",null,[\"$\",\"$L5\",null,{\"children\":\"$L6\"}]]}],{},null,false]},null,false]},null,false]},null,false],[\"$\",\"$1\",\"h\",{\"children\":[null,[\"$\",\"$1\",\"84z4isHPDDh9rzQAC-CeH\",{\"children\":[[\"$\",\"$L7\",null,{\"children\":\"$L8\"}],[\"$\",\"$L9\",null,{\"children\":\"$La\"}],null]}]]}],false]],\"m\":\"$undefined\",\"G\":[\"$b\",\"$undefined\"],\"s\":false,\"S\":true}\n"])</script><script>self.__next_f.push([1,"a:[[\"$\",\"meta\",\"0\",{\"name\":\"viewport\",\"content\":\"width=device-width, initial-scale=1\"}]]\n"])</script><script>self.__next_f.push([1,"8:[[\"$\",\"meta\",\"0\",{\"charSet\":\"utf-8\"}],[\"$\",\"title\",\"1\",{\"children\":\"وثائق API - التوثيق التقني - دليل  المؤشرات KPI\"}],[\"$\",\"meta\",\"2\",{\"name\":\"description\",\"content\":\"دليل استخدام منصة  المؤشرات KPI لإدارة الأداء المؤسسي\"}]]\n"])</script><script>self.__next_f.push([1,"6:null\n"])</script><script>self.__next_f.push([1,"c:I[84424,[\"2049\",\"static/chunks/2049-4807d1f153ee14dd.js\",\"9791\",\"static/chunks/9791-20fac1a27f6e22c4.js\",\"161\",\"static/chunks/161-783ba81db49a7d9b.js\",\"7478\",\"static/chunks/app/technical/%5Bslug%5D/page-85b876ce7d2fbc21.js\"],\"DocPage\"]\nd:T274a,"])</script><script>self.__next_f.push([1,"# وثائق API\n\n\u003cdiv dir=\"rtl\"\u003e\n\nوثائق API لمنصة  المؤشرات KPI.\n\n---\n\n## نظرة عامة\n\n**عنوان الأساسي (Base URL):**\n\n```\nhttps://api.murtakaz.com\n```\n\n**للتطوير المحلي:**\n\n```\nhttp://localhost:3000/api\n```\n\n**تنسيق الاستجابة:**\n\nجميع الاستجابات بصيغة JSON.\n\n```json\n{\n  \"success\": true,\n  \"data\": { ... },\n  \"message\": \"Operation completed successfully\"\n}\n```\n\n---\n\n## المصادقة\n\n### JWT Token\n\nيتم إرسال الرمز في ترويسة الطلب:\n\n```http\nAuthorization: Bearer \u003ctoken\u003e\n```\n\n### Cookie-based (Current)\n\n```http\nCookie: murtakaz_session=\u003csession_id\u003e\n```\n\n---\n\n## نقاط النهاية (Endpoints)\n\n### المصادقة\n\n#### تسجيل الدخول\n\n```http\nPOST /api/auth/login\nContent-Type: application/json\n```\n\n**الطلب:**\n\n```json\n{\n  \"email\": \"user@example.com\",\n  \"password\": \"securePassword123\"\n}\n```\n\n**الاستجابة الناجحة (200):**\n\n```json\n{\n  \"success\": true,\n  \"user\": {\n    \"id\": \"usr_123\",\n    \"name\": \"أحمد محمد\",\n    \"email\": \"user@example.com\",\n    \"role\": \"MANAGER\",\n    \"department\": \"dep_456\"\n  },\n  \"token\": \"eyJhbGciOiJIUzI1NiIs...\"\n}\n```\n\n**الاستجابة الفاشلة (401):**\n\n```json\n{\n  \"success\": false,\n  \"error\": \"Invalid credentials\"\n}\n```\n\n---\n\n#### تسجيل الخروج\n\n```http\nPOST /api/auth/logout\n```\n\n**الاستجابة (200):**\n\n```json\n{\n  \"success\": true,\n  \"message\": \"Logged out successfully\"\n}\n```\n\n---\n\n### الجلسة\n\n#### الحصول على الجلسة الحالية\n\n```http\nGET /api/session\n```\n\n**الاستجابة (200):**\n\n```json\n{\n  \"success\": true,\n  \"user\": {\n    \"id\": \"usr_123\",\n    \"name\": \"أحمد محمد\",\n    \"email\": \"user@example.com\",\n    \"role\": \"MANAGER\"\n  }\n}\n```\n\n**الاستجابة عند عدم تسجيل الدخول (401):**\n\n```json\n{\n  \"success\": false,\n  \"error\": \"Not authenticated\"\n}\n```\n\n---\n\n### الكيانات (Entities)\n\n#### قائمة الكيانات\n\n```http\nGET /api/entities?type=kpi\u0026status=active\u0026page=1\u0026limit=20\n```\n\n**المعاملات (Query Parameters):**\n\n| المعامل | النوع | الوصف |\n|---------|-------|-------|\n| `type` | string | نوع الكيان (kpi, project, initiative) |\n| `status` | string | الحالة (active, planned, completed) |\n| `owner` | string | معرّف المالك |\n| `page` | integer | رقم الصفحة (default: 1) |\n| `limit` | integer | عدد النتائج (default: 20, max: 100) |\n| `search` | string | بحث نصي |\n\n**الاستجابة (200):**\n\n```json\n{\n  \"success\": true,\n  \"data\": {\n    \"items\": [\n      {\n        \"id\": \"ent_789\",\n        \"title\": \"نسبة رضا العملاء\",\n        \"titleAr\": \"نسبة رضا العملاء\",\n        \"code\": \"kpi_satisfaction\",\n        \"type\": \"kpi\",\n        \"status\": \"active\",\n        \"owner\": { \"id\": \"usr_123\", \"name\": \"أحمد محمد\" },\n        \"target\": 95,\n        \"current\": 87,\n        \"unit\": \"%\",\n        \"achievement\": 91.5\n      }\n    ],\n    \"pagination\": {\n      \"page\": 1,\n      \"limit\": 20,\n      \"total\": 156,\n      \"pages\": 8\n    }\n  }\n}\n```\n\n---\n\n#### تفاصيل كيان\n\n```http\nGET /api/entities/:id\n```\n\n**الاستجابة (200):**\n\n```json\n{\n  \"success\": true,\n  \"data\": {\n    \"id\": \"ent_789\",\n    \"title\": \"نسبة رضا العملاء\",\n    \"titleAr\": \"نسبة رضا العملاء\",\n    \"code\": \"kpi_satisfaction\",\n    \"description\": \"مؤشر قياس رضا العملاء عن الخدمات\",\n    \"type\": \"kpi\",\n    \"status\": \"active\",\n    \"owner\": { \"id\": \"usr_123\", \"name\": \"أحمد محمد\" },\n    \"target\": 95,\n    \"unit\": \"%\",\n    \"direction\": \"INCREASE_IS_GOOD\",\n    \"period\": \"MONTHLY\",\n    \"formula\": \"get('survey_score') / get('total_responses') * 100\",\n    \"variables\": [\n      { \"code\": \"survey_score\", \"name\": \"مجموع الدرجات\", \"type\": \"NUMBER\" }\n    ],\n    \"values\": [\n      {\n        \"id\": \"val_001\",\n        \"period\": \"2025-01\",\n        \"value\": 87,\n        \"status\": \"approved\",\n        \"enteredBy\": \"usr_123\",\n        \"enteredAt\": \"2025-01-15T10:30:00Z\"\n      }\n    ]\n  }\n}\n```\n\n---\n\n#### إنشاء كيان\n\n```http\nPOST /api/entities\nContent-Type: application/json\n```\n\n**الطلب:**\n\n```json\n{\n  \"title\": \"مؤشر الأداء الجديد\",\n  \"titleAr\": \"مؤشر الأداء الجديد\",\n  \"code\": \"kpi_new\",\n  \"type\": \"kpi\",\n  \"ownerId\": \"usr_123\",\n  \"target\": 100,\n  \"unit\": \"%\",\n  \"direction\": \"INCREASE_IS_GOOD\",\n  \"period\": \"MONTHLY\"\n}\n```\n\n**الاستجابة (201):**\n\n```json\n{\n  \"success\": true,\n  \"data\": {\n    \"id\": \"ent_999\",\n    \"title\": \"مؤشر الأداء الجديد\",\n    \"createdAt\": \"2025-01-15T10:30:00Z\"\n  }\n}\n```\n\n---\n\n#### تحديث كيان\n\n```http\nPATCH /api/entities/:id\nContent-Type: application/json\n```\n\n**الطلب:**\n\n```json\n{\n  \"title\": \"العنوان المحدث\",\n  \"target\": 95\n}\n```\n\n**الاستجابة (200):**\n\n```json\n{\n  \"success\": true,\n  \"data\": {\n    \"id\": \"ent_789\",\n    \"title\": \"العنوان المحدث\",\n    \"updatedAt\": \"2025-01-15T11:00:00Z\"\n  }\n}\n```\n\n---\n\n#### حذف كيان\n\n```http\nDELETE /api/entities/:id\n```\n\n**الاستجابة (200):**\n\n```json\n{\n  \"success\": true,\n  \"message\": \"Entity deleted successfully\"\n}\n```\n\n---\n\n### قيم مؤشرات الأداء\n\n#### إدخال قيمة\n\n```http\nPOST /api/entities/:id/values\nContent-Type: application/json\n```\n\n**الطلب:**\n\n```json\n{\n  \"period\": \"2025-01\",\n  \"value\": 87.5,\n  \"variables\": {\n    \"survey_score\": 875,\n    \"total_responses\": 1000\n  },\n  \"notes\": \"ملاحظات عن الفترة\"\n}\n```\n\n**الاستجابة (201):**\n\n```json\n{\n  \"success\": true,\n  \"data\": {\n    \"id\": \"val_002\",\n    \"period\": \"2025-01\",\n    \"value\": 87.5,\n    \"calculatedValue\": 87.5,\n    \"status\": \"draft\",\n    \"createdAt\": \"2025-01-15T10:30:00Z\"\n  }\n}\n```\n\n---\n\n#### إرسال للاعتماد\n\n```http\nPOST /api/values/:id/submit\n```\n\n**الاستجابة (200):**\n\n```json\n{\n  \"success\": true,\n  \"data\": {\n    \"id\": \"val_002\",\n    \"status\": \"submitted\",\n    \"submittedAt\": \"2025-01-15T11:00:00Z\"\n  }\n}\n```\n\n---\n\n#### اعتماد قيمة\n\n```http\nPOST /api/values/:id/approve\nContent-Type: application/json\n```\n\n**الطلب:**\n\n```json\n{\n  \"comment\": \"تم المراجعة والاعتماد\"\n}\n```\n\n**الاستجابة (200):**\n\n```json\n{\n  \"success\": true,\n  \"data\": {\n    \"id\": \"val_002\",\n    \"status\": \"approved\",\n    \"approvedBy\": \"usr_456\",\n    \"approvedAt\": \"2025-01-15T14:00:00Z\",\n    \"comment\": \"تم المراجعة والاعتماد\"\n  }\n}\n```\n\n---\n\n### لوحات المتابعة\n\n#### الحصول على بيانات لوحة\n\n```http\nGET /api/dashboards/:type\n```\n\n**المعاملات:**\n\n| المعامل | النوع | الوصف |\n|---------|-------|-------|\n| `from` | date | تاريخ البداية |\n| `to` | date | تاريخ النهاية |\n| `department` | string | تصفية حسب الإدارة |\n\n**الاستجابة (200):**\n\n```json\n{\n  \"success\": true,\n  \"data\": {\n    \"kpis\": {\n      \"total\": 45,\n      \"onTrack\": 35,\n      \"atRisk\": 8,\n      \"offTrack\": 2\n    },\n    \"health\": 85.5,\n    \"trends\": [\n      { \"month\": \"2025-01\", \"value\": 87 },\n      { \"month\": \"2024-12\", \"value\": 84 },\n      { \"month\": \"2024-11\", \"value\": 82 }\n    ]\n  }\n}\n```\n\n---\n\n### المستخدمين\n\n#### قائمة المستخدمين\n\n```http\nGET /api/users?page=1\u0026limit=20\u0026department=dep_456\n```\n\n**الاستجابة (200):**\n\n```json\n{\n  \"success\": true,\n  \"data\": {\n    \"items\": [\n      {\n        \"id\": \"usr_123\",\n        \"name\": \"أحمد محمد\",\n        \"email\": \"ahmed@example.com\",\n        \"role\": \"MANAGER\",\n        \"department\": { \"id\": \"dep_456\", \"name\": \"الجودة\" },\n        \"status\": \"active\"\n      }\n    ],\n    \"pagination\": { ... }\n  }\n}\n```\n\n---\n\n## رموز الحالة (Status Codes)\n\n| الرمز | المعنى | الوصف |\n|-------|--------|-------|\n| 200 | OK | الطلب ناجح |\n| 201 | Created | تم الإنشاء بنجاح |\n| 400 | Bad Request | طلب غير صالح |\n| 401 | Unauthorized | غير مصرح |\n| 403 | Forbidden | مرفوض (ليس لديك الصلاحية) |\n| 404 | Not Found | المورد غير موجود |\n| 422 | Unprocessable Entity | بيانات غير صالحة |\n| 500 | Internal Server Error | خطأ في الخادم |\n\n---\n\n## معالجة الأخطاء\n\n### صيغة الخطأ الموحدة\n\n```json\n{\n  \"success\": false,\n  \"error\": {\n    \"code\": \"VALIDATION_ERROR\",\n    \"message\": \"Invalid input data\",\n    \"details\": [\n      { \"field\": \"email\", \"message\": \"Invalid email format\" }\n    ]\n  }\n}\n```\n\n### رموز أخطاء شائعة\n\n| الرمز | الوصف | الحل |\n|-------|-------|------|\n| `UNAUTHORIZED` | غير مصرح | تسجيل الدخول |\n| `FORBIDDEN` | مرفوض | التحقق من الصلاحيات |\n| `NOT_FOUND` | غير موجود | التحقق من المعرّف |\n| `VALIDATION_ERROR` | خطأ في التحقق | التحقق من البيانات |\n| `DUPLICATE` | تكرار | قيمة موجودة مسبقاً |\n| `RATE_LIMIT` | تجاوز الحد | الانتظار والمحاولة لاحقاً |\n\n---\n\n## الحدود والقيود\n\n### Rate Limiting\n\n- **القياسي**: 100 طلب/دقيقة\n- **المصادق**: 1000 طلب/دقيقة\n- **المسؤول**: 5000 طلب/دقيقة\n\n### حجم الطلب\n\n- **JSON**: 1 MB كحد أقصى\n- **الملفات**: 10 MB كحد أقصى\n\n---\n\n## أمثلة بالـ cURL\n\n### تسجيل الدخول\n\n```bash\ncurl -X POST https://api.murtakaz.com/api/auth/login \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"email\":\"user@example.com\",\"password\":\"password\"}'\n```\n\n### الحصول على الكيانات\n\n```bash\ncurl https://api.murtakaz.com/api/entities?type=kpi \\\n  -H \"Authorization: Bearer $TOKEN\"\n```\n\n### إنشاء كيان\n\n```bash\ncurl -X POST https://api.murtakaz.com/api/entities \\\n  -H \"Authorization: Bearer $TOKEN\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"title\": \"مؤشر جديد\",\n    \"code\": \"kpi_new\",\n    \"type\": \"kpi\"\n  }'\n```\n\n\u003c/div\u003e\n"])</script><script>self.__next_f.push([1,"4:[\"$\",\"$Lc\",null,{\"title\":\"وثائق API\",\"content\":\"$d\"}]\n"])</script></body></html>

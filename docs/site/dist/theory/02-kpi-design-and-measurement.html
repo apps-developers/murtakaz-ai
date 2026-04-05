@@ -1,0 +1,331 @@
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="/_next/static/css/145dcfbb7bdfe18e.css" data-precedence="next"/><link rel="preload" as="script" fetchPriority="low" href="/_next/static/chunks/webpack-d2ea48b7c8b42936.js"/><script src="/_next/static/chunks/4bd1b696-a3b9e41acf183884.js" async=""></script><script src="/_next/static/chunks/1517-5078ad7f5e23299c.js" async=""></script><script src="/_next/static/chunks/main-app-4320a2f1ad29e83b.js" async=""></script><script src="/_next/static/chunks/2049-4807d1f153ee14dd.js" async=""></script><script src="/_next/static/chunks/9791-20fac1a27f6e22c4.js" async=""></script><script src="/_next/static/chunks/161-783ba81db49a7d9b.js" async=""></script><script src="/_next/static/chunks/app/theory/%5Bslug%5D/page-5d3a6ef2c7362de5.js" async=""></script><title>تصميم مؤشرات الأداء وقياسها - الخلفية النظرية -  المؤشرات KPI</title><meta name="description" content="دليل استخدام منصة  المؤشرات KPI لإدارة الأداء المؤسسي"/><script src="/_next/static/chunks/polyfills-42372ed130431b0a.js" noModule=""></script></head><body class="min-h-screen bg-white font-sans antialiased"><div class="flex min-h-screen"><div class="no-print fixed top-0 right-0 left-0 z-40 flex items-center justify-between border-b bg-white px-4 py-3 lg:hidden"><a class="flex items-center gap-2 font-semibold text-slate-900" href="/"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open h-5 w-5"><path d="M12 7v14"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path></svg><span>دليل  المؤشرات KPI</span></a><div class="flex items-center gap-2"><button class="rounded-md p-2 hover:bg-slate-100" aria-label="Print"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-printer h-5 w-5"><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><path d="M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6"></path><rect x="6" y="14" width="12" height="8" rx="1"></rect></svg></button><button class="rounded-md p-2 hover:bg-slate-100" aria-label="Toggle menu"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu h-5 w-5"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button></div></div><aside class="fixed inset-y-0 right-0 z-50 w-72 transform overflow-y-auto border-l bg-white transition-transform duration-200 ease-in-out lg:translate-x-0 lg:transform-none translate-x-full"><div class="no-print flex h-full flex-col"><div class="border-b px-4 py-4"><a class="flex items-center gap-2 font-bold text-lg text-slate-900" href="/"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open h-6 w-6 text-blue-600"><path d="M12 7v14"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path></svg><span>دليل  المؤشرات KPI</span></a><p class="mt-1 text-sm text-slate-600">منصة إدارة الأداء المؤسسي</p></div><nav class="flex-1 px-3 py-4 overflow-y-auto"><ul class="space-y-1"><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-house h-4 w-4"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"></path><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg><span>الرئيسية</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/00-quick-reference"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>المرجع السريع</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/01-getting-started"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>البدء والدخول</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/09-glossary"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>المسرد</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/02-roles-and-permissions"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>الأدوار والصلاحيات</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/04-entities-and-kpis"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>الكيانات ومؤشرات الأداء</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/22-formulas-guide"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>دليل الصيغ الحسابية</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/03-overview-page"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>صفحة النظرة العامة</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/05-entering-kpi-values"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>إدخال قيم مؤشرات الأداء</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/17-approval-workflow"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>سير عمل الموافقات</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/06-approvals"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>الاعتمادات</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/10-reports"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>التقارير والتحليلات</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/07-dashboards"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>لوحات المتابعة</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/16-organization"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>المؤسسة</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/12-departments"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>الإدارات</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/15-pillars-and-objectives"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>الركائز والأهداف</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/13-projects"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>المشاريع</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/14-risks"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>المخاطر</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/11-responsibilities"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>المسؤوليات</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/18-ai-assistant"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>المساعد الذكي (AI)</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/20-data-management"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>إدارة البيانات</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/19-app-pages"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>صفحات التطبيق</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/21-user-journeys"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>رحلات المستخدم</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/08-admin-guide"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>دليل المسؤول</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/23-troubleshooting"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>استكشاف الأخطاء</span></a></li></ul><div class="mt-6 pt-4 border-t border-slate-200"><div class="px-3 mb-2"><span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">الخلفية النظرية</span></div><ul class="space-y-1"><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/theory/01-strategy-execution-foundations"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-graduation-cap h-4 w-4"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"></path><path d="M22 10v6"></path><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"></path></svg><span>أسس تنفيذ الاستراتيجية</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors bg-amber-50 text-amber-700 font-medium" href="/theory/02-kpi-design-and-measurement"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-graduation-cap h-4 w-4"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"></path><path d="M22 10v6"></path><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"></path></svg><span>تصميم مؤشرات الأداء</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/theory/03-performance-management-frameworks"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-graduation-cap h-4 w-4"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"></path><path d="M22 10v6"></path><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"></path></svg><span>أطر إدارة الأداء</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/theory/04-governance-and-approvals"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-graduation-cap h-4 w-4"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"></path><path d="M22 10v6"></path><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"></path></svg><span>الحوكمة والاعتمادات</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/theory/05-organizational-health-and-rag"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-graduation-cap h-4 w-4"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"></path><path d="M22 10v6"></path><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"></path></svg><span>الصحة المؤسسية وRAG</span></a></li></ul></div><div class="mt-6 pt-4 border-t border-slate-200"><div class="px-3 mb-2"><span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">التوثيق التقني</span></div><ul class="space-y-1"><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/technical/01-tech-stack"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>نظرة على التقنية</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/technical/02-architecture"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>معمارية النظام</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/technical/03-development"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>دليل التطوير</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/technical/04-deployment"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>دليل النشر</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/technical/05-api"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>وثائق API</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/technical/06-data-model"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>نموذج البيانات</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/technical/07-operations"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>دليل التشغيل</span></a></li><li><a class="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors text-slate-700 hover:bg-slate-100" href="/technical/08-troubleshooting"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>استكشاف الأخطاء</span></a></li></ul></div></nav><div class="border-t p-4"><button class="flex w-full items-center justify-center gap-2 rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-printer h-4 w-4"><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><path d="M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6"></path><rect x="6" y="14" width="12" height="8" rx="1"></rect></svg><span>طباعة الصفحة</span></button><div class="mt-4 flex items-center justify-between text-sm"><span></span><a class="flex items-center gap-1 text-slate-600 hover:text-slate-900" href="/"><span class="truncate max-w-[80px]">الرئيسية</span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left h-4 w-4"><path d="m15 18-6-6 6-6"></path></svg></a></div></div></div></aside><main class="flex-1 lg:mr-72"><div class="h-14 lg:hidden"></div><div class="mx-auto max-w-4xl px-4 py-8 lg:px-8 lg:py-12"><div class="mb-8 border-b pb-6"><h1 class="text-3xl font-bold text-slate-900">تصميم مؤشرات الأداء وقياسها</h1></div><div class="prose prose-slate max-w-none prose-headings:text-slate-900 prose-h1:text-3xl prose-h2:text-2xl prose-h2:border-b prose-h2:pb-2 prose-h2:mt-8 prose-h3:text-xl prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline prose-code:bg-slate-100 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm prose-pre:bg-slate-100 prose-pre:p-4 prose-pre:rounded-md prose-table:border-collapse prose-table:w-full prose-th:border prose-th:border-slate-300 prose-th:bg-slate-50 prose-th:p-3 prose-th:text-right prose-td:border prose-td:border-slate-300 prose-td:p-3 prose-hr:border-slate-300 prose-hr:my-6"><h1>تصميم مؤشرات الأداء الرئيسية وقياسها</h1>
+<div dir="rtl">
+<h2>ما هو مؤشر الأداء الرئيسي (KPI)؟</h2>
+<div node="[object Object]"><strong>مؤشر الأداء الرئيسي (Key Performance Indicator - KPI)</strong> هو مقياس كمي يُستخدم لتقييم مدى فعالية فرد أو فريق أو مؤسسة في تحقيق هدف استراتيجي رئيسي. كلمة <em>رئيسي</em> بالغة الأهمية — فليس كل مقياس مؤشر أداء. يجب أن يرتبط مؤشر الأداء مباشرةً بهدف استراتيجي يمثّل أهمية حقيقية.</div>
+<blockquote>
+<div node="[object Object]">&quot;ما يُقاس يُدار.&quot; — بيتر دراكر</div>
+</blockquote>
+<hr/>
+<h2>مؤشر الأداء مقابل المقياس مقابل الهدف</h2>
+<div node="[object Object]">كثيراً ما تختلط هذه المصطلحات:</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="overflow-x-auto my-6 rounded-lg border border-slate-200 shadow-sm"><table class="w-full border-collapse"><thead class="bg-slate-50 border-b border-slate-200"><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><th class="px-4 py-3 text-right font-semibold text-slate-700 text-sm">المصطلح</th><th class="px-4 py-3 text-right font-semibold text-slate-700 text-sm">التعريف</th><th class="px-4 py-3 text-right font-semibold text-slate-700 text-sm">المثال</th></tr></thead><tbody><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm"><strong>الهدف</strong></td><td class="px-4 py-3 text-slate-600 text-sm">النتيجة المنشودة</td><td class="px-4 py-3 text-slate-600 text-sm">&quot;تحسين رضا العملاء&quot;</td></tr><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm"><strong>المقياس</strong></td><td class="px-4 py-3 text-slate-600 text-sm">أي نقطة بيانات كمية</td><td class="px-4 py-3 text-slate-600 text-sm">&quot;عدد طلبات الدعم&quot;</td></tr><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm"><strong>مؤشر الأداء الرئيسي</strong></td><td class="px-4 py-3 text-slate-600 text-sm">مقياس مرتبط مباشرةً بهدف استراتيجي</td><td class="px-4 py-3 text-slate-600 text-sm">&quot;درجة رضا العملاء ≥ 85%&quot;</td></tr></tbody></table></div>
+<div node="[object Object]">ليس كل مقياس يستحق أن يكون مؤشر أداء رئيسي. كثرة مؤشرات الأداء تُشتّت التركيز. أفضل الممارسات توصي بـ <strong>5–10 مؤشرات أداء كحدٍّ أقصى لكل مستوى تنظيمي</strong>.</div>
+<hr/>
+<h2>إطار مؤشرات الأداء الذكية (SMART)</h2>
+<div node="[object Object]">يجب أن يكون مؤشر الأداء المُصمَّم جيداً:</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="overflow-x-auto my-6 rounded-lg border border-slate-200 shadow-sm"><table class="w-full border-collapse"><thead class="bg-slate-50 border-b border-slate-200"><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><th class="px-4 py-3 text-right font-semibold text-slate-700 text-sm">الحرف</th><th class="px-4 py-3 text-right font-semibold text-slate-700 text-sm">الصفة</th><th class="px-4 py-3 text-right font-semibold text-slate-700 text-sm">السؤال المطروح</th></tr></thead><tbody><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm"><strong>S</strong></td><td class="px-4 py-3 text-slate-600 text-sm">محدد (Specific)</td><td class="px-4 py-3 text-slate-600 text-sm">هل واضح تماماً ما الذي يُقاس؟</td></tr><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm"><strong>M</strong></td><td class="px-4 py-3 text-slate-600 text-sm">قابل للقياس (Measurable)</td><td class="px-4 py-3 text-slate-600 text-sm">هل يمكن التعبير عنه بالأرقام؟</td></tr><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm"><strong>A</strong></td><td class="px-4 py-3 text-slate-600 text-sm">قابل للتحقيق (Achievable)</td><td class="px-4 py-3 text-slate-600 text-sm">هل الهدف واقعي بالنظر إلى مواردنا؟</td></tr><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm"><strong>R</strong></td><td class="px-4 py-3 text-slate-600 text-sm">ذو صلة (Relevant)</td><td class="px-4 py-3 text-slate-600 text-sm">هل يعكس مباشرةً أولوية استراتيجية؟</td></tr><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm"><strong>T</strong></td><td class="px-4 py-3 text-slate-600 text-sm">محدد بوقت (Time-bound)</td><td class="px-4 py-3 text-slate-600 text-sm">هل ثمة فترة قياس محددة؟</td></tr></tbody></table></div>
+<hr/>
+<h2>مكونات مؤشر الأداء المُعرَّف جيداً</h2>
+<div node="[object Object]">يجب توثيق هذه السمات لكل مؤشر أداء قبل تتبّعه:</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="overflow-x-auto my-6 rounded-lg border border-slate-200 shadow-sm"><table class="w-full border-collapse"><thead class="bg-slate-50 border-b border-slate-200"><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><th class="px-4 py-3 text-right font-semibold text-slate-700 text-sm">السمة</th><th class="px-4 py-3 text-right font-semibold text-slate-700 text-sm">الوصف</th><th class="px-4 py-3 text-right font-semibold text-slate-700 text-sm">المثال</th></tr></thead><tbody><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm"><strong>العنوان</strong></td><td class="px-4 py-3 text-slate-600 text-sm">اسم واضح ووصفي</td><td class="px-4 py-3 text-slate-600 text-sm">&quot;معدل الاحتفاظ بالموظفين&quot;</td></tr><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm"><strong>المالك</strong></td><td class="px-4 py-3 text-slate-600 text-sm">الشخص المسؤول عن الأداء</td><td class="px-4 py-3 text-slate-600 text-sm">مدير الموارد البشرية</td></tr><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm"><strong>الخط الأساسي</strong></td><td class="px-4 py-3 text-slate-600 text-sm">قيمة المرجع الابتدائية</td><td class="px-4 py-3 text-slate-600 text-sm">72% (العام الماضي)</td></tr><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm"><strong>الهدف</strong></td><td class="px-4 py-3 text-slate-600 text-sm">النتيجة المراد تحقيقها</td><td class="px-4 py-3 text-slate-600 text-sm">85% بحلول الربع الرابع</td></tr><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm"><strong>الوحدة</strong></td><td class="px-4 py-3 text-slate-600 text-sm">طريقة التعبير عن القيمة</td><td class="px-4 py-3 text-slate-600 text-sm">%</td></tr><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm"><strong>الاتجاه</strong></td><td class="px-4 py-3 text-slate-600 text-sm">الاتجاه الإيجابي</td><td class="px-4 py-3 text-slate-600 text-sm">الزيادة مؤشر إيجابي</td></tr><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm"><strong>الدورية</strong></td><td class="px-4 py-3 text-slate-600 text-sm">مدى تكرار القياس</td><td class="px-4 py-3 text-slate-600 text-sm">ربع سنوي</td></tr><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm"><strong>مصدر البيانات</strong></td><td class="px-4 py-3 text-slate-600 text-sm">مصدر القيمة</td><td class="px-4 py-3 text-slate-600 text-sm">نظام الموارد البشرية</td></tr><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm"><strong>الصيغة الحسابية</strong></td><td class="px-4 py-3 text-slate-600 text-sm">طريقة الحساب (إن وُجدت)</td><td class="px-4 py-3 text-slate-600 text-sm">(الموظفون الباقون ÷ إجمالي الموظفين) × 100</td></tr></tbody></table></div>
+<hr/>
+<h2>أنواع مؤشرات الأداء حسب المصدر</h2>
+<div node="[object Object]">تختلف مؤشرات الأداء في طريقة إنتاج قيمها:</div>
+<h3>1. المؤشرات اليدوية (Manual)</h3>
+<div node="[object Object]">يُدخل الشخص المسؤول القيمة مباشرةً في كل فترة.</div>
+<ul>
+<li><strong>الأنسب لـ</strong>: البيانات المجمّعة خارج الأنظمة الآلية (الاستطلاعات، العدادات اليدوية، التقييمات)</li>
+<li><strong>المخاطر</strong>: الخطأ البشري، التأخر، عدم الاتساق</li>
+<li><strong>المثال</strong>: &quot;درجة رضا العملاء&quot; تُدخَل شهرياً من نتائج الاستطلاع</li>
+</ul>
+<h3>2. المؤشرات المحسوبة (Calculated)</h3>
+<div node="[object Object]">تُحسَب القيمة تلقائياً من صيغة حسابية باستخدام متغيرات مُدخَلة.</div>
+<ul>
+<li><strong>الأنسب لـ</strong>: النسب المشتقة، مقاييس الكفاءة، الدرجات المركّبة</li>
+<li><strong>المخاطر</strong>: أخطاء الصيغة؛ يجب إدخال جميع المتغيرات</li>
+<li><strong>المثال</strong>: <code class="bg-slate-100 px-1.5 py-0.5 rounded text-sm font-mono" node="[object Object]">هامش الربح % = (الإيرادات - التكاليف) ÷ الإيرادات × 100</code></li>
+</ul>
+<h3>3. المؤشرات المشتقة (Derived)</h3>
+<div node="[object Object]">تُسحَب القيمة تلقائياً من مؤشر أداء أو كيان آخر.</div>
+<ul>
+<li><strong>الأنسب لـ</strong>: تجميع مؤشرات أداء فرعية في درجة أم؛ تجنب ازدواجية إدخال البيانات</li>
+<li><strong>المثال</strong>: &quot;إيرادات المجموعة&quot; مشتقة من مجموع مؤشرات الإيرادات لجميع الأقسام</li>
+</ul>
+<h3>4. مؤشرات الدرجة (Score)</h3>
+<div node="[object Object]">درجة صحة مركّبة مُجمَّعة من قيم الكيانات الفرعية باستخدام الأوزان.</div>
+<ul>
+<li><strong>الأنسب لـ</strong>: ملخصات صحة على مستوى الركيزة أو الهدف</li>
+<li><strong>المثال</strong>: &quot;درجة التميز التشغيلي&quot; = متوسط مرجّح لـ 5 مؤشرات فرعية</li>
+</ul>
+<hr/>
+<h2>اتجاه مؤشر الأداء</h2>
+<div node="[object Object]">الاتجاه يُخبر النظام ما إذا كانت الزيادة أو الانخفاض يُشير إلى أداء إيجابي:</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="overflow-x-auto my-6 rounded-lg border border-slate-200 shadow-sm"><table class="w-full border-collapse"><thead class="bg-slate-50 border-b border-slate-200"><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><th class="px-4 py-3 text-right font-semibold text-slate-700 text-sm">الاتجاه</th><th class="px-4 py-3 text-right font-semibold text-slate-700 text-sm">المعنى</th><th class="px-4 py-3 text-right font-semibold text-slate-700 text-sm">مثال مؤشر الأداء</th></tr></thead><tbody><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm"><strong>الزيادة إيجابية</strong></td><td class="px-4 py-3 text-slate-600 text-sm">القيم المرتفعة أفضل</td><td class="px-4 py-3 text-slate-600 text-sm">الإيرادات، رضا العملاء</td></tr><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm"><strong>الانخفاض إيجابي</strong></td><td class="px-4 py-3 text-slate-600 text-sm">القيم المنخفضة أفضل</td><td class="px-4 py-3 text-slate-600 text-sm">معدل الأخطاء، دوران الموظفين، التكاليف</td></tr></tbody></table></div>
+<div node="[object Object]">يؤثر هذا الإعداد على كيفية حساب نسب الإنجاز ودرجات الصحة.</div>
+<hr/>
+<h2>دوريات القياس</h2>
+<div node="[object Object]">يجب قياس مؤشرات الأداء بالتكرار الصحيح:</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="overflow-x-auto my-6 rounded-lg border border-slate-200 shadow-sm"><table class="w-full border-collapse"><thead class="bg-slate-50 border-b border-slate-200"><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><th class="px-4 py-3 text-right font-semibold text-slate-700 text-sm">نوع الدورية</th><th class="px-4 py-3 text-right font-semibold text-slate-700 text-sm">التكرار</th><th class="px-4 py-3 text-right font-semibold text-slate-700 text-sm">الأنسب لـ</th></tr></thead><tbody><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm"><strong>شهري</strong></td><td class="px-4 py-3 text-slate-600 text-sm">كل شهر</td><td class="px-4 py-3 text-slate-600 text-sm">مؤشرات الأداء التشغيلي، المقاييس المالية</td></tr><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm"><strong>ربع سنوي</strong></td><td class="px-4 py-3 text-slate-600 text-sm">كل 3 أشهر</td><td class="px-4 py-3 text-slate-600 text-sm">مؤشرات الأداء الاستراتيجي، معالم المشاريع</td></tr><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm"><strong>سنوي</strong></td><td class="px-4 py-3 text-slate-600 text-sm">مرة في السنة</td><td class="px-4 py-3 text-slate-600 text-sm">الأهداف الاستراتيجية طويلة المدى</td></tr></tbody></table></div>
+<div node="[object Object]">يتطلب دمج الدوريات المختلفة في لوحة متابعة واحدة قواعد تجميع دقيقة — ولهذا تمتلك كل مؤشر أداء <strong>طريقة تجميع</strong> مُهيَّأة (آخر قيمة، مجموع، متوسط، أدنى، أعلى).</div>
+<hr/>
+<h2>مؤشرات الأداء القيادية مقابل المتأخرة</h2>
+<div node="[object Object]">تمييز بالغ الأهمية كثيراً ما يُغفَل:</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="overflow-x-auto my-6 rounded-lg border border-slate-200 shadow-sm"><table class="w-full border-collapse"><thead class="bg-slate-50 border-b border-slate-200"><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><th class="px-4 py-3 text-right font-semibold text-slate-700 text-sm">النوع</th><th class="px-4 py-3 text-right font-semibold text-slate-700 text-sm">التعريف</th><th class="px-4 py-3 text-right font-semibold text-slate-700 text-sm">متى يُخبرك</th><th class="px-4 py-3 text-right font-semibold text-slate-700 text-sm">المثال</th></tr></thead><tbody><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm"><strong>متأخر (Lagging)</strong></td><td class="px-4 py-3 text-slate-600 text-sm">يقيس النتائج بعد حدوثها</td><td class="px-4 py-3 text-slate-600 text-sm">متأخر جداً للتغيير</td><td class="px-4 py-3 text-slate-600 text-sm">الإيرادات، معدل تراجع العملاء</td></tr><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm"><strong>قيادي (Leading)</strong></td><td class="px-4 py-3 text-slate-600 text-sm">يقيس الأنشطة التي تتنبأ بالنتائج المستقبلية</td><td class="px-4 py-3 text-slate-600 text-sm">إنذار مبكر</td><td class="px-4 py-3 text-slate-600 text-sm">المكالمات البيعية، ساعات التدريب</td></tr></tbody></table></div>
+<div node="[object Object]"><strong>أفضل الممارسات</strong>: استخدام مزيج متوازن. مؤشرات الأداء المتأخرة تُخبرك <em>بما حدث</em>؛ أما القيادية فتُخبرك <em>بما سيحدث</em>.</div>
+<hr/>
+<h2>أخطاء شائعة في تصميم مؤشرات الأداء</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="overflow-x-auto my-6 rounded-lg border border-slate-200 shadow-sm"><table class="w-full border-collapse"><thead class="bg-slate-50 border-b border-slate-200"><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><th class="px-4 py-3 text-right font-semibold text-slate-700 text-sm">الخطأ</th><th class="px-4 py-3 text-right font-semibold text-slate-700 text-sm">المشكلة</th><th class="px-4 py-3 text-right font-semibold text-slate-700 text-sm">الحل</th></tr></thead><tbody><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm"><strong>كثرة مؤشرات الأداء</strong></td><td class="px-4 py-3 text-slate-600 text-sm">إرهاق وضياع التركيز</td><td class="px-4 py-3 text-slate-600 text-sm">الحد بـ 5–10 مؤشرات لكل مستوى</td></tr><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm"><strong>غياب المالك</strong></td><td class="px-4 py-3 text-slate-600 text-sm">لا أحد مسؤول</td><td class="px-4 py-3 text-slate-600 text-sm">تخصيص مالك محدد الاسم لكل مؤشر</td></tr><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm"><strong>مقاييس الظهور</strong></td><td class="px-4 py-3 text-slate-600 text-sm">تبدو جيدة لكنها لا تعكس قيمة حقيقية</td><td class="px-4 py-3 text-slate-600 text-sm">ربط كل مؤشر بهدف استراتيجي</td></tr><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm"><strong>غياب الخط الأساسي</strong></td><td class="px-4 py-3 text-slate-600 text-sm">لا يمكن قياس التقدم</td><td class="px-4 py-3 text-slate-600 text-sm">تسجيل قيمة البداية دائماً</td></tr><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm"><strong>صيغة حسابية غامضة</strong></td><td class="px-4 py-3 text-slate-600 text-sm">أشخاص مختلفون يحسبون بطرق مختلفة</td><td class="px-4 py-3 text-slate-600 text-sm">توثيق الصيغة ومصدر البيانات بدقة</td></tr><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm"><strong>دورية غير مناسبة</strong></td><td class="px-4 py-3 text-slate-600 text-sm">القياس النادر يُفوّت المشكلات</td><td class="px-4 py-3 text-slate-600 text-sm">مطابقة الدورية مع الإيقاع الطبيعي للمقياس</td></tr><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm"><strong>هدف مرتفع جداً</strong></td><td class="px-4 py-3 text-slate-600 text-sm">يُحبط الفريق</td><td class="px-4 py-3 text-slate-600 text-sm">وضع أهداف طموحة لكن قابلة للتحقيق</td></tr><tr class="border-b border-slate-100 last:border-b-0 transition-colors bg-slate-50/50 hover:bg-blue-50/50"><td class="px-4 py-3 text-slate-600 text-sm"><strong>هدف منخفض جداً</strong></td><td class="px-4 py-3 text-slate-600 text-sm">يُعطي ثقة زائفة</td><td class="px-4 py-3 text-slate-600 text-sm">مراجعة الأهداف دورياً مقارنةً بالمعايير القياسية</td></tr></tbody></table></div>
+<hr/>
+<h2>دورة حياة مؤشر الأداء في الممارسة</h2>
+<div node="[object Object]">مؤشر الأداء لا يوجد فحسب — بل يمر بدورة حياة:</div>
+<pre><div class="my-6"><div class="mermaid my-8 flex justify-center overflow-x-auto rounded-lg bg-slate-50 p-4"></div></div></pre>
+<div node="[object Object]">في  المؤشرات KPI، تُترجَم هذه الدورة مباشرةً إلى إنشاء الكيانات وإدخال القيم والاعتماد ومراجعة لوحات المتابعة.</div>
+<hr/>
+<h2>التجميع: من الفردي إلى المؤسسي</h2>
+<div node="[object Object]">مؤشرات الأداء على مستوى الفرد أو الفريق تتصاعد إلى الأداء المؤسسي:</div>
+<pre><div class="my-6"><div class="mermaid my-8 flex justify-center overflow-x-auto rounded-lg bg-slate-50 p-4"></div></div></pre>
+<div node="[object Object]">الأوزان المُخصَّصة لكل مؤشر أداء تُحدد مقدار تأثيره في الدرجة الأم — مما يُتيح للقيادة إبراز المقاييس الأكثر أهمية استراتيجياً.</div>
+<hr/>
+<h2>ملخص المفاهيم الرئيسية</h2>
+<blockquote>
+<div node="[object Object]"><strong>النقاط الأساسية:</strong></div>
+<ul>
+<li><strong>SMART</strong>: محدد، قابل للقياس، قابل للتحقيق، ذو صلة، محدد بوقت</li>
+<li><strong>5–10 مؤشرات</strong> كحد أقصى لكل مستوى تنظيمي</li>
+<li><strong>قيادية vs متأخرة</strong>: مزيج متوازن للتنبؤ والمراقبة</li>
+<li><strong>الاتجاه</strong> (الزيادة/الانخفاض إيجابي) يؤثر على حساب الإنجاز</li>
+<li><strong>الفصل بين المهام</strong>: المدير يُدخل ≠ التنفيذي يعتمد</li>
+</ul>
+</blockquote>
+<hr/>
+<h2>للاستزادة</h2>
+<ul>
+<li>بارمنتر، <em>مؤشرات الأداء الرئيسية</em> (2015)</li>
+<li>مار، <em>مؤشرات الأداء الرئيسية</em> (2012)</li>
+<li>كابلان ونورتون، <em>خرائط الاستراتيجية</em> (2004)</li>
+<li>هوبارد، <em>كيف تقيس أي شيء</em> (2010)</li>
+</ul>
+</div></div><footer class="mt-16 border-t pt-8 text-sm text-slate-600 no-print"><p>دليل استخدام منصة  المؤشرات KPI © 2025</p></footer></div></main></div><script src="/_next/static/chunks/webpack-d2ea48b7c8b42936.js" async=""></script><script>(self.__next_f=self.__next_f||[]).push([0])</script><script>self.__next_f.push([1,"1:\"$Sreact.fragment\"\n2:I[15244,[],\"\"]\n3:I[43866,[],\"\"]\n5:I[86213,[],\"OutletBoundary\"]\n7:I[86213,[],\"MetadataBoundary\"]\n9:I[86213,[],\"ViewportBoundary\"]\nb:I[34835,[],\"\"]\n:HL[\"/_next/static/css/145dcfbb7bdfe18e.css\",\"style\"]\n"])</script><script>self.__next_f.push([1,"0:{\"P\":null,\"b\":\"s5eJIx2mAXYXJg6cEVOhC\",\"p\":\"\",\"c\":[\"\",\"theory\",\"02-kpi-design-and-measurement\"],\"i\":false,\"f\":[[[\"\",{\"children\":[\"theory\",{\"children\":[[\"slug\",\"02-kpi-design-and-measurement\",\"d\"],{\"children\":[\"__PAGE__\",{}]}]}]},\"$undefined\",\"$undefined\",true],[\"\",[\"$\",\"$1\",\"c\",{\"children\":[[[\"$\",\"link\",\"0\",{\"rel\":\"stylesheet\",\"href\":\"/_next/static/css/145dcfbb7bdfe18e.css\",\"precedence\":\"next\",\"crossOrigin\":\"$undefined\",\"nonce\":\"$undefined\"}]],[\"$\",\"html\",null,{\"lang\":\"ar\",\"dir\":\"rtl\",\"children\":[\"$\",\"body\",null,{\"className\":\"min-h-screen bg-white font-sans antialiased\",\"children\":[\"$\",\"$L2\",null,{\"parallelRouterKey\":\"children\",\"segmentPath\":[\"children\"],\"error\":\"$undefined\",\"errorStyles\":\"$undefined\",\"errorScripts\":\"$undefined\",\"template\":[\"$\",\"$L3\",null,{}],\"templateStyles\":\"$undefined\",\"templateScripts\":\"$undefined\",\"notFound\":[[],[[\"$\",\"title\",null,{\"children\":\"404: This page could not be found.\"}],[\"$\",\"div\",null,{\"style\":{\"fontFamily\":\"system-ui,\\\"Segoe UI\\\",Roboto,Helvetica,Arial,sans-serif,\\\"Apple Color Emoji\\\",\\\"Segoe UI Emoji\\\"\",\"height\":\"100vh\",\"textAlign\":\"center\",\"display\":\"flex\",\"flexDirection\":\"column\",\"alignItems\":\"center\",\"justifyContent\":\"center\"},\"children\":[\"$\",\"div\",null,{\"children\":[[\"$\",\"style\",null,{\"dangerouslySetInnerHTML\":{\"__html\":\"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}\"}}],[\"$\",\"h1\",null,{\"className\":\"next-error-h1\",\"style\":{\"display\":\"inline-block\",\"margin\":\"0 20px 0 0\",\"padding\":\"0 23px 0 0\",\"fontSize\":24,\"fontWeight\":500,\"verticalAlign\":\"top\",\"lineHeight\":\"49px\"},\"children\":404}],[\"$\",\"div\",null,{\"style\":{\"display\":\"inline-block\"},\"children\":[\"$\",\"h2\",null,{\"style\":{\"fontSize\":14,\"fontWeight\":400,\"lineHeight\":\"49px\",\"margin\":0},\"children\":\"This page could not be found.\"}]}]]}]}]]],\"forbidden\":\"$undefined\",\"unauthorized\":\"$undefined\"}]}]}]]}],{\"children\":[\"theory\",[\"$\",\"$1\",\"c\",{\"children\":[null,[\"$\",\"$L2\",null,{\"parallelRouterKey\":\"children\",\"segmentPath\":[\"children\",\"theory\",\"children\"],\"error\":\"$undefined\",\"errorStyles\":\"$undefined\",\"errorScripts\":\"$undefined\",\"template\":[\"$\",\"$L3\",null,{}],\"templateStyles\":\"$undefined\",\"templateScripts\":\"$undefined\",\"notFound\":\"$undefined\",\"forbidden\":\"$undefined\",\"unauthorized\":\"$undefined\"}]]}],{\"children\":[[\"slug\",\"02-kpi-design-and-measurement\",\"d\"],[\"$\",\"$1\",\"c\",{\"children\":[null,[\"$\",\"$L2\",null,{\"parallelRouterKey\":\"children\",\"segmentPath\":[\"children\",\"theory\",\"children\",\"$0:f:0:1:2:children:2:children:0\",\"children\"],\"error\":\"$undefined\",\"errorStyles\":\"$undefined\",\"errorScripts\":\"$undefined\",\"template\":[\"$\",\"$L3\",null,{}],\"templateStyles\":\"$undefined\",\"templateScripts\":\"$undefined\",\"notFound\":\"$undefined\",\"forbidden\":\"$undefined\",\"unauthorized\":\"$undefined\"}]]}],{\"children\":[\"__PAGE__\",[\"$\",\"$1\",\"c\",{\"children\":[\"$L4\",null,[\"$\",\"$L5\",null,{\"children\":\"$L6\"}]]}],{},null,false]},null,false]},null,false]},null,false],[\"$\",\"$1\",\"h\",{\"children\":[null,[\"$\",\"$1\",\"7HQTgo7faVvM-mZZXyepS\",{\"children\":[[\"$\",\"$L7\",null,{\"children\":\"$L8\"}],[\"$\",\"$L9\",null,{\"children\":\"$La\"}],null]}]]}],false]],\"m\":\"$undefined\",\"G\":[\"$b\",\"$undefined\"],\"s\":false,\"S\":true}\n"])</script><script>self.__next_f.push([1,"a:[[\"$\",\"meta\",\"0\",{\"name\":\"viewport\",\"content\":\"width=device-width, initial-scale=1\"}]]\n"])</script><script>self.__next_f.push([1,"8:[[\"$\",\"meta\",\"0\",{\"charSet\":\"utf-8\"}],[\"$\",\"title\",\"1\",{\"children\":\"تصميم مؤشرات الأداء وقياسها - الخلفية النظرية -  المؤشرات KPI\"}],[\"$\",\"meta\",\"2\",{\"name\":\"description\",\"content\":\"دليل استخدام منصة  المؤشرات KPI لإدارة الأداء المؤسسي\"}]]\n"])</script><script>self.__next_f.push([1,"6:null\n"])</script><script>self.__next_f.push([1,"c:I[84424,[\"2049\",\"static/chunks/2049-4807d1f153ee14dd.js\",\"9791\",\"static/chunks/9791-20fac1a27f6e22c4.js\",\"161\",\"static/chunks/161-783ba81db49a7d9b.js\",\"22\",\"static/chunks/app/theory/%5Bslug%5D/page-5d3a6ef2c7362de5.js\"],\"DocPage\"]\nd:T2d54,"])</script><script>self.__next_f.push([1,"# تصميم مؤشرات الأداء الرئيسية وقياسها\n\n\u003cdiv dir=\"rtl\"\u003e\n\n## ما هو مؤشر الأداء الرئيسي (KPI)؟\n\n**مؤشر الأداء الرئيسي (Key Performance Indicator - KPI)** هو مقياس كمي يُستخدم لتقييم مدى فعالية فرد أو فريق أو مؤسسة في تحقيق هدف استراتيجي رئيسي. كلمة *رئيسي* بالغة الأهمية — فليس كل مقياس مؤشر أداء. يجب أن يرتبط مؤشر الأداء مباشرةً بهدف استراتيجي يمثّل أهمية حقيقية.\n\n\u003e \"ما يُقاس يُدار.\" — بيتر دراكر\n\n---\n\n## مؤشر الأداء مقابل المقياس مقابل الهدف\n\nكثيراً ما تختلط هذه المصطلحات:\n\n| المصطلح | التعريف | المثال |\n|---------|---------|--------|\n| **الهدف** | النتيجة المنشودة | \"تحسين رضا العملاء\" |\n| **المقياس** | أي نقطة بيانات كمية | \"عدد طلبات الدعم\" |\n| **مؤشر الأداء الرئيسي** | مقياس مرتبط مباشرةً بهدف استراتيجي | \"درجة رضا العملاء ≥ 85%\" |\n\nليس كل مقياس يستحق أن يكون مؤشر أداء رئيسي. كثرة مؤشرات الأداء تُشتّت التركيز. أفضل الممارسات توصي بـ **5–10 مؤشرات أداء كحدٍّ أقصى لكل مستوى تنظيمي**.\n\n---\n\n## إطار مؤشرات الأداء الذكية (SMART)\n\nيجب أن يكون مؤشر الأداء المُصمَّم جيداً:\n\n| الحرف | الصفة | السؤال المطروح |\n|-------|-------|--------------|\n| **S** | محدد (Specific) | هل واضح تماماً ما الذي يُقاس؟ |\n| **M** | قابل للقياس (Measurable) | هل يمكن التعبير عنه بالأرقام؟ |\n| **A** | قابل للتحقيق (Achievable) | هل الهدف واقعي بالنظر إلى مواردنا؟ |\n| **R** | ذو صلة (Relevant) | هل يعكس مباشرةً أولوية استراتيجية؟ |\n| **T** | محدد بوقت (Time-bound) | هل ثمة فترة قياس محددة؟ |\n\n---\n\n## مكونات مؤشر الأداء المُعرَّف جيداً\n\nيجب توثيق هذه السمات لكل مؤشر أداء قبل تتبّعه:\n\n| السمة | الوصف | المثال |\n|-------|-------|--------|\n| **العنوان** | اسم واضح ووصفي | \"معدل الاحتفاظ بالموظفين\" |\n| **المالك** | الشخص المسؤول عن الأداء | مدير الموارد البشرية |\n| **الخط الأساسي** | قيمة المرجع الابتدائية | 72% (العام الماضي) |\n| **الهدف** | النتيجة المراد تحقيقها | 85% بحلول الربع الرابع |\n| **الوحدة** | طريقة التعبير عن القيمة | % |\n| **الاتجاه** | الاتجاه الإيجابي | الزيادة مؤشر إيجابي |\n| **الدورية** | مدى تكرار القياس | ربع سنوي |\n| **مصدر البيانات** | مصدر القيمة | نظام الموارد البشرية |\n| **الصيغة الحسابية** | طريقة الحساب (إن وُجدت) | (الموظفون الباقون ÷ إجمالي الموظفين) × 100 |\n\n---\n\n## أنواع مؤشرات الأداء حسب المصدر\n\nتختلف مؤشرات الأداء في طريقة إنتاج قيمها:\n\n### 1. المؤشرات اليدوية (Manual)\nيُدخل الشخص المسؤول القيمة مباشرةً في كل فترة.\n- **الأنسب لـ**: البيانات المجمّعة خارج الأنظمة الآلية (الاستطلاعات، العدادات اليدوية، التقييمات)\n- **المخاطر**: الخطأ البشري، التأخر، عدم الاتساق\n- **المثال**: \"درجة رضا العملاء\" تُدخَل شهرياً من نتائج الاستطلاع\n\n### 2. المؤشرات المحسوبة (Calculated)\nتُحسَب القيمة تلقائياً من صيغة حسابية باستخدام متغيرات مُدخَلة.\n- **الأنسب لـ**: النسب المشتقة، مقاييس الكفاءة، الدرجات المركّبة\n- **المخاطر**: أخطاء الصيغة؛ يجب إدخال جميع المتغيرات\n- **المثال**: `هامش الربح % = (الإيرادات - التكاليف) ÷ الإيرادات × 100`\n\n### 3. المؤشرات المشتقة (Derived)\nتُسحَب القيمة تلقائياً من مؤشر أداء أو كيان آخر.\n- **الأنسب لـ**: تجميع مؤشرات أداء فرعية في درجة أم؛ تجنب ازدواجية إدخال البيانات\n- **المثال**: \"إيرادات المجموعة\" مشتقة من مجموع مؤشرات الإيرادات لجميع الأقسام\n\n### 4. مؤشرات الدرجة (Score)\nدرجة صحة مركّبة مُجمَّعة من قيم الكيانات الفرعية باستخدام الأوزان.\n- **الأنسب لـ**: ملخصات صحة على مستوى الركيزة أو الهدف\n- **المثال**: \"درجة التميز التشغيلي\" = متوسط مرجّح لـ 5 مؤشرات فرعية\n\n---\n\n## اتجاه مؤشر الأداء\n\nالاتجاه يُخبر النظام ما إذا كانت الزيادة أو الانخفاض يُشير إلى أداء إيجابي:\n\n| الاتجاه | المعنى | مثال مؤشر الأداء |\n|---------|--------|-----------------|\n| **الزيادة إيجابية** | القيم المرتفعة أفضل | الإيرادات، رضا العملاء |\n| **الانخفاض إيجابي** | القيم المنخفضة أفضل | معدل الأخطاء، دوران الموظفين، التكاليف |\n\nيؤثر هذا الإعداد على كيفية حساب نسب الإنجاز ودرجات الصحة.\n\n---\n\n## دوريات القياس\n\nيجب قياس مؤشرات الأداء بالتكرار الصحيح:\n\n| نوع الدورية | التكرار | الأنسب لـ |\n|------------|---------|----------|\n| **شهري** | كل شهر | مؤشرات الأداء التشغيلي، المقاييس المالية |\n| **ربع سنوي** | كل 3 أشهر | مؤشرات الأداء الاستراتيجي، معالم المشاريع |\n| **سنوي** | مرة في السنة | الأهداف الاستراتيجية طويلة المدى |\n\nيتطلب دمج الدوريات المختلفة في لوحة متابعة واحدة قواعد تجميع دقيقة — ولهذا تمتلك كل مؤشر أداء **طريقة تجميع** مُهيَّأة (آخر قيمة، مجموع، متوسط، أدنى، أعلى).\n\n---\n\n## مؤشرات الأداء القيادية مقابل المتأخرة\n\nتمييز بالغ الأهمية كثيراً ما يُغفَل:\n\n| النوع | التعريف | متى يُخبرك | المثال |\n|-------|---------|-----------|--------|\n| **متأخر (Lagging)** | يقيس النتائج بعد حدوثها | متأخر جداً للتغيير | الإيرادات، معدل تراجع العملاء |\n| **قيادي (Leading)** | يقيس الأنشطة التي تتنبأ بالنتائج المستقبلية | إنذار مبكر | المكالمات البيعية، ساعات التدريب |\n\n**أفضل الممارسات**: استخدام مزيج متوازن. مؤشرات الأداء المتأخرة تُخبرك *بما حدث*؛ أما القيادية فتُخبرك *بما سيحدث*.\n\n---\n\n## أخطاء شائعة في تصميم مؤشرات الأداء\n\n| الخطأ | المشكلة | الحل |\n|-------|---------|------|\n| **كثرة مؤشرات الأداء** | إرهاق وضياع التركيز | الحد بـ 5–10 مؤشرات لكل مستوى |\n| **غياب المالك** | لا أحد مسؤول | تخصيص مالك محدد الاسم لكل مؤشر |\n| **مقاييس الظهور** | تبدو جيدة لكنها لا تعكس قيمة حقيقية | ربط كل مؤشر بهدف استراتيجي |\n| **غياب الخط الأساسي** | لا يمكن قياس التقدم | تسجيل قيمة البداية دائماً |\n| **صيغة حسابية غامضة** | أشخاص مختلفون يحسبون بطرق مختلفة | توثيق الصيغة ومصدر البيانات بدقة |\n| **دورية غير مناسبة** | القياس النادر يُفوّت المشكلات | مطابقة الدورية مع الإيقاع الطبيعي للمقياس |\n| **هدف مرتفع جداً** | يُحبط الفريق | وضع أهداف طموحة لكن قابلة للتحقيق |\n| **هدف منخفض جداً** | يُعطي ثقة زائفة | مراجعة الأهداف دورياً مقارنةً بالمعايير القياسية |\n\n---\n\n## دورة حياة مؤشر الأداء في الممارسة\n\nمؤشر الأداء لا يوجد فحسب — بل يمر بدورة حياة:\n\n```mermaid\nflowchart LR\n    A[\"التصميم\u003cbr/\u003eتحديد الغرض، الصيغة، الهدف\"] --\u003e|\"التهيئة\"| B[\"الإعداد في النظام\u003cbr/\u003eتعيين المالك\"]\n    B --\u003e|\"القياس\"| C[\"إدخال القيم\u003cbr/\u003eإرسال\"]\n    C --\u003e|\"المراجعة\"| D[\"اعتماد، تحليل، تصرف\"]\n    D --\u003e|\"التقاعد/المراجعة\"| E[\"تعديل الهدف، أرشفة، أو استبدال\"]\n    E --\u003e|\"إعادة التصميم\"| A\n    \n    style A fill:#e3f2fd\n    style B fill:#f3e5f5\n    style C fill:#fff3e0\n    style D fill:#e8f5e9\n    style E fill:#ffebee\n```\n\nفي  المؤشرات KPI، تُترجَم هذه الدورة مباشرةً إلى إنشاء الكيانات وإدخال القيم والاعتماد ومراجعة لوحات المتابعة.\n\n---\n\n## التجميع: من الفردي إلى المؤسسي\n\nمؤشرات الأداء على مستوى الفرد أو الفريق تتصاعد إلى الأداء المؤسسي:\n\n```mermaid\nflowchart TD\n    A[\"مؤشرات الأداء الفردية\u003cbr/\u003eمستوى المدير\"] --\u003e|\"تجميع مرجّح\"| B[\"مؤشرات الأداء\u003cbr/\u003eمستوى القسم / الركيزة\"]\n    B --\u003e|\"تجميع مرجّح\"| C[\"درجة الصحة المؤسسية الإجمالية\"]\n    \n    style A fill:#e3f2fd\n    style B fill:#fff3e0\n    style C fill:#e8f5e9\n```\n\nالأوزان المُخصَّصة لكل مؤشر أداء تُحدد مقدار تأثيره في الدرجة الأم — مما يُتيح للقيادة إبراز المقاييس الأكثر أهمية استراتيجياً.\n\n---\n\n## ملخص المفاهيم الرئيسية\n\n\u003e **النقاط الأساسية:**\n\u003e - **SMART**: محدد، قابل للقياس، قابل للتحقيق، ذو صلة، محدد بوقت\n\u003e - **5–10 مؤشرات** كحد أقصى لكل مستوى تنظيمي\n\u003e - **قيادية vs متأخرة**: مزيج متوازن للتنبؤ والمراقبة\n\u003e - **الاتجاه** (الزيادة/الانخفاض إيجابي) يؤثر على حساب الإنجاز\n\u003e - **الفصل بين المهام**: المدير يُدخل ≠ التنفيذي يعتمد\n\n---\n\n## للاستزادة\n\n- بارمنتر، *مؤشرات الأداء الرئيسية* (2015)\n- مار، *مؤشرات الأداء الرئيسية* (2012)\n- كابلان ونورتون، *خرائط الاستراتيجية* (2004)\n- هوبارد، *كيف تقيس أي شيء* (2010)\n\n\u003c/div\u003e\n"])</script><script>self.__next_f.push([1,"4:[\"$\",\"$Lc\",null,{\"title\":\"تصميم مؤشرات الأداء وقياسها\",\"content\":\"$d\"}]\n"])</script></body></html>

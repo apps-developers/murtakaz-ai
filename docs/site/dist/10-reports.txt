@@ -1,0 +1,201 @@
+1:"$Sreact.fragment"
+2:I[15244,[],""]
+3:I[43866,[],""]
+5:I[86213,[],"OutletBoundary"]
+7:I[86213,[],"MetadataBoundary"]
+9:I[86213,[],"ViewportBoundary"]
+b:I[34835,[],""]
+:HL["/_next/static/css/145dcfbb7bdfe18e.css","style"]
+0:{"P":null,"b":"s5eJIx2mAXYXJg6cEVOhC","p":"","c":["","10-reports"],"i":false,"f":[[["",{"children":[["slug","10-reports","d"],{"children":["__PAGE__",{}]}]},"$undefined","$undefined",true],["",["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/145dcfbb7bdfe18e.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]],["$","html",null,{"lang":"ar","dir":"rtl","children":["$","body",null,{"className":"min-h-screen bg-white font-sans antialiased","children":["$","$L2",null,{"parallelRouterKey":"children","segmentPath":["children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[],[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]]],"forbidden":"$undefined","unauthorized":"$undefined"}]}]}]]}],{"children":[["slug","10-reports","d"],["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","segmentPath":["children","$0:f:0:1:2:children:0","children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":["__PAGE__",["$","$1","c",{"children":["$L4",null,["$","$L5",null,{"children":"$L6"}]]}],{},null,false]},null,false]},null,false],["$","$1","h",{"children":[null,["$","$1","qOPwtPFAcLqn9Jp1MgrV3",{"children":[["$","$L7",null,{"children":"$L8"}],["$","$L9",null,{"children":"$La"}],null]}]]}],false]],"m":"$undefined","G":["$b","$undefined"],"s":false,"S":true}
+a:[["$","meta","0",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]
+8:[["$","meta","0",{"charSet":"utf-8"}],["$","title","1",{"children":"التقارير والتحليلات - دليل  المؤشرات KPI"}],["$","meta","2",{"name":"description","content":"دليل استخدام منصة  المؤشرات KPI لإدارة الأداء المؤسسي"}]]
+6:null
+c:I[84424,["2049","static/chunks/2049-4807d1f153ee14dd.js","9791","static/chunks/9791-20fac1a27f6e22c4.js","161","static/chunks/161-783ba81db49a7d9b.js","7182","static/chunks/app/%5Bslug%5D/page-c70e347b1eb63951.js"],"DocPage"]
+d:T1ac9,# التقارير والتحليلات
+
+<div dir="rtl">
+
+يوفر قسم **التقارير** (`/<locale>/reports`) عروضاً تحليلية شاملة للأداء المؤسسي مع إمكانية التصدير والتصفية المتقدمة.
+
+---
+
+## الوصول إلى التقارير
+
+1. انقر على **التقارير** في الشريط الجانبي.
+2. تعرض الصفحة أربعة تبويبات رئيسية للتقارير.
+3. يمكن التبديل بين التبويبات للوصول إلى نوع مختلف من التحليلات.
+
+---
+
+## تبويبات التقارير
+
+### مخطط أنواع التقارير
+
+```mermaid
+flowchart TD
+    R[التقارير] --> A[الملخص التنفيذي]
+    R --> B[المحاذاة الاستراتيجية]
+    R --> C[أداء المؤشرات]
+    R --> D[التقرير الجدولي]
+    
+    A -->|للإدارة العليا| E[نظرة شاملة]
+    B -->|للتخطيط| F[إنجاز الأهداف]
+    C -->|للتحليل| G[الاتجاهات والمقارنات]
+    D -->|للتصدير| H[بيانات تفصيلية]
+```
+
+### 1. الملخص التنفيذي (Executive Summary)
+
+**يُجيب على:** *"ما هي نظرة عامة عالية المستوى على أداء المؤسسة؟"*
+
+يوفر ملخصاً تنفيذياً شاملاً للأداء المؤسسي مع التصورات البيانية والرؤى الرئيسية.
+
+**المحتوى الرئيسي:**
+- مؤشرات الأداء الرئيسية على مستوى المؤسسة
+- ملخص الصحة الإجمالية
+- التقدم نحو الأهداف الاستراتيجية
+- الرسوم البيانية المرئية للأداء
+
+**يستخدمه:** التنفيذي (EXECUTIVE)، مسؤول المؤسسة (ADMIN)
+
+---
+
+### 2. المحاذاة الاستراتيجية (Strategic Alignment)
+
+**يُجيب على:** *"ما مدى تحقق الركائز والأهداف الاستراتيجية؟"*
+
+يُتبع إنجاز الركائز والأهداف الاستراتيجية ويربطها بمؤشرات الأداء.
+
+**المحتوى الرئيسي:**
+- حالة الركائز الاستراتيجية
+- تتبع إنجاز الأهداف
+- التوافق بين الأهداف ومؤشرات الأداء
+- تقييم فجوات الأداء
+
+**يستخدمه:** التنفيذي (EXECUTIVE)، مسؤول المؤسسة (ADMIN)
+
+---
+
+### 3. أداء المؤشرات (KPI Performance)
+
+**يُجيب على:** *"ما تفاصيل أداء مؤشرات الأداء مع الاتجاهات؟"*
+
+يقدم تحليلاً مفصلاً لمؤشرات الأداء مع الاتجاهات التاريخية والمقارنات.
+
+**المحتوى الرئيسي:**
+- تحليل تفصيلي لمؤشرات الأداء
+- الاتجاهات التاريخية
+- المقارنة بين المستهدف والفعلي
+- معلومات حداثة البيانات
+
+**يستخدمه:** التنفيذي (EXECUTIVE)، مسؤول المؤسسة (ADMIN)، المدير (MANAGER)
+
+---
+
+### 4. التقرير الجدولي (Tabular Report)
+
+**يُجيب على:** *"كيف يمكنني عرض أداء المؤشرات عبر العناصر بشكل جدولي؟"*
+
+يوفر عرضاً جدولياً لأداء المؤشرات عبر الكيانات المختلفة مع التصفية والتصدير.
+
+**المحتوى الرئيسي:**
+- عرض جدولي لأداء المؤشرات عبر الكيانات
+- فلاتر متقدمة حسب نوع الكيان والفترة
+- إمكانية التصدير إلى CSV/Excel
+- مقارنة الأداء بين الكيانات المختلفة
+
+**يستخدمه:** التنفيذي (EXECUTIVE)، مسؤول المؤسسة (ADMIN)، المدير (MANAGER)
+
+---
+
+### تدفق استخدام التقارير
+
+```mermaid
+sequenceDiagram
+    actor U as المستخدم
+    participant R as التقارير
+    participant F as الفلاتر
+    participant D as قاعدة البيانات
+    participant E as التصدير
+    
+    U->>R: فتح التقارير
+    R->>U: عرض التبويبات
+    U->>R: اختيار نوع التقرير
+    R->>F: تطبيق الفلاتر
+    F->>D: استعلام البيانات
+    D-->>F: النتائج
+    F-->>R: عرض التقرير
+    U->>E: طلب تصدير
+    E-->>U: ملف CSV/Excel
+```
+
+### دورة حياة التقرير
+
+```mermaid
+stateDiagram-v2
+    [*] --> DRAFT : إنشاء تقرير
+    DRAFT --> FILTERED : تطبيق فلاتر
+    FILTERED --> GENERATED : توليد البيانات
+    GENERATED --> EXPORTED : تصدير
+    GENERATED --> SAVED : حفظ
+    EXPORTED --> [*]
+    SAVED --> [*]
+    
+    note right of FILTERED
+        اختيار الفترة
+        نوع الكيان
+        المعايير
+    end note
+```
+
+## أدوات التحكم في التقارير
+
+| أداة التحكم | الوصف |
+|------------|-------|
+| **فلتر الفترة** | تحديد نطاق زمني محدد للتقرير |
+| **فلتر نوع الكيان** | اختيار أنواع الكيانات المراد تضمينها |
+| **تصدير** | تصدير البيانات إلى CSV أو Excel |
+| **تحديث** | إعادة تحميل البيانات للحصول على أحدث المعلومات |
+
+---
+
+## نصائح مفيدة
+
+- ابدأ بالـ **الملخص التنفيذي** للحصول على نظرة شاملة سريعة.
+- استخدم **المحاذاة الاستراتيجية** لمراجعة التقدم نحو الأهداف الاستراتيجية.
+- **أداء المؤشرات** هو الأنسب للتحليل العميق لاتجاهات مؤشر الأداء.
+- **التقرير الجدولي** مثالي لتصدير البيانات وإجراء التحليلات الخارجية.
+
+---
+
+### مقارنة التقارير ولوحات المتابعة
+
+```mermaid
+flowchart LR
+    subgraph "التقارير"
+        direction TB
+        R1[تحليل عميق]
+        R2[تصدير البيانات]
+        R3[فلاتر متقدمة]
+    end
+    
+    subgraph "لوحات المتابعة"
+        direction TB
+        D1[مراقبة لحظية]
+        D2[تفاعلية]
+        D3[روابط سريعة]
+    end
+    
+    R1 -->|استخدام مختلف| D1
+    R2 -->|تكامل| D2
+```
+
+| | التقارير | لوحات المتابعة |
+|---|---------|---------------|
+| **الهدف** | تحليل عميق وتصدير | مراقبة لحظية وسريعة |
+| **التفاعل** | فلاتر وتصدير | تفاعلية مع روابط للتفاصيل |
+| **الجمهور** | تحليليون وإداريون | جميع المستخدمين |
+| **البيانات** | مفصلة وقابلة للتصدير | ملخصة ومرئية |
+
+</div>
+4:["$","$Lc",null,{"title":"التقارير والتحليلات","content":"$d"}]

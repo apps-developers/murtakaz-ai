@@ -1,0 +1,448 @@
+1:"$Sreact.fragment"
+2:I[15244,[],""]
+3:I[43866,[],""]
+5:I[86213,[],"OutletBoundary"]
+7:I[86213,[],"MetadataBoundary"]
+9:I[86213,[],"ViewportBoundary"]
+b:I[34835,[],""]
+:HL["/_next/static/css/145dcfbb7bdfe18e.css","style"]
+0:{"P":null,"b":"s5eJIx2mAXYXJg6cEVOhC","p":"","c":["","technical","07-operations"],"i":false,"f":[[["",{"children":["technical",{"children":[["slug","07-operations","d"],{"children":["__PAGE__",{}]}]}]},"$undefined","$undefined",true],["",["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/145dcfbb7bdfe18e.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]],["$","html",null,{"lang":"ar","dir":"rtl","children":["$","body",null,{"className":"min-h-screen bg-white font-sans antialiased","children":["$","$L2",null,{"parallelRouterKey":"children","segmentPath":["children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[],[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]]],"forbidden":"$undefined","unauthorized":"$undefined"}]}]}]]}],{"children":["technical",["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","segmentPath":["children","technical","children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":[["slug","07-operations","d"],["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","segmentPath":["children","technical","children","$0:f:0:1:2:children:2:children:0","children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":["__PAGE__",["$","$1","c",{"children":["$L4",null,["$","$L5",null,{"children":"$L6"}]]}],{},null,false]},null,false]},null,false]},null,false],["$","$1","h",{"children":[null,["$","$1","1TfMTKTikU6-mWNKlEXs6",{"children":[["$","$L7",null,{"children":"$L8"}],["$","$L9",null,{"children":"$La"}],null]}]]}],false]],"m":"$undefined","G":["$b","$undefined"],"s":false,"S":true}
+a:[["$","meta","0",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]
+8:[["$","meta","0",{"charSet":"utf-8"}],["$","title","1",{"children":"دليل التشغيل - التوثيق التقني - دليل  المؤشرات KPI"}],["$","meta","2",{"name":"description","content":"دليل استخدام منصة  المؤشرات KPI لإدارة الأداء المؤسسي"}]]
+6:null
+c:I[84424,["2049","static/chunks/2049-4807d1f153ee14dd.js","9791","static/chunks/9791-20fac1a27f6e22c4.js","161","static/chunks/161-783ba81db49a7d9b.js","7478","static/chunks/app/technical/%5Bslug%5D/page-85b876ce7d2fbc21.js"],"DocPage"]
+d:T22d5,# دليل التشغيل
+
+<div dir="rtl">
+
+دليل العمليات اليومية والصيانة لمنصة  المؤشرات KPI.
+
+---
+
+## المهام اليومية
+
+### فحوصات الصباح (9:00 صباحاً)
+
+```bash
+# 1. فحص صحة النظام
+curl https://api.murtakaz.com/api/health
+
+# 2. مراجعة السجلات
+# - تسجيل الدخول
+# - أخطاء API
+# - أداء البطيء
+
+# 3. مراجعة الإشعارات
+# - قيم KPI بانتظار الاعتماد
+# - المخاطر المفتوحة
+# - المشاريع المتأخرة
+```
+
+### فحوصات المساء (5:00 مساءً)
+
+```bash
+# 1. النسخ الاحتياطي اليومي
+pg_dump murtakaz > backup_$(date +%Y%m%d).sql
+
+# 2. مراجعة استخدام الموارد
+# - CPU
+# - الذاكرة
+# - مساحة القرص
+
+# 3. تسجيل مقاييس الأداء
+```
+
+---
+
+## المراقبة
+
+### لوحة المراقبة
+
+| المقياس | الأداة | التنبيه عند |
+|---------|--------|------------|
+| توفر النظام | Uptime Robot | < 99.9% |
+| أداء API | New Relic | > 500ms |
+| أخطاء | Sentry | > 1% |
+| قاعدة البيانات | Datadog | > 80% CPU |
+
+### مقاييس رئيسية
+
+**مؤشرات الأداء (KPIs) للنظام:**
+
+```javascript
+// uptime-check.js
+const metrics = {
+  // توفر النظام
+  uptime: {
+    target: 99.9,
+    current: calculateUptime(),
+    unit: '%'
+  },
+  
+  // أداء API
+  apiLatency: {
+    p50: '< 200ms',
+    p95: '< 500ms',
+    p99: '< 1000ms'
+  },
+  
+  // معدل الأخطاء
+  errorRate: {
+    target: '< 0.1%',
+    current: calculateErrorRate(),
+    unit: '%'
+  },
+  
+  // قاعدة البيانات
+  dbPerformance: {
+    queryTime: '< 100ms',
+    connections: '< 80%',
+    slowQueries: '< 5/min'
+  }
+}
+```
+
+---
+
+## النسخ الاحتياطي
+
+### الاستراتيجية 3-2-1
+
+- **3** نسخ من البيانات
+- **2** وسائط تخزين مختلفة
+- **1** نسخة خارج الموقع
+
+### جدول النسخ الاحتياطي
+
+| النوع | التكرار | الاحتفاظ | الموقع |
+|-------|---------|----------|--------|
+| قاعدة البيانات | يومي | 30 يوم | S3 |
+| ملفات التطبيق | أسبوعي | 12 أسبوع | S3 |
+| إعدادات النظام | عند التغيير | 10 نسخ | Git |
+
+### سكربت النسخ الاحتياطي
+
+```bash
+#!/bin/bash
+# backup.sh
+
+# إعدادات
+DB_NAME="murtakaz"
+BACKUP_DIR="/backups"
+S3_BUCKET="s3://murtakaz-backups"
+DATE=$(date +%Y%m%d_%H%M%S)
+
+# نسخ قاعدة البيانات
+echo "جارٍ نسخ قاعدة البيانات..."
+pg_dump -Fc $DB_NAME > "$BACKUP_DIR/db_$DATE.dump"
+
+# ضغط
+echo "جارٍ الضغط..."
+gzip "$BACKUP_DIR/db_$DATE.dump"
+
+# نقل إلى S3
+echo "جارٍ الرفع إلى S3..."
+aws s3 cp "$BACKUP_DIR/db_$DATE.dump.gz" $S3_BUCKET/database/
+
+# حذف النسخ المحلية القديمة
+find $BACKUP_DIR -name "db_*.dump.gz" -mtime +7 -delete
+
+# إعلام Slack (اختياري)
+curl -X POST -H 'Content-type: application/json' \
+  --data '{"text":"✅ Backup completed: '$DATE'"}' \
+  $SLACK_WEBHOOK_URL
+
+echo "تم!"
+```
+
+### Cron Job
+
+```bash
+# فتح crontab
+crontab -e
+
+# إضافة مهام
+# النسخ الاحتياطي اليومي عند 2 صباحاً
+0 2 * * * /path/to/backup.sh >> /var/log/backup.log 2>&1
+
+# تنظيف السجلات القديمة
+0 3 * * 0 /path/to/cleanup-logs.sh
+```
+
+---
+
+## الصيانة المجدولة
+
+### الصيانة الأسبوعية
+
+**يوم الأحد (صيانة خفيفة):**
+
+- [ ] مراجعة سجلات الأخطاء
+- [ ] تنظيف الجلسات القديمة
+- [ ] تحديث فهارس البحث
+- [ ] مراجعة مقاييس الأداء
+
+### الصيانة الشهرية
+
+**الأسبوع الأول:**
+
+- [ ] تحليل أداء الاستعلامات
+- [ ] تحديث الإحصائيات
+- [ ] مراجعة أمان النظام
+- [ ] تحديث التبعيات (dependencies)
+
+**الأسبوع الثالث:**
+
+- [ ] اختبار استعادة النسخ الاحتياطي
+- [ ] مراجعة سعة التخزين
+- [ ] تنظيف البيانات القديمة
+- [ ] تحديث الوثائق
+
+### الصيانة الربع سنوية
+
+- [ ] مراجعة شامل لأمان النظام
+- [ ] تحديث إستراتيجية النسخ الاحتياطي
+- [ ] مراجعة التراخيص والاشتراكات
+- [ ] اختبار خطة الطوارئ
+
+---
+
+## إدارة المستخدمين
+
+### إنشاء مستخدم جديد
+
+```sql
+-- عبر قاعدة البيانات
+INSERT INTO "User" (id, email, name, role, organizationId, status)
+VALUES (
+  gen_random_uuid(),
+  'new.user@company.com',
+  'اسم المستخدم',
+  'MANAGER',
+  'org_123',
+  'ACTIVE'
+);
+```
+
+### تعطيل مستخدم
+
+```sql
+UPDATE "User" 
+SET status = 'INACTIVE', 
+    updatedAt = NOW()
+WHERE id = 'usr_123';
+```
+
+### إعادة تعيين كلمة المرور
+
+```bash
+# عبر CLI
+npm run reset-password -- --user=usr_123
+```
+
+---
+
+## إدارة الكيانات
+
+### إنشاء كيان بالجملة
+
+```bash
+# استيراد من CSV
+npm run import-entities -- --file=entities.csv --type=kpi
+```
+
+### حذف كيان (Soft Delete)
+
+```sql
+-- الحذف الناعم
+UPDATE "Entity"
+SET deletedAt = NOW()
+WHERE id = 'ent_123';
+
+-- الاستعادة
+UPDATE "Entity"
+SET deletedAt = NULL
+WHERE id = 'ent_123';
+
+-- الحذف النهائي (احذر!)
+DELETE FROM "Entity" WHERE id = 'ent_123';
+```
+
+---
+
+## الأداء
+
+### تحليل استعلامات بطيئة
+
+```sql
+-- تفعيل pg_stat_statements أولاً
+-- في postgresql.conf: shared_preload_libraries = 'pg_stat_statements'
+
+-- الاستعلامات البطيئة
+SELECT 
+  query,
+  mean_exec_time,
+  calls,
+  total_exec_time
+FROM pg_stat_statements
+ORDER BY mean_exec_time DESC
+LIMIT 10;
+```
+
+### تحسين الفهارس
+
+```sql
+-- إيجاد الاستعلامات بدون فهارس
+SELECT 
+  schemaname,
+  tablename,
+  attname as column,
+  n_tup_read,
+  n_tup_fetch
+FROM pg_stats
+WHERE schemaname = 'public'
+ORDER BY n_tup_read DESC;
+
+-- إضافة فهرس جديد
+CREATE INDEX CONCURRENTLY idx_entity_owner 
+ON "Entity"(ownerId);
+```
+
+---
+
+## الأمان
+
+### تدوير مفاتيح API
+
+```bash
+# إنشاء مفتاح جديد
+npm run rotate-api-key -- --env=production
+
+# إبطال المفتاح القديم (بعد 24 ساعة)
+npm run revoke-api-key -- --key=old_key_id
+```
+
+### مراجعة الوصول
+
+```sql
+-- المستخدمين النشطين
+SELECT 
+  u.id,
+  u.name,
+  u.email,
+  u.role,
+  u.lastLoginAt,
+  COUNT(ea.id) as assignedEntities
+FROM "User" u
+LEFT JOIN "EntityAssignment" ea ON u.id = ea.userId
+WHERE u.status = 'ACTIVE'
+GROUP BY u.id;
+
+-- محاولات تسجيل دخول فاشلة
+SELECT 
+  email,
+  COUNT(*) as failedAttempts,
+  MAX(createdAt) as lastAttempt
+FROM "LoginAttempt"
+WHERE success = false
+  AND createdAt > NOW() - INTERVAL '24 hours'
+GROUP BY email
+HAVING COUNT(*) > 5;
+```
+
+---
+
+## الترقيات
+
+### ترقية الإصدار
+
+```bash
+# 1. النسخ الاحتياطي
+./backup.sh
+
+# 2. سحب الإصدار الجديد
+git fetch origin
+git checkout v1.2.0
+
+# 3. تحديث التبعيات
+npm ci
+
+# 4. ترحيل قاعدة البيانات
+npx prisma migrate deploy
+
+# 5. بناء
+npm run build
+
+# 6. إعادة التشغيل
+pm2 restart murtakaz
+
+# 7. فحص الصحة
+curl https://api.murtakaz.com/api/health
+```
+
+### ترقية PostgreSQL
+
+```bash
+# 1. نسخ احتياطي كامل
+pg_dumpall > full_backup.sql
+
+# 2. إيقاف التطبيق
+pm2 stop murtakaz
+
+# 3. ترقية PostgreSQL
+sudo apt-get update
+sudo apt-get install postgresql-16
+
+# 4. اختبار
+sudo -u postgres psql -c "SELECT version();"
+
+# 5. إعادة التشغيل
+pm2 start murtakaz
+```
+
+---
+
+## سجل التغييرات
+
+### نموذج Change Log
+
+```markdown
+## [1.2.0] - 2025-01-15
+
+### Added
+- ميزة التقارير المخصصة
+- دعم صيغ Excel للتصدير
+
+### Changed
+- تحسين أداء لوحات المتابعة
+
+### Fixed
+- إصلاح خطأ في حساب المتوسطات المرجحة
+
+### Security
+- تحديث NextAuth.js لإصلاح CVE-2025-XXXX
+```
+
+---
+
+## التواصل
+
+### قنوات الإعلام
+
+| الحدث | القناة | الوقت |
+|-------|--------|-------|
+| انقطاع النظام | Slack #alerts | فوري |
+| انتهاء النسخ الاحتياطي | Slack #ops | فوري |
+| صيانة مجدولة | Email | 24 ساعة مسبقاً |
+| تقرير أسبوعي | Email | كل أحد |
+
+### جهات الاتصال
+
+| الدور | الاسم | البريد | الهاتف |
+|-------|-------|--------|--------|
+| مسؤول النظام | - | admin@company.com | - |
+| الدعم الفني | - | support@murtakaz.com | - |
+| الطوارئ | - | emergency@company.com | - |
+
+</div>
+4:["$","$Lc",null,{"title":"دليل التشغيل","content":"$d"}]

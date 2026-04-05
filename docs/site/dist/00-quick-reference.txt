@@ -1,0 +1,159 @@
+1:"$Sreact.fragment"
+2:I[15244,[],""]
+3:I[43866,[],""]
+5:I[86213,[],"OutletBoundary"]
+7:I[86213,[],"MetadataBoundary"]
+9:I[86213,[],"ViewportBoundary"]
+b:I[34835,[],""]
+:HL["/_next/static/css/145dcfbb7bdfe18e.css","style"]
+0:{"P":null,"b":"s5eJIx2mAXYXJg6cEVOhC","p":"","c":["","00-quick-reference"],"i":false,"f":[[["",{"children":[["slug","00-quick-reference","d"],{"children":["__PAGE__",{}]}]},"$undefined","$undefined",true],["",["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/145dcfbb7bdfe18e.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]],["$","html",null,{"lang":"ar","dir":"rtl","children":["$","body",null,{"className":"min-h-screen bg-white font-sans antialiased","children":["$","$L2",null,{"parallelRouterKey":"children","segmentPath":["children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[],[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]]],"forbidden":"$undefined","unauthorized":"$undefined"}]}]}]]}],{"children":[["slug","00-quick-reference","d"],["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","segmentPath":["children","$0:f:0:1:2:children:0","children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":["__PAGE__",["$","$1","c",{"children":["$L4",null,["$","$L5",null,{"children":"$L6"}]]}],{},null,false]},null,false]},null,false],["$","$1","h",{"children":[null,["$","$1","OrgzRDxHK3oOi8hdGmj71",{"children":[["$","$L7",null,{"children":"$L8"}],["$","$L9",null,{"children":"$La"}],null]}]]}],false]],"m":"$undefined","G":["$b","$undefined"],"s":false,"S":true}
+a:[["$","meta","0",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]
+8:[["$","meta","0",{"charSet":"utf-8"}],["$","title","1",{"children":"المرجع السريع - دليل  المؤشرات KPI"}],["$","meta","2",{"name":"description","content":"دليل استخدام منصة  المؤشرات KPI لإدارة الأداء المؤسسي"}]]
+6:null
+c:I[84424,["2049","static/chunks/2049-4807d1f153ee14dd.js","9791","static/chunks/9791-20fac1a27f6e22c4.js","161","static/chunks/161-783ba81db49a7d9b.js","7182","static/chunks/app/%5Bslug%5D/page-c70e347b1eb63951.js"],"DocPage"]
+d:Td13,# الدليل السريع
+
+<div dir="rtl">
+
+مرجع سريع لأهم المهام في نظام  المؤشرات KPI.
+
+---
+
+## تسجيل الدخول
+
+```
+/ar/auth/login
+```
+
+1. أدخل بريدك الإلكتروني
+2. أدخل كلمة المرور
+3. انقر **تسجيل الدخول**
+
+---
+
+## إدخال قيمة مؤشر أداء
+
+### المسار السريع:
+
+1. انتقل إلى **الكيانات** ← [نوع الكيان]
+2. انقر على الكيان المطلوب
+3. انتقل إلى تبويب **القيم**
+4. انقر **إضافة قيمة جديدة**
+5. أدخل القيمة والفترة
+6. انقر **حفظ كمسودة**
+7. عند الجاهزية، انقر **إرسال للاعتماد**
+
+---
+
+## الاعتماد على قيمة مؤشر أداء
+
+### للمعتمدين:
+
+1. انتقل إلى **الاعتمادات** في الشريط الجانبي
+2. اختر القيمة المراد اعتمادها
+3. راجع القيمة والملاحظات
+4. انقر **اعتماد** أو **رفض**
+
+---
+
+## عرض لوحات المتابعة
+
+### المسارات المختصرة:
+
+| اللوحة | الرابط |
+|--------|--------|
+| النظرة العامة | `/ar/overview` |
+| التنفيذية | `/ar/dashboards/executive` |
+| PMO | `/ar/dashboards/pmo` |
+| المدير | `/ar/dashboards/manager` |
+| أداء KPI | `/ar/dashboards/kpi-performance` |
+
+---
+
+## إنشاء مستخدم جديد (للمسؤول)
+
+```
+/ar/users → جديد
+```
+
+**الحقول المطلوبة:**
+- الاسم
+- البريد الإلكتروني
+- الدور (EXECUTIVE, MANAGER, ADMIN)
+- الإدارة
+
+---
+
+## تكليف مستخدم بكيان (للمسؤول)
+
+```
+/ar/responsibilities → حسب الكيان → تكليف
+```
+
+1. اختر الكيان
+2. انقر **تكليف**
+3. اختر المستخدم (المستخدمين)
+4. انقر **تأكيد**
+
+---
+
+## تصدير تقرير
+
+### CSV/Excel:
+
+1. انتقل إلى **التقارير**
+2. اختر نوع التقرير
+3. طبق الفلاتر المطلوبة
+4. انقر **تصدير** ← اختر التنسيق
+
+---
+
+## تغيير اللغة
+
+### يدوياً:
+
+غيّر `ar` إلى `en` في الرابط:
+
+```
+/ar/overview    → الواجهة العربية
+/en/overview    → الواجهة الإنجليزية
+```
+
+---
+
+## الاختصارات المفيدة
+
+| الاختصار | الوظيفة |
+|----------|---------|
+| `/` | التركيز على البحث |
+| `?` | فتح المساعدة |
+| `Esc` | إغلاق النافذة المنبثقة |
+| `Ctrl+Enter` | حفظ النموذج |
+| `Ctrl+Shift+R` | إعادة تحميل مع مسح الذاكرة المؤقتة |
+
+---
+
+## حلول سريعة للمشاكل
+
+| المشكلة | الحل السريع |
+|---------|-------------|
+| الصفحة لا تُحمّل | F5 لإعادة التحميل |
+| بيانات قديمة | Ctrl+Shift+R |
+| خطأ في الصيغة | اختبر الصيغة بـ "تشغيل الاختبار" |
+| لا يمكن الإرسال للاعتماد | تأكد من ملء جميع الحقول المطلوبة |
+
+---
+
+## اتصال سريع بالدعم
+
+```
+dev@murtakaz.com
+```
+
+**أضف في موضوع البريد:**
+- [مشكلة] لوصف مشكلة
+- [طلب] لطلب ميزة
+- [استفسار] لسؤال عام
+
+</div>
+4:["$","$Lc",null,{"title":"المرجع السريع","content":"$d"}]

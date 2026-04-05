@@ -1,0 +1,224 @@
+1:"$Sreact.fragment"
+2:I[15244,[],""]
+3:I[43866,[],""]
+5:I[86213,[],"OutletBoundary"]
+7:I[86213,[],"MetadataBoundary"]
+9:I[86213,[],"ViewportBoundary"]
+b:I[34835,[],""]
+:HL["/_next/static/css/145dcfbb7bdfe18e.css","style"]
+0:{"P":null,"b":"s5eJIx2mAXYXJg6cEVOhC","p":"","c":["","15-pillars-and-objectives"],"i":false,"f":[[["",{"children":[["slug","15-pillars-and-objectives","d"],{"children":["__PAGE__",{}]}]},"$undefined","$undefined",true],["",["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/145dcfbb7bdfe18e.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]],["$","html",null,{"lang":"ar","dir":"rtl","children":["$","body",null,{"className":"min-h-screen bg-white font-sans antialiased","children":["$","$L2",null,{"parallelRouterKey":"children","segmentPath":["children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[],[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]]],"forbidden":"$undefined","unauthorized":"$undefined"}]}]}]]}],{"children":[["slug","15-pillars-and-objectives","d"],["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","segmentPath":["children","$0:f:0:1:2:children:0","children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":["__PAGE__",["$","$1","c",{"children":["$L4",null,["$","$L5",null,{"children":"$L6"}]]}],{},null,false]},null,false]},null,false],["$","$1","h",{"children":[null,["$","$1","fYVrXOGJxVEPZd2259Yye",{"children":[["$","$L7",null,{"children":"$L8"}],["$","$L9",null,{"children":"$La"}],null]}]]}],false]],"m":"$undefined","G":["$b","$undefined"],"s":false,"S":true}
+a:[["$","meta","0",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]
+8:[["$","meta","0",{"charSet":"utf-8"}],["$","title","1",{"children":"الركائز والأهداف - دليل  المؤشرات KPI"}],["$","meta","2",{"name":"description","content":"دليل استخدام منصة  المؤشرات KPI لإدارة الأداء المؤسسي"}]]
+6:null
+c:I[84424,["2049","static/chunks/2049-4807d1f153ee14dd.js","9791","static/chunks/9791-20fac1a27f6e22c4.js","161","static/chunks/161-783ba81db49a7d9b.js","7182","static/chunks/app/%5Bslug%5D/page-c70e347b1eb63951.js"],"DocPage"]
+d:T1aac,# الركائز والأهداف — التخطيط الاستراتيجي
+
+<div dir="rtl">
+
+تُستخدم صفحتا **الركائز** (`/<locale>/pillars`) و**الأهداف** (`/<locale>/objectives`) لعرض وإدارة إطار الاستراتيجية المؤسسية.
+
+---
+
+## الركائز الاستراتيجية
+
+### الوصول
+
+انتقل إلى `/<locale>/pillars` أو انقر على **الركائز** في الشريط الجانبي.
+
+### مفهوم الركائز
+
+الركائز هي المحاور الرئيسية للاستراتيجية. تُمثل مجالات التركيز الأساسية التي تسعى المؤسسة لتحقيقها.
+
+#### هيكل التخطيط الاستراتيجي
+
+```mermaid
+mindmap
+  root((التخطيط<br/>الاستراتيجي))
+    الرؤية
+      بيان الرؤية
+      القيم
+    الركائز
+      محاور التركيز
+      المجالات الرئيسية
+    الأهداف
+      النتائج المرجوة
+      المؤشرات النوعية
+    مؤشرات الأداء
+      القياس الكمي
+      التتبع الدوري
+```
+
+### المحتوى المعروض
+
+تعرض صفحة الركائز:
+- قائمة الركائز الاستراتيجية
+- شعار كل ركيزة (أيقونة)
+- رابط للوصول إلى تفاصيل الركيزة
+
+---
+
+## الأهداف
+
+### الوصول
+
+انتقل إلى `/<locale>/objectives` أو انقر على **الأهداف** في الشريط الجانبي.
+
+### مفهوم الأهداف
+
+الأهداف هي النتائج المراد تحقيقها ضمن كل ركيزة. تُعد الأهداف خطوة بين الرؤية الاستراتيجية ومؤشرات الأداء.
+
+### المحتوى المعروض
+
+تعرض صفحة الأهداف:
+- قائمة الأهداف التنظيمية
+- الركيزة المرتبطة بكل هدف
+- رابط للوصول إلى تفاصيل الهدف
+
+---
+
+## العلاقة بين الركائز والأهداف
+
+```mermaid
+graph TD
+    A[الرؤية<br/>Vision] --> B[الركائز الاستراتيجية<br/>Pillars]
+    B --> C[الأهداف<br/>Objectives]
+    C --> D[مؤشرات الأداء<br/>KPIs]
+    D --> E[المشاريع<br/>Projects]
+    
+    style A fill:#3b82f6,stroke:#1d4ed8,color:#fff
+    style B fill:#60a5fa,stroke:#3b82f6,color:#fff
+    style C fill:#93c5fd,stroke:#60a5fa,color:#1e3a8a
+    style D fill:#bfdbfe,stroke:#93c5fd,color:#1e3a8a
+    style E fill:#dbeafe,stroke:#bfdbfe,color:#1e3a8a
+```
+
+> **الهيكل الهرمي:** الرؤية ← الركائز ← الأهداف ← مؤشرات الأداء ← المشاريع
+
+---
+
+## صفحة تفاصيل الركيزة
+
+```
+/<locale>/entities/pillar/<pillarId>
+```
+
+### المحتوى
+- **النظرة العامة**: العنوان، الوصف، الحالة
+- **الأهداف المرتبطة**: قائمة الأهداف ضمن الركيزة
+- **مؤشرات الأداء**: KPIs المرتبطة بالركيزة
+- **المشاريع**: المشاريع المرتبطة بالركيزة
+- **التكليفات**: المستخدمون المُكلَّفون
+
+---
+
+## صفحة تفاصيل الهدف
+
+```
+/<locale>/entities/objective/<objectiveId>
+```
+
+### المحتوى
+- **النظرة العامة**: العنوان، الوصف، الحالة، الركيزة الأم
+- **مؤشرات الأداء**: KPIs المرتبطة بالهدف
+- **المشاريع**: المشاريع المساهمة في تحقيق الهدف
+- **التقدم**: شريط تقدم نحو تحقيق الهدف
+- **التكليفات**: المستخدمون المُكلَّفون
+
+---
+
+## إنشاء ركيزة/هدف جديد (للمسؤولين فقط)
+
+### تدفق إنشاء ركيزة/هدف
+
+```mermaid
+flowchart LR
+    A[ADMIN] -->|إنشاء| B[ركيزة جديدة]
+    B --> C[إضافة أهداف]
+    C --> D[ربط KPIs]
+    D --> E[تعيين المستخدمين]
+    E --> F[متابعة التقدم]
+    
+    G[ADMIN] -->|إنشاء| H[هدف جديد]
+    H --> I[اختيار الركيزة]
+    I --> J[ربط KPIs]
+    J --> K[ربط المشاريع]
+```
+
+1. انتقل إلى صفحة الكيانات ← الركائز / الأهداف.
+2. انقر على **+ ركيزة جديدة** أو **+ هدف جديد**.
+3. أدخل البيانات:
+   - **العنوان** (مطلوب)
+   - **العنوان (عربي)** (اختياري)
+   - **الوصف** (مطلوب)
+   - **الحالة**: PLANNED / ACTIVE / COMPLETED
+   - **الركيزة الأم** (للأهداف فقط — اختياري)
+4. انقر على **حفظ**.
+
+---
+
+## لوحة متابعة المحاذاة الاستراتيجية
+
+#### هيكل المحاذاة الاستراتيجية
+
+```mermaid
+flowchart TD
+    subgraph "المحاذاة الاستراتيجية"
+        A[إنجاز الركائز] --> B[نسبة التحقق]
+        C[إنجاز الأهداف] --> D[الأهداف المتأخرة]
+        E[التوزيع الاستراتيجي] --> F[التوازن بين الركائز]
+    end
+    
+    B --> G[لوحة التحكم]
+    D --> G
+    F --> G
+```
+
+#### تدفق استخدام التقارير
+
+```mermaid
+sequenceDiagram
+    actor U as المستخدم
+    participant R as التقارير
+    participant F as الفلاتر
+    participant D as قاعدة البيانات
+    participant E as التصدير
+    
+    U->>R: فتح التقارير
+    R->>U: عرض التبويبات
+    U->>R: اختيار نوع التقرير
+    R->>F: تطبيق الفلاتر
+    F->>D: استعلام البيانات
+    D-->>F: النتائج
+    F-->>R: عرض التقرير
+    U->>E: طلب تصدير
+    E-->>U: ملف CSV/Excel
+```
+
+انتقل إلى `/<locale>/dashboards/pillar` أو `/<locale>/reports` ← **المحاذاة الاستراتيجية** لعرض:
+- إنجاز الركائز والأهداف
+- نسبة التحقق لكل ركيزة
+- الأهداف المتأخرة
+- التوزيع الاستراتيجي
+
+---
+
+## صلاحيات حسب الدور
+
+| الدور | رؤية الركائز/الأهداف | إنشاء/تعديل/حذف |
+|-------|---------------------|-----------------|
+| **SUPER_ADMIN** | الكل | ✓ كامل |
+| **ADMIN** | الكل | ✓ كامل |
+| **EXECUTIVE** | الكل | ✗ للقراءة فقط |
+| **MANAGER** | المُكلَّف بها | ✗ للقراءة فقط |
+
+---
+
+## نصائح مفيدة
+
+- ابدأ بإعداد الركائز ثم الأهداف ثم مؤشرات الأداء.
+- تأكد من ارتباط كل هدف بركيزة واضحة.
+- راجع حالة الركائز والأهداف دورياً.
+- استخدم لوحة المحاذاة الاستراتيجية لفهم التقدم العام.
+
+</div>
+4:["$","$Lc",null,{"title":"الركائز والأهداف","content":"$d"}]

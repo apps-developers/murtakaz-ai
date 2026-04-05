@@ -9,6 +9,7 @@ docs/site/out/
 
 # build outputs
 **/dist/
+!docs/site/dist/
 **/build/
 
 # logs

@@ -1,0 +1,229 @@
+1:"$Sreact.fragment"
+2:I[15244,[],""]
+3:I[43866,[],""]
+5:I[86213,[],"OutletBoundary"]
+7:I[86213,[],"MetadataBoundary"]
+9:I[86213,[],"ViewportBoundary"]
+b:I[34835,[],""]
+:HL["/_next/static/css/145dcfbb7bdfe18e.css","style"]
+0:{"P":null,"b":"s5eJIx2mAXYXJg6cEVOhC","p":"","c":["","12-departments"],"i":false,"f":[[["",{"children":[["slug","12-departments","d"],{"children":["__PAGE__",{}]}]},"$undefined","$undefined",true],["",["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/145dcfbb7bdfe18e.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]],["$","html",null,{"lang":"ar","dir":"rtl","children":["$","body",null,{"className":"min-h-screen bg-white font-sans antialiased","children":["$","$L2",null,{"parallelRouterKey":"children","segmentPath":["children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[],[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]]],"forbidden":"$undefined","unauthorized":"$undefined"}]}]}]]}],{"children":[["slug","12-departments","d"],["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","segmentPath":["children","$0:f:0:1:2:children:0","children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":["__PAGE__",["$","$1","c",{"children":["$L4",null,["$","$L5",null,{"children":"$L6"}]]}],{},null,false]},null,false]},null,false],["$","$1","h",{"children":[null,["$","$1","hEf2LQR1brgK1ql3xqxeT",{"children":[["$","$L7",null,{"children":"$L8"}],["$","$L9",null,{"children":"$La"}],null]}]]}],false]],"m":"$undefined","G":["$b","$undefined"],"s":false,"S":true}
+a:[["$","meta","0",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]
+8:[["$","meta","0",{"charSet":"utf-8"}],["$","title","1",{"children":"الإدارات - دليل  المؤشرات KPI"}],["$","meta","2",{"name":"description","content":"دليل استخدام منصة  المؤشرات KPI لإدارة الأداء المؤسسي"}]]
+6:null
+c:I[84424,["2049","static/chunks/2049-4807d1f153ee14dd.js","9791","static/chunks/9791-20fac1a27f6e22c4.js","161","static/chunks/161-783ba81db49a7d9b.js","7182","static/chunks/app/%5Bslug%5D/page-c70e347b1eb63951.js"],"DocPage"]
+d:T1dd8,# الإدارات — إدارة الهيكل التنظيمي
+
+<div dir="rtl">
+
+تُستخدم صفحة **الإدارات** (`/<locale>/departments`) لإدارة هيكل الأقسام والإدارات في المؤسسة. تربط الإدارات بين المستخدمين والهيكل التنظيمي.
+
+---
+
+## الوصول إلى الإدارات
+
+1. انقر على **الإدارات** في الشريط الجانبي.
+2. أو انتقل مباشرةً إلى:
+
+```
+/<locale>/departments
+```
+
+> **ملاحظة:** تتطلب إدارة الإدارات (إنشاء/تعديل/حذف) صلاحيات **ADMIN** أو **SUPER_ADMIN**.
+
+---
+
+### هيكل العلاقات التنظيمية
+
+```mermaid
+flowchart TB
+    subgraph "المؤسسة"
+        O[المدير التنفيذي]
+    end
+    
+    subgraph "الإدارات"
+        D1[الإدارة 1]
+        D2[الإدارة 2]
+        D3[الإدارة 3]
+    end
+    
+    subgraph "المستخدمون"
+        U1[مدير الإدارة 1]
+        U2[موظفو الإدارة 1]
+        U3[مدير الإدارة 2]
+        U4[موظفو الإدارة 2]
+    end
+    
+    O --> D1
+    O --> D2
+    O --> D3
+    
+    D1 --> U1
+    D1 --> U2
+    D2 --> U3
+    D2 --> U4
+    
+    style O fill:#1e3a8a,stroke:#1e40af,color:#fff
+    style D1 fill:#3b82f6,stroke:#2563eb,color:#fff
+    style D2 fill:#3b82f6,stroke:#2563eb,color:#fff
+    style D3 fill:#3b82f6,stroke:#2563eb,color:#fff
+```
+
+### تدفق إنشاء الإدارة
+
+```mermaid
+flowchart LR
+    A[ADMIN] -->|إنشاء| B[إدارة جديدة]
+    B --> C[تعيين المستخدمين]
+    C --> D[تعيين المدير]
+    D --> E[ربط بالكيانات]
+    E --> F[التقارير حسب الإدارة]
+```
+
+| العمود | الوصف |
+|--------|-------|
+| **الاسم** | اسم الإدارة (بالعربية أو الإنجليزية حسب اللغة المختارة) |
+| **المدير** | اسم مدير الإدارة (إن وُجد) |
+| **المستخدمون** | عدد المستخدمين في الإدارة |
+| **تاريخ الإنشاء** | تاريخ إنشاء الإدارة |
+| **الإجراءات** | أزرار التعديل والحذف (للمسؤولين فقط) |
+
+---
+
+## إنشاء إدارة جديدة (للمسؤولين فقط)
+
+1. في صفحة الإدارات، انقر على زر **+ إدارة جديدة**.
+2. أدخل البيانات المطلوبة:
+   - **الاسم** (مطلوب): اسم الإدارة بالإنجليزية
+   - **الاسم (عربي)** (اختياري): اسم الإدارة بالعربية
+3. انقر على **حفظ**.
+4. تظهر الإدارة الجديدة في القائمة.
+
+> **تلميح:** يُفضل إدخال الاسم باللغتين لضمان العرض الصحيح في واجهتي العربية والإنجليزية.
+
+---
+
+## تعديل إدارة (للمسؤولين فقط)
+
+1. في جدول الإدارات، ابحث عن الإدارة المطلوبة.
+2. انقر على أيقونة **التعديل** (✏️) في عمود الإجراءات.
+3. يفتح حوار التعديل.
+4. عدّل الحقول المطلوبة:
+   - **الاسم**: تحديث الاسم بالإنجليزية
+   - **الاسم (عربي)**: تحديث الاسم بالعربية
+5. انقر على **حفظ**.
+6. يتم تحديث الإدارة فوراً.
+
+---
+
+## حذف إدارة (للمسؤولين فقط)
+
+> **تحذير:** لا يمكن التراجع عن حذف الإدارة. تأكد من عدم وجود مستخدمين مرتبطين بالإدارة قبل الحذف.
+
+1. في جدول الإدارات، ابحث عن الإدارة المطلوبة.
+2. انقر على أيقونة **الحذف** (🗑️) في عمود الإجراءات.
+3. يفتح حوار تأكيد الحذف.
+4. راجع اسم الإدارة للتأكد.
+5. انقر على **حذف** للتأكيد.
+
+### قيود الحذف
+
+- لا يمكن حذف إدارة تحتوي على مستخدمين.
+- يجب نقل المستخدمين إلى إدارة أخرى أولاً (عبر إدارة المستخدمين).
+
+---
+
+## ربط المستخدمين بالإدارات
+
+### عند إنشاء مستخدم جديد
+
+1. انتقل إلى **الإدارة ← المستخدمون**.
+2. أنشئ مستخدماً جديداً.
+3. حدد **الإدارة** من قائمة الإدارات المتاحة.
+
+### تعديل إدارة مستخدم موجود
+
+1. انتقل إلى **الإدارة ← المستخدمون**.
+2. افتح صفحة تفاصيل المستخدم.
+3. عدّل حقل **الإدارة**.
+4. احفظ التغييرات.
+
+---
+
+## تعيين مدير للإدارة
+
+يمكن تعيين مدير للإدارة من صفحة تفاصيل المستخدم:
+
+1. انتقل إلى **الإدارة ← المستخدمون**.
+2. افتح المستخدم الذي تريد تعيينه كمدير.
+3. في حقل **الدور**، تأكد من اختيار `MANAGER` أو `EXECUTIVE` أو `ADMIN`.
+4. احفظ التغييرات.
+5. عدّل سجل الإدارة واختر هذا المستخدم كمدير.
+
+---
+
+### العلاقة بين الإدارات والكيانات
+
+```mermaid
+flowchart TB
+    D[الإدارة] --> U[المستخدمون]
+    D --> E[الكيانات المرتبطة]
+    
+    U --> U1[مدير]
+    U --> U2[مديرو KPIs]
+    U --> U3[مستخدمون]
+    
+    E --> E1[مؤشرات الأداء]
+    E --> E2[المشاريع]
+    E --> E3[المخاطر]
+    
+    style D fill:#3b82f6,stroke:#2563eb,color:#fff
+```
+
+- يمكن ربط **الكيانات** بإدارات معينة عند إنشائها.
+- تساعد هذه العلاقة في:
+  - تصفية الكيانات حسب الإدارة
+  - تقارير الأداء حسب الإدارة
+  - تحديد المسؤولية التنظيمية
+
+---
+
+## صلاحيات حسب الدور
+
+| الدور | رؤية الإدارات | إنشاء/تعديل/حذف |
+|-------|---------------|-----------------|
+| **SUPER_ADMIN** | جميع الإدارات في جميع المؤسسات | ✓ كامل |
+| **ADMIN** | جميع الإدارات في المؤسسة | ✓ كامل |
+| **EXECUTIVE** | جميع الإدارات في المؤسسة | ✗ للقراءة فقط |
+| **MANAGER** | إدارته فقط (إن وُجدت) | ✗ للقراءة فقط |
+
+---
+
+## حل المشكلات الشائعة
+
+### لماذا لا يمكن حذف إدارة؟
+
+- تأكد من عدم وجود **مستخدمين** مرتبطين بالإدارة.
+- انقل جميع المستخدمين إلى إدارة أخرى أولاً.
+
+### لماذا لا يظهر اسم الإدارة بالعربية؟
+
+- تأكد من إدخال **الاسم (عربي)** عند إنشاء/تعديل الإدارة.
+- إذا لم يُدخل الاسم العربي، يُعرض الاسم الإنجليزي في الواجهة العربية.
+
+### كيف أغيّر مدير الإدارة؟
+
+1. انتقل إلى صفحة المستخدمين.
+2. عيّن المستخدم الجديد في الإدارة المطلوبة.
+3. أو قم بتعديل الإدارة واختيار المستخدم كمدير.
+
+---
+
+## نصائح مفيدة
+
+- حدد إدارة للمستخدم عند إنشائه لتسهيل التنظيم.
+- استخدم الأسماء الواضحة والمعروفة في المؤسسة.
+- أدخل الأسماء باللغتين لتحسين التجربة في الواجهتين.
+- راجع قائمة الإدارات دورياً لضمان تحديثها.
+
+</div>
+4:["$","$Lc",null,{"title":"الإدارات","content":"$d"}]

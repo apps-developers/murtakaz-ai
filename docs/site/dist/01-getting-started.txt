@@ -1,0 +1,164 @@
+1:"$Sreact.fragment"
+2:I[15244,[],""]
+3:I[43866,[],""]
+5:I[86213,[],"OutletBoundary"]
+7:I[86213,[],"MetadataBoundary"]
+9:I[86213,[],"ViewportBoundary"]
+b:I[34835,[],""]
+:HL["/_next/static/css/145dcfbb7bdfe18e.css","style"]
+0:{"P":null,"b":"s5eJIx2mAXYXJg6cEVOhC","p":"","c":["","01-getting-started"],"i":false,"f":[[["",{"children":[["slug","01-getting-started","d"],{"children":["__PAGE__",{}]}]},"$undefined","$undefined",true],["",["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/145dcfbb7bdfe18e.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]],["$","html",null,{"lang":"ar","dir":"rtl","children":["$","body",null,{"className":"min-h-screen bg-white font-sans antialiased","children":["$","$L2",null,{"parallelRouterKey":"children","segmentPath":["children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[],[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]]],"forbidden":"$undefined","unauthorized":"$undefined"}]}]}]]}],{"children":[["slug","01-getting-started","d"],["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","segmentPath":["children","$0:f:0:1:2:children:0","children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":["__PAGE__",["$","$1","c",{"children":["$L4",null,["$","$L5",null,{"children":"$L6"}]]}],{},null,false]},null,false]},null,false],["$","$1","h",{"children":[null,["$","$1","WZLeSsgt6nut0l0x5CMCr",{"children":[["$","$L7",null,{"children":"$L8"}],["$","$L9",null,{"children":"$La"}],null]}]]}],false]],"m":"$undefined","G":["$b","$undefined"],"s":false,"S":true}
+a:[["$","meta","0",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]
+8:[["$","meta","0",{"charSet":"utf-8"}],["$","title","1",{"children":"البدء والدخول - دليل  المؤشرات KPI"}],["$","meta","2",{"name":"description","content":"دليل استخدام منصة  المؤشرات KPI لإدارة الأداء المؤسسي"}]]
+6:null
+c:I[84424,["2049","static/chunks/2049-4807d1f153ee14dd.js","9791","static/chunks/9791-20fac1a27f6e22c4.js","161","static/chunks/161-783ba81db49a7d9b.js","7182","static/chunks/app/%5Bslug%5D/page-c70e347b1eb63951.js"],"DocPage"]
+d:T1b33,# البدء والدخول
+
+<div dir="rtl">
+
+يرشدك هذا الدليل خطوةً بخطوة عبر تسجيل الدخول إلى المنصة، والتنقل بين أقسامها، وفهم التخطيط العام للواجهة.
+
+---
+
+## 1. الوصول إلى المنصة
+
+افتح متصفح الإنترنت وانتقل إلى رابط المنصة الذي زوّدتك به مؤسستك. يتضمن مسار الرابط بادئة اللغة:
+
+- **العربية**: `/ar/...`
+- **الإنجليزية**: `/en/...`
+
+عند زيارة الرابط الجذر `/` يتم التوجيه تلقائياً إلى `/en`، وبإمكانك تغيير اللغة يدوياً بعد الدخول.
+
+---
+
+## 2. تسجيل الدخول
+
+1. انتقل إلى `/<locale>/auth/login` (مثال: `/ar/auth/login`).
+2. أدخل **بريدك الإلكتروني** و**كلمة المرور**.
+3. انقر على زر **تسجيل الدخول**.
+
+بعد المصادقة الناجحة، سيتم توجيهك تلقائياً إلى صفحة **النظرة العامة** (`/<locale>/overview`).
+
+> **ملاحظة:** إن لم تكن لديك بيانات اعتماد، تواصل مع مسؤول النظام في مؤسستك. تُدار بيانات الاعتماد على مستوى المؤسسة ولا تتوفر خدمة التسجيل الذاتي.
+
+### نسيت كلمة المرور؟
+
+استخدم رابط **نسيت كلمة المرور** في صفحة تسجيل الدخول لبدء عملية إعادة تعيين كلمة المرور عبر البريد الإلكتروني.
+
+```mermaid
+graph LR
+    A[صفحة تسجيل الدخول] --> B{نسيت كلمة المرور?}
+    B -->|نعم| C[إدخال البريد الإلكتروني]
+    C --> D[إرسال رابط إعادة التعيين]
+    D --> E[تعيين كلمة مرور جديدة]
+    E --> F[تسجيل الدخول]
+    B -->|لا| A
+```
+
+---
+
+## 3. تغيير اللغة
+
+تدعم المنصة دعماً كاملاً **اللغة العربية** (من اليمين إلى اليسار) و**اللغة الإنجليزية** (من اليسار إلى اليمين).
+
+- غيّر اللغة بتعديل بادئة اللغة في الرابط: استبدل `/en/` بـ `/ar/` أو العكس.
+- أو استخدم زر تبديل اللغة في شريط التنقل العلوي.
+
+تتكيف جميع التسميات والتواريخ والأرقام تلقائياً مع اللغة المحددة، بما في ذلك اتجاه الصفحة بالكامل.
+
+---
+
+## 4. التنقل الرئيسي (الشريط الجانبي)
+
+بعد تسجيل الدخول، يكون الشريط الجانبي وسيلة التنقل الرئيسية. تختلف العناصر الظاهرة بحسب دورك في النظام:
+
+| عنصر التنقل | الوصف |
+|------------|-------|
+| **النظرة العامة** | ملخص تنفيذي مخصص ولوحة الصحة المؤسسية |
+| **الكيانات** | تصفح مؤشرات الأداء وعناصر الاستراتيجية حسب النوع (يتغير بحسب إعدادات مؤسستك) |
+| **المشاريع** | محفظة المشاريع الاستراتيجية |
+| **المخاطر** | سجل المخاطر المؤسسية |
+| **الركائز الاستراتيجية** | محاور الاستراتيجية ومجالات التركيز |
+| **الأهداف** | الأهداف التنظيمية |
+| **المسؤوليات** | تكليفات الفريق والملكية |
+| **الإدارات** | الهيكل التنظيمي والأقسام |
+| **لوحات المتابعة** | لوحات تحليلية مبنية على الأدوار |
+| **التقارير** | تقارير تحليلية مع التصدير |
+| **الاعتمادات** | طابور اعتماد قيم مؤشرات الأداء |
+| **المؤسسة** | إعدادات ومعلومات المؤسسة |
+| **الإدارة** | إدارة المستخدمين (للمسؤولين فقط) |
+
+---
+
+## 5. تخطيط الصفحة
+
+تتبع جميع الصفحات تخطيطاً موحداً:
+
+```mermaid
+graph TB
+    subgraph Page["الصفحة"]
+        subgraph Header["رأس الصفحة"]
+            Title["العنوان"]
+            Actions["الأزرار"]
+        end
+        
+        subgraph Main["منطقة المحتوى الرئيسي"]
+            Content["البطاقات / الجداول / الرسوم"]
+        end
+        
+        subgraph Sidebar["الشريط الجانبي"]
+            Nav1["النظرة العامة"]
+            Nav2["الكيانات"]
+            Nav3["مؤشرات الأداء"]
+            Nav4["لوحات المتابعة"]
+            Nav5["الاعتمادات"]
+        end
+    end
+    
+    style Header fill:#3b82f6,stroke:#2563eb,color:#fff
+    style Main fill:#f8fafc,stroke:#e2e8f0
+    style Sidebar fill:#f1f5f9,stroke:#cbd5e1
+```
+
+- **رأس الصفحة**: يعرض عنوان الصفحة والعنوان الفرعي وأزرار الإجراءات الرئيسية (مثل: "كيان جديد"، "عرض لوحات المتابعة").
+- **البطاقات**: تُعرض البيانات في بطاقات تحتوي على مقاييس وأشرطة تقدم وشارات الحالة.
+- **الجداول**: قوائم السجلات بأعمدة قابلة للترتيب مع روابط للوصول إلى صفحات التفاصيل.
+
+---
+
+## 6. تسجيل الخروج
+
+- انقر على صورتك الشخصية أو اسمك في شريط التنقل العلوي.
+- اختر **تسجيل الخروج**.
+
+تُمسح جلستك وتعود تلقائياً إلى صفحة تسجيل الدخول.
+
+---
+
+## 7. المساعد الذكي (AI Assistant)
+
+عند تمكينه، يكون المساعد الذكي متاحاً في شريط العلوي للمساعدة في المهام:
+
+### تفعيل/إخفاء لوحة المساعد
+
+- انقر على زر **المساعد الذكي** في الشريط العلوي لتفعيل لوحة المحادثة.
+- انقر مرة أخرى لإخفاء اللوحة.
+
+### ميزات المساعد الذكي
+
+- **مساعدة سياقية**: يقدم إرشادات بناءً على الصفحة الحالية.
+- **الإجابة على الأسئلة**: يمكن طرح الأسئلة حول استخدام المنصة.
+- **الدعم متعدد اللغات**: يدعم اللغتين العربية والإنجليزية.
+
+> **ملاحظة:** يتحكم مسؤول المنصة في توفر هذه الميزة عبر **مؤشرات الميزات** في إعدادات النظام.
+
+---
+
+## 8. صفحة الملف الشخصي
+
+انتقل إلى `/<locale>/profile` للاطلاع على:
+- دورك الحالي ومؤسستك
+- نطاق وصولك (ما يمكنك رؤيته وتنفيذه)
+- إعدادات التفضيلات (اللغة، المظهر)
+
+</div>
+4:["$","$Lc",null,{"title":"البدء والدخول","content":"$d"}]

@@ -1,0 +1,151 @@
+1:"$Sreact.fragment"
+2:I[15244,[],""]
+3:I[43866,[],""]
+5:I[86213,[],"OutletBoundary"]
+7:I[86213,[],"MetadataBoundary"]
+9:I[86213,[],"ViewportBoundary"]
+b:I[34835,[],""]
+:HL["/_next/static/css/145dcfbb7bdfe18e.css","style"]
+0:{"P":null,"b":"s5eJIx2mAXYXJg6cEVOhC","p":"","c":["","theory","01-strategy-execution-foundations"],"i":false,"f":[[["",{"children":["theory",{"children":[["slug","01-strategy-execution-foundations","d"],{"children":["__PAGE__",{}]}]}]},"$undefined","$undefined",true],["",["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/145dcfbb7bdfe18e.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]],["$","html",null,{"lang":"ar","dir":"rtl","children":["$","body",null,{"className":"min-h-screen bg-white font-sans antialiased","children":["$","$L2",null,{"parallelRouterKey":"children","segmentPath":["children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[],[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]]],"forbidden":"$undefined","unauthorized":"$undefined"}]}]}]]}],{"children":["theory",["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","segmentPath":["children","theory","children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":[["slug","01-strategy-execution-foundations","d"],["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","segmentPath":["children","theory","children","$0:f:0:1:2:children:2:children:0","children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":["__PAGE__",["$","$1","c",{"children":["$L4",null,["$","$L5",null,{"children":"$L6"}]]}],{},null,false]},null,false]},null,false]},null,false],["$","$1","h",{"children":[null,["$","$1","l9EOXephimQoYxduwgMih",{"children":[["$","$L7",null,{"children":"$L8"}],["$","$L9",null,{"children":"$La"}],null]}]]}],false]],"m":"$undefined","G":["$b","$undefined"],"s":false,"S":true}
+a:[["$","meta","0",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]
+8:[["$","meta","0",{"charSet":"utf-8"}],["$","title","1",{"children":"أسس تنفيذ الاستراتيجية - الخلفية النظرية -  المؤشرات KPI"}],["$","meta","2",{"name":"description","content":"دليل استخدام منصة  المؤشرات KPI لإدارة الأداء المؤسسي"}]]
+6:null
+c:I[84424,["2049","static/chunks/2049-4807d1f153ee14dd.js","9791","static/chunks/9791-20fac1a27f6e22c4.js","161","static/chunks/161-783ba81db49a7d9b.js","22","static/chunks/app/theory/%5Bslug%5D/page-5d3a6ef2c7362de5.js"],"DocPage"]
+d:T20e7,# أسس تنفيذ الاستراتيجية
+
+<div dir="rtl">
+
+## ما هو تنفيذ الاستراتيجية؟
+
+**الاستراتيجية** هي خطة المؤسسة لتحقيق أهدافها بعيدة المدى. أما **تنفيذ الاستراتيجية** فهو منهجية ترجمة تلك الخطة إلى إجراءات قابلة للقياس، وتحديد الملكية، وتتبع التقدم، وإجراء التصحيحات في الوقت الفعلي.
+
+تفشل معظم المؤسسات ليس بسبب استراتيجية سيئة، بل بسبب ضعف التنفيذ. تُظهر الأبحاث باستمرار أن **60–90% من الخطط الاستراتيجية لا تُكتَمل** بسبب الفجوة بين التخطيط والتطبيق.
+
+---
+
+## فجوة تنفيذ الاستراتيجية
+
+تنشأ الفجوة بين الاستراتيجية المُصاغة جيداً والنتائج الفعلية من أسباب متكررة:
+
+| السبب الجذري | الأعراض الظاهرة |
+|-------------|----------------|
+| **غياب الملكية الواضحة** | الجميع "يمتلك" الاستراتيجية؛ لا أحد يُحاسَب |
+| **غياب القياس** | يُناقَش التقدم في الاجتماعات دون أن يُقاس أبداً |
+| **غياب الرؤية** | القيادة لا ترى ما يجري على أرض الواقع |
+| **غياب حلقة التغذية الراجعة** | تظهر المشكلات متأخرة جداً للتصحيح |
+| **حوافز غير متوافقة** | العمل اليومي منفصل عن الأهداف الاستراتيجية |
+| **التعقيد الزائد** | وثائق الاستراتيجية طويلة أو مجردة جداً للتطبيق |
+
+تعالج منصة  المؤشرات KPI كل سبب من هذه الأسباب مباشرةً من خلال بناء **نظام تنفيذ منظَّم وقابل للقياس ومُهيمَن عليه**.
+
+---
+
+## التسلسل الهرمي للاستراتيجية
+
+يتطلب تنفيذ الاستراتيجية الفعّال تسلسلاً هرمياً واضحاً يربط الرؤية بالعمل اليومي:
+
+```mermaid
+flowchart TD
+    A[الرؤية] -->|"أين نريد أن نكون بعد 10 سنوات؟"| B[الرسالة]
+    B -->|"لماذا نوجد؟ ماذا نفعل؟"| C[الركائز الاستراتيجية / المحاور]
+    C -->|"المجالات الـ 3–5 التي سنركز عليها"| D[الأهداف الاستراتيجية]
+    D -->|"ما الذي يجب تحقيقه في كل ركيزة؟"| E[المبادرات والمشاريع]
+    E -->|"ماذا سنفعل لتحقيق كل هدف؟"| F[مؤشرات الأداء الرئيسية KPIs]
+    F -->|"كيف سنعرف أننا نُحرز تقدماً؟"| G[الإجراءات والمهام التشغيلية]
+    G -->|"ماذا يفعل كل فرد هذا الأسبوع / الشهر؟"| H[التنفيذ]
+    
+    style A fill:#e1f5ff
+    style G fill:#fff4e1
+    style H fill:#e8f5e9
+```
+
+يجب ربط كل مستوى صراحةً بالمستوى الذي فوقه. بدون هذه الروابط، تتحول الخطط الاستراتيجية إلى قوائم أمنيات بدلاً من خرائط طريق للتنفيذ.
+
+---
+
+## دورة حياة تنفيذ الاستراتيجية
+
+tنفيذ الاستراتيجية ليس حدثاً لمرة واحدة — بل هو دورة مستمرة:
+
+```mermaid
+flowchart TD
+    A[1. الصياغة] --> B[2. النشر]
+    B --> C[3. القياس]
+    C --> D[4. المراجعة]
+    D --> E[5. التصحيح]
+    E --> A
+    
+    A -->|تحديد الرؤية، الركائز، الأهداف، ومؤشرات الأداء| A_detail[" "]
+    B -->|تحديد الملكية، ضبط الأهداف، تهيئة دوريات القياس| B_detail[" "]
+    C -->|جمع البيانات، إدخال القيم، الإرسال للاعتماد| C_detail[" "]
+    D -->|اعتماد البيانات، تحليل الاتجاهات، تقييم درجات الصحة| D_detail[" "]
+    E -->|تحديد الثغرات، تصعيد المخاطر، تحديث الخطط، إعادة التخصيص| E_detail[" "]
+    
+    style A fill:#e3f2fd
+    style B fill:#e8f5e9
+    style C fill:#fff3e0
+    style D fill:#fce4ec
+    style E fill:#f3e5f5
+```
+
+تدعم منصة  المؤشرات KPI مراحل **القياس ← المراجعة ← التصحيح** من هذه الدورة من خلال إدخال البيانات والاعتماد ولوحات المتابعة.
+
+---
+
+## التتالي مقابل التوافق
+
+مفهومان أساسيان في تنفيذ الاستراتيجية:
+
+### التتالي الرأسي (Vertical Cascade)
+تحليل الأهداف رفيعة المستوى إلى أهداف فرعية ومبادرات ومؤشرات أداء عبر التسلسل الهرمي المؤسسي. يتتالى الهدف على مستوى الرئيس التنفيذي (مثل: "نمو الإيرادات 20%") نزولاً إلى أهداف الأقسام ومعالم المشاريع ومؤشرات الأداء الفردية.
+
+### التوافق الأفقي (Horizontal Alignment)
+ضمان أن أقسام وفرق مختلفة تعمل في اتجاه تكاملي — لا متناقض. يُعدّ سوء التوافق أحد أكثر التكاليف الخفية شيوعاً في المؤسسات الكبيرة.
+
+---
+
+## دور البيانات في تنفيذ الاستراتيجية
+
+تنفيذ الاستراتيجية بلا بيانات قائم على الآراء. البيانات:
+
+- **تُؤكد** ما إذا كانت الاستراتيجية تعمل كما هو مقصود
+- **تُشير** إلى المشكلات مبكراً قبل أن تتحول إلى أزمات
+- **تُزيل** التحيز السياسي من محادثات الأداء
+- **تُمكّن** من اتخاذ القرارات القائمة على الحقائق على جميع المستويات
+- **تُنشئ المساءلة** — ما يُقاس يُدار
+
+لهذا السبب، لا تُعدّ دورة إدخال البيانات ← الاعتماد ← لوحات المتابعة في  المؤشرات KPI مجرد ميزة برمجية — بل هي العمود الفقري التشغيلي لحوكمة الاستراتيجية الحديثة.
+
+---
+
+## المبادئ الرئيسية للتنفيذ الناجح
+
+1. **الوضوح** — كل شخص يعرف دوره وما هو مسؤول عن قياسه.
+2. **الإيقاع المنتظم** — تُجمع البيانات وتُراجع في فترات منتظمة ومتوقعة.
+3. **المساءلة** — لكل مؤشر أداء مالك محدد الاسم يُحاسَب على أدائه.
+4. **الشفافية** — القيادة لديها رؤية آنية للأداء على جميع المستويات.
+5. **السرعة** — تُكتشف المشكلات وتُتخذ القرارات بسرعة، لا في المراجعات السنوية.
+6. **الثقة في البيانات** — تمر جميع البيانات المُبلَّغ عنها بعملية اعتماد مُهيمَن عليها قبل احتسابها.
+
+---
+
+## ملخص المفاهيم الرئيسية
+
+> **النقاط الأساسية:**
+> - **60–90%** من الخطط الاستراتيجية لا تُكتَمل بسبب الفجوة بين التخطيط والتنفيذ
+> - **التسلسل الهرمي** يربط الرؤية بالعمل اليومي عبر 7 مستويات
+> - **دورة الحياة** تشمل: الصياغة → النشر → القياس → المراجعة → التصحيح
+> - **التتالي الرأسي** و**التوافق الأفقي** يضمان تنفيذاً متكاملاً
+> - **البيانات** تُزيل التحيز السياسي وتُنشئ المساءلة
+
+---
+
+## للاستزادة
+
+- كابلان ونورتون، *بطاقة الأداء المتوازن* (1996)
+- هريبينياك، *جعل الاستراتيجية تعمل* (2005)
+- نيفن، *بطاقة الأداء المتوازن خطوةً بخطوة* (2002)
+- مانكينز وستيل، *تحويل الاستراتيجية العظيمة إلى أداء عظيم*، مجلة هارفارد بزنس ريفيو (2005)
+
+</div>
+4:["$","$Lc",null,{"title":"أسس تنفيذ الاستراتيجية","content":"$d"}]
