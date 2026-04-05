@@ -435,6 +435,7 @@ export default function ApprovalsPage() {
                 )}
               </TableBody>
             </Table>
+          )}
           </div>
         </CardContent>
       </Card>
