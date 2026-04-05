@@ -72,7 +72,7 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale} suppressHydrationWarning data-color-theme={colorTheme}>
-      <body>
+      <body className="antialiased">
         {/* Dynamic organization theme CSS - injected in body to avoid hydration issues */}
         {themeCSS && (
           <style

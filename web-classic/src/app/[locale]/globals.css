@@ -76,7 +76,7 @@ html[lang="ar"] {
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground antialiased;
+    @apply bg-background text-foreground;
     font-family: inherit !important;
   }
 }
