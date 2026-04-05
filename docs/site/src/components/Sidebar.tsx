@@ -14,25 +14,44 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
+  // البدء السريع
   { title: "الرئيسية", href: "/", file: "" },
+  { title: "المرجع السريع", href: "/00-quick-reference", file: "00-quick-reference.md" },
   { title: "البدء والدخول", href: "/01-getting-started", file: "01-getting-started.md" },
-  { title: "الأدوار والصلاحيات", href: "/02-roles-and-permissions", file: "02-roles-and-permissions.md" },
-  { title: "صفحة النظرة العامة", href: "/03-overview-page", file: "03-overview-page.md" },
-  { title: "الكيانات ومؤشرات الأداء", href: "/04-entities-and-kpis", file: "04-entities-and-kpis.md" },
-  { title: "إدخال قيم مؤشرات الأداء", href: "/05-entering-kpi-values", file: "05-entering-kpi-values.md" },
-  { title: "الاعتمادات", href: "/06-approvals", file: "06-approvals.md" },
-  { title: "لوحات المتابعة", href: "/07-dashboards", file: "07-dashboards.md" },
-  { title: "دليل المسؤول", href: "/08-admin-guide", file: "08-admin-guide.md" },
+  
+  // المفاهيم الأساسية
   { title: "المسرد", href: "/09-glossary", file: "09-glossary.md" },
+  { title: "الأدوار والصلاحيات", href: "/02-roles-and-permissions", file: "02-roles-and-permissions.md" },
+  { title: "الكيانات ومؤشرات الأداء", href: "/04-entities-and-kpis", file: "04-entities-and-kpis.md" },
+  { title: "دليل الصيغ الحسابية", href: "/22-formulas-guide", file: "22-formulas-guide.md" },
+  
+  // العمليات اليومية
+  { title: "صفحة النظرة العامة", href: "/03-overview-page", file: "03-overview-page.md" },
+  { title: "إدخال قيم مؤشرات الأداء", href: "/05-entering-kpi-values", file: "05-entering-kpi-values.md" },
+  { title: "سير عمل الموافقات", href: "/17-approval-workflow", file: "17-approval-workflow.md" },
+  { title: "الاعتمادات", href: "/06-approvals", file: "06-approvals.md" },
   { title: "التقارير والتحليلات", href: "/10-reports", file: "10-reports.md" },
-  { title: "المسؤوليات", href: "/11-responsibilities", file: "11-responsibilities.md" },
+  
+  // لوحات المتابعة والتحليل
+  { title: "لوحات المتابعة", href: "/07-dashboards", file: "07-dashboards.md" },
+  
+  // إدارة المؤسسة
+  { title: "المؤسسة", href: "/16-organization", file: "16-organization.md" },
   { title: "الإدارات", href: "/12-departments", file: "12-departments.md" },
+  { title: "الركائز والأهداف", href: "/15-pillars-and-objectives", file: "15-pillars-and-objectives.md" },
   { title: "المشاريع", href: "/13-projects", file: "13-projects.md" },
   { title: "المخاطر", href: "/14-risks", file: "14-risks.md" },
-  { title: "الركائز والأهداف", href: "/15-pillars-and-objectives", file: "15-pillars-and-objectives.md" },
-  { title: "المؤسسة", href: "/16-organization", file: "16-organization.md" },
-  { title: "سير عمل الموافقات", href: "/17-approval-workflow", file: "17-approval-workflow.md" },
+  { title: "المسؤوليات", href: "/11-responsibilities", file: "11-responsibilities.md" },
+  
+  // الأدوات المتقدمة
   { title: "المساعد الذكي (AI)", href: "/18-ai-assistant", file: "18-ai-assistant.md" },
+  { title: "إدارة البيانات", href: "/20-data-management", file: "20-data-management.md" },
+  { title: "صفحات التطبيق", href: "/19-app-pages", file: "19-app-pages.md" },
+  { title: "رحلات المستخدم", href: "/21-user-journeys", file: "21-user-journeys.md" },
+  
+  // الإدارة والدعم
+  { title: "دليل المسؤول", href: "/08-admin-guide", file: "08-admin-guide.md" },
+  { title: "استكشاف الأخطاء", href: "/23-troubleshooting", file: "23-troubleshooting.md" },
 ];
 
 const theoryItems: NavItem[] = [
@@ -41,6 +60,17 @@ const theoryItems: NavItem[] = [
   { title: "أطر إدارة الأداء", href: "/theory/03-performance-management-frameworks", file: "03-performance-management-frameworks.md", isTheory: true },
   { title: "الحوكمة والاعتمادات", href: "/theory/04-governance-and-approvals", file: "04-governance-and-approvals.md", isTheory: true },
   { title: "الصحة المؤسسية وRAG", href: "/theory/05-organizational-health-and-rag", file: "05-organizational-health-and-rag.md", isTheory: true },
+];
+
+const technicalItems: NavItem[] = [
+  { title: "نظرة على التقنية", href: "/technical/01-tech-stack", file: "01-tech-stack.md" },
+  { title: "معمارية النظام", href: "/technical/02-architecture", file: "02-architecture.md" },
+  { title: "دليل التطوير", href: "/technical/03-development", file: "03-development.md" },
+  { title: "دليل النشر", href: "/technical/04-deployment", file: "04-deployment.md" },
+  { title: "وثائق API", href: "/technical/05-api", file: "05-api.md" },
+  { title: "نموذج البيانات", href: "/technical/06-data-model", file: "06-data-model.md" },
+  { title: "دليل التشغيل", href: "/technical/07-operations", file: "07-operations.md" },
+  { title: "استكشاف الأخطاء", href: "/technical/08-troubleshooting", file: "08-troubleshooting.md" },
 ];
 
 interface SidebarProps {
@@ -158,6 +188,34 @@ export function Sidebar({ className }: SidebarProps) {
                       )}
                     >
                       <GraduationCap className="h-4 w-4" />
+                      <span>{item.title}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Technical Docs Section */}
+            <div className="mt-6 pt-4 border-t border-slate-200">
+              <div className="px-3 mb-2">
+                <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                  التوثيق التقني
+                </span>
+              </div>
+              <ul className="space-y-1">
+                {technicalItems.map((item) => (
+                  <li key={item.href}>
+                    <Link
+                      href={item.href}
+                      onClick={() => setMobileOpen(false)}
+                      className={cn(
+                        "flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors",
+                        pathname === item.href
+                          ? "bg-emerald-50 text-emerald-700 font-medium"
+                          : "text-slate-700 hover:bg-slate-100"
+                      )}
+                    >
+                      <FileText className="h-4 w-4" />
                       <span>{item.title}</span>
                     </Link>
                   </li>

@@ -9,6 +9,7 @@ interface DocPageProps {
 
 // List of valid documentation files
 const validDocs = [
+  "00-quick-reference",
   "01-getting-started",
   "02-roles-and-permissions",
   "03-overview-page",
@@ -27,6 +28,11 @@ const validDocs = [
   "16-organization",
   "17-approval-workflow",
   "18-ai-assistant",
+  "19-app-pages",
+  "20-data-management",
+  "21-user-journeys",
+  "22-formulas-guide",
+  "23-troubleshooting",
 ];
 
 export async function generateStaticParams() {
@@ -36,6 +42,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: DocPageProps) {
   const { slug } = await params;
   const titles: Record<string, string> = {
+    "00-quick-reference": "المرجع السريع",
     "01-getting-started": "البدء والدخول",
     "02-roles-and-permissions": "الأدوار والصلاحيات",
     "03-overview-page": "صفحة النظرة العامة",
@@ -54,6 +61,11 @@ export async function generateMetadata({ params }: DocPageProps) {
     "16-organization": "المؤسسة",
     "17-approval-workflow": "سير عمل الموافقات",
     "18-ai-assistant": "المساعد الذكي (AI)",
+    "19-app-pages": "صفحات التطبيق",
+    "20-data-management": "إدارة البيانات",
+    "21-user-journeys": "رحلات المستخدم",
+    "22-formulas-guide": "دليل الصيغ الحسابية",
+    "23-troubleshooting": "استكشاف الأخطاء",
   };
 
   return {
@@ -84,6 +96,7 @@ export default async function DocumentationPage({ params }: DocPageProps) {
   }
 
   const titles: Record<string, string> = {
+    "00-quick-reference": "المرجع السريع",
     "01-getting-started": "البدء والدخول",
     "02-roles-and-permissions": "الأدوار والصلاحيات",
     "03-overview-page": "صفحة النظرة العامة",
@@ -102,6 +115,11 @@ export default async function DocumentationPage({ params }: DocPageProps) {
     "16-organization": "المؤسسة",
     "17-approval-workflow": "سير عمل الموافقات",
     "18-ai-assistant": "المساعد الذكي (AI)",
+    "19-app-pages": "صفحات التطبيق",
+    "20-data-management": "إدارة البيانات",
+    "21-user-journeys": "رحلات المستخدم",
+    "22-formulas-guide": "دليل الصيغ الحسابية",
+    "23-troubleshooting": "استكشاف الأخطاء",
   };
 
   return <DocPage title={titles[slug] || slug} content={content} />;
